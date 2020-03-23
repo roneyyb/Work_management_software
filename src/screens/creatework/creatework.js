@@ -134,7 +134,7 @@ class Creatework extends React.Component {
             autoFocus
             value={this.props.work}
             onChangeText={this.onChanges.bind(this)}
-            placeholder={'Enter work title'}
+            placeholder={'Enter Board Title'}
             autoCorrect={false}
             multiline
             placeholderTextColor='#8D8D8C'
