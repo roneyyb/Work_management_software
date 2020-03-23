@@ -65,7 +65,7 @@ export const onChangepassword = (password,confirmpassword,error4) => {
         payload: {
           password,
           error3:
-            'Should start with A-Za-z min. length should be 7 max 14 should contain one numerical',
+            'Should start with A-Za-z min. length should be 7 max 14 no special character',
             error4:'Password does not match'
         }
       });} else {
@@ -74,7 +74,7 @@ export const onChangepassword = (password,confirmpassword,error4) => {
           payload: {
             password,
             error3:
-              'Should start with A-Za-z min. length should be 7 max 14 should contain one numerical',
+              'Should start with A-Za-z min. length should be 7 max 14 no special character',
              error4
           }
         });

@@ -20,10 +20,10 @@ export default class Attachment extends Component {
                       fontWeight: 'bold'
                     }}
                   >
-                  {'Attachment '}
+                  {'Attachment   '}
                   </Text> 
             </View>
-            <View>       
+            {/* <View>       
                  <FlatList
            data={this.props.image}
            contentContainerStyle={{ marginTop:100}}
@@ -62,7 +62,7 @@ export default class Attachment extends Component {
         scrollEnabled={true}
         keyExtractor={item => item.length}
         />
-        </View>
+        </View> */}
        </ScrollView>
         );
     }

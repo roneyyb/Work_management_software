@@ -87,7 +87,7 @@ class Login extends Component {
             colors={['#ADD8E6', '#add8e6E6', '#add8e6CC']}
             style={{ alignItems: 'center', justifyContent: 'center', flex: 4 }}
           >
-            <Text style={styles.titleStyle}>{'MTASK'}</Text>
+            <Text style={styles.titleStyle}>{'Task'}</Text>
           </LinearGradient>
           <View style={{ padding: upadding, flex: 6 }}>
             <View style={{ alignSelf: 'flex-end', marginBottom: upadding }}>
