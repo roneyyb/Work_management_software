@@ -22,7 +22,8 @@ export default class Attatchmentmodal extends Component {
             >    
             <Text style={{color:'#2B65EC', fontWeight:'bold'}}>{'Attachment'}</Text>
                 <TouchableHighlight style={styles.touchablehighlightstyle}
-                onPress={() => {this.props.onAttatchment(0);}}
+                onPress={() => {this.props.onAttatchment(0);
+                this.props.pickImage(this.props.taskid,this.props.createImage);}}
                 underlayColor={null}
                 >
                     <View style={styles.container}>
@@ -41,7 +42,10 @@ export default class Attatchmentmodal extends Component {
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight style={styles.touchablehighlightstyle}
-                onPress={() => {this.props.onAttatchment(0);}}
+                onPress={() => {
+                    this.props.onAttatchment(0);
+                    this.props.pickDocument();
+            }}
                 underlayColor={null}
                 >
                     <View style={styles.container}>
@@ -60,7 +64,10 @@ export default class Attatchmentmodal extends Component {
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight style={styles.touchablehighlightstyle}
-                onPress={() => {this.props.onAttatchment(0);}}
+                onPress={() => {
+                    this.props.onAttatchment(0);
+                    this.props.pickImage();
+                }}
                 underlayColor={null}
                 >
                     <View style={styles.container}>

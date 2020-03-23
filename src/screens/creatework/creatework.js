@@ -30,7 +30,7 @@ class Creatework extends React.Component {
   static navigationOptions = ({ navigation }) => ({
       headerTitle: () => 
         <Text style={{ color: '#8D8D8C', fontSize: upadding * 1.3 , fontWeight: 'bold' }}>
-        {`${navigation.getParam('update') ? 'UPDATE WORK' : 'CREATE WORK'}`}
+        {`${navigation.getParam('update') ? 'UPDATE BOARD    ' : 'CREATE BOARD   '}`}
         </Text>
       ,
       headerRight: () => 

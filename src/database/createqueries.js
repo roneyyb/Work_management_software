@@ -7,18 +7,26 @@ import {
   SAVE_IMAGE,
   CREATE_FAIL
 } from "../actions/types";
-
+import RNFS from 'react-native-fs';
 const db = SQLite.openDatabase("multiutilityapp.db");
 
 export const createImage = (ress, type, taskid) => {
+  console.log('create image function');
   return dispatch => {
+     console.log(ress.length,taskid, type, ress);
     var arr = [];
+    console.log('inside');
     ress.forEach((item, i) => {
-        console.log(i);
+      console.log('wtf');
+        console.log('i =>',i);
         RNFS.readFile(item.uri, 'base64')
           .then(res => {
             const image_uri = 'data' + `:${item.type};base64,` + res;
-            const dates = (new Date()).toString;
+            var dates = (new Date());
+            var dates = dates.toDateString();
+            console.log(dates);
+            const uuid = uuidv1();
+           // console.log(image_uri.length);
             arr.push({
               image_id: uuid,
               image: image_uri,
@@ -26,27 +34,35 @@ export const createImage = (ress, type, taskid) => {
               task_id: taskid,
               image_created: dates
             });
+           // console.log(arr);
             db.transaction(tx => {
-              const uuid = uuidv1();
-              tx.executeSql("Insert into TASK_IMAGES(image_id, image, type, task_id, image_created) values(?,?,?,?,?);", [uuid, image_uri, type, taskid, dates]), (_, success) => {
-                console.log(success);
+               console.log('inserting attachment');
+              tx.executeSql("Insert into TASK_ATTACHMENT(image_id, image, type, task_id, image_created, attachment_name) values(?,?,?,?,?,?);", [uuid, image_uri, type, taskid, dates, item.name],
+               (_, success) => {
+                console.log('document inserted',success);
                 if (i === ress.length - 1) {
                   return dispatch({
                     type: SAVE_IMAGE,
                     payload: arr
                   });
                 }
-              }, (_, error) => {
-                console.log(error);
-              }
+              },(_,error) => {
+                console.log('error =>',error);
+              });
+            },
+            (error) => {
+              console.log("create work error =>", error);
+            },
+            error => {
+              console.log('success=>',error);
             });
-          });
-      })
+          })
       .catch(error => {
           console.log(error);
         });
-      }
-}
+      });
+    };
+};
 
 export const createWork = (work, data) => {
   return dispatch => {

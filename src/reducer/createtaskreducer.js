@@ -14,7 +14,8 @@ import {
   CLEAR_ALL_STATE,
   SET_NOTIFICATION,
   DEADLINE_CHANGE,
-  SAVE_IMAGE
+  SAVE_IMAGE,
+  GET_ATTACHMENT
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -38,6 +39,7 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
+  console.log(action.type);
   switch (action.type) {
     case TITLE_CHANGE:
       return { ...state, title: action.payload };
@@ -70,7 +72,11 @@ export default (state = INITIAL_STATE, action) => {
     case SAVE_IMAGE:
       return {
         ...state, image: (this.state.image.concat(action.payload))
-      }
+      };
+    case GET_ATTACHMENT:
+      return {
+        ...state, image: action.paylaod.images, document: action.payload.document
+      };
     case DELETE_SELECTED_TASK_SUCCESS:
       return {...state, message:action.payload, deletesuccess:true };
     case CLEAR_ALL_STATE:

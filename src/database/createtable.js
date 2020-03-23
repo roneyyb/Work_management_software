@@ -34,7 +34,7 @@ export const createDatabase = (work,actionaftercom,signup) => {
                       () => {
                         console.log('WORK_TASK table created');
                         tx.executeSql(
-                          'CREATE TABLE IF NOT EXISTS TASK_IMAGES(image_id text not null primary key,image string, type string, taskid_backend text,task_id integer not null, image_created string, foreign key(task_id) references WORK_TASK(task_id) on delete cascade);',
+                          'CREATE TABLE IF NOT EXISTS TASK_ATTACHMENT(image_id text not null primary key,image text, type string, taskid_backend text,task_id integer not null, attachment_name string, image_created string, foreign key(task_id) references WORK_TASK(task_id) on delete cascade);',
                           null,
                           () => {
                             console.log('-------All table created-------');

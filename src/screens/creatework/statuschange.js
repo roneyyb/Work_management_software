@@ -11,7 +11,7 @@ class Title extends Component {
   render() {
     return (
       <Text style={{ fontSize: upadding*1.5, fontWeight: 'bold', color: '#8D8D8C' }}>
-        {'WORK LIST'}
+        {'BOARD  '}
       </Text>
     );
   }

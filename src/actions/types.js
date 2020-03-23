@@ -33,6 +33,7 @@ export const UPDATE_SUCCESS_WORK_LIST = 'update_success_work_list';
 export const UPDATE_FAIL_WORK_LIST = 'update_fail_work_list';
 export const DEFAULT_WORK = 'default_work';
 
+
 //work update action
 export const WORK_UPDATE_SUCCESS = 'work_update_success';
 export const WORK_UPDATE_FAIL = 'work_update_fail';
@@ -52,7 +53,7 @@ export const SET_STATE_WORK = 'set_state_work';
 export const DEADLINE_CHANGE = 'deadline_change';
 export const SET_NOTIFICATION = 'set_notification';
 export const SAVE_IMAGE = 'save_image';
-
+export const GET_ATTACHMENT = 'get_attachment';
 
 //Task update actions
 export const TASK_UPDATE_SUCCESS = 'task_success';

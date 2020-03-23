@@ -1,7 +1,8 @@
 import SQLite from "react-native-sqlite-storage";
-import { FETCH_SUCCESS_WORK_LIST, FETCH_FAIL_WORK_LIST, LOADING_DATA_FAIL, LOADING_UP_DATA, LOADING_DATA_SUCCESS } from '../actions/types';
+import { FETCH_SUCCESS_WORK_LIST, FETCH_FAIL_WORK_LIST, LOADING_DATA_FAIL, LOADING_UP_DATA, LOADING_DATA_SUCCESS, GET_ATTACHMENT } from '../actions/types';
 
 const db = SQLite.openDatabase('multiutilityapp.db');
+
 
 export const Give_all_work = () => {
   console.log('Give all work');
@@ -44,6 +45,59 @@ export const Give_all_work = () => {
   };
 };
 
+export const Give_all_image = (taskid) => {
+  console.log('give_all_images =>',taskid);
+  return dispatch => {
+    var attachment = [];
+    db.transaction(tx => {
+        tx.executeSql(`Select * from TASK_ATTACHMENT where task_id=?`, [taskid], (_,results) => {
+         const rows = results.rows;
+         attachment = rows;
+       console.log(rows.length);
+       let images = [];
+       console.log('sdf');
+       let document = [];
+       console.log('===  Attachment ===');
+       for (let i = 0; i <= rows.length; i++) {
+         console.log(rows[i].type);
+         if(rows[i].type==='document') {
+           document.push(rows[i]);
+         } else {
+           images.push(rows[i]);
+         }
+         if(i===(rows.length)) {
+           return dispatch({
+             type:GET_ATTACHMENT,
+             payload: {images, document}
+           });
+         }
+      }
+      //  rows.forEach((item,i) => {
+      //    console.log('inside',item.attachment_name);
+      //    if(item.type==='document') {
+      //      document.push(item);
+      //    } else {
+      //      images.push(item);
+      //    }
+      //    if(i===(rows.length-1)) {
+      //      return dispatch({
+      //        type:GET_ATTACHMENT,
+      //        payload: {images, document}
+      //      });
+      //    }
+      //  });
+       console.log('completed');
+        }, (_, error) => {
+          console.log('error =>', error);
+            return dispatch({
+                type: LOADING_DATA_FAIL,
+                payload: error
+              });  
+        });
+    }, (error) => { console.log('Give all task error select.js=>',error); }, () => { console.log('transaction succe    ssful'); });
+};
+};
+
 export const Give_all_task = (completed, workid, sortBy) => {
     let task_completed = 0;
      console.log('completed, workid, sortBy', completed, workid, sortBy);
@@ -81,7 +135,7 @@ export const Give_all_task = (completed, workid, sortBy) => {
                     payload: error
                   });  
             });
-        }, (error) => { console.log('Give all task error select.js=>',error); }, () => { console.log('transaction successful'); });
+        }, (error) => { console.log('Give all task error select.js=>',error); }, () => { console.log('transactionsuccessful'); });
     };
 };
 

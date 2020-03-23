@@ -148,7 +148,7 @@ class Modal1 extends Component {
             light
           />
           <Text style={{ marginLeft: upadding * 1.5, color: '#8D8D8C' }}>
-            {'Rename Work'}
+            {'Rename Board'}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -177,7 +177,7 @@ class Modal1 extends Component {
             light
           />
           <Text style={{ marginLeft: upadding * 1.5, color: '#8D8D8C' }}>
-            {'Delete Work'}
+            {'Delete Board'}
           </Text>
         </TouchableOpacity>
       </View>
