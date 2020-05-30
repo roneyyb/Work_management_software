@@ -4,65 +4,10 @@ import uuidv1 from "uuid/v1";
 import {
   CREATE_WORK_SUCCESS,
   CREATE_WORK_FAIL,
-  SAVE_IMAGE,
   CREATE_FAIL
 } from "../actions/types";
-import RNFS from 'react-native-fs';
-const db = SQLite.openDatabase("multiutilityapp.db");
 
-export const createImage = (ress, type, taskid) => {
-  console.log('create image function');
-  return dispatch => {
-     console.log(ress.length,taskid, type, ress);
-    var arr = [];
-    console.log('inside');
-    ress.forEach((item, i) => {
-      console.log('wtf');
-        console.log('i =>',i);
-        RNFS.readFile(item.uri, 'base64')
-          .then(res => {
-            const image_uri = 'data' + `:${item.type};base64,` + res;
-            var dates = (new Date());
-            var dates = dates.toDateString();
-            console.log(dates);
-            const uuid = uuidv1();
-           // console.log(image_uri.length);
-            arr.push({
-              image_id: uuid,
-              image: image_uri,
-              type,
-              task_id: taskid,
-              image_created: dates
-            });
-           // console.log(arr);
-            db.transaction(tx => {
-               console.log('inserting attachment');
-              tx.executeSql("Insert into TASK_ATTACHMENT(image_id, image, type, task_id, image_created, attachment_name) values(?,?,?,?,?,?);", [uuid, image_uri, type, taskid, dates, item.name],
-               (_, success) => {
-                console.log('document inserted',success);
-                if (i === ress.length - 1) {
-                  return dispatch({
-                    type: SAVE_IMAGE,
-                    payload: arr
-                  });
-                }
-              },(_,error) => {
-                console.log('error =>',error);
-              });
-            },
-            (error) => {
-              console.log("create work error =>", error);
-            },
-            error => {
-              console.log('success=>',error);
-            });
-          })
-      .catch(error => {
-          console.log(error);
-        });
-      });
-    };
-};
+const db = SQLite.openDatabase("multiutilityapp.db");
 
 export const createWork = (work, data) => {
   return dispatch => {
@@ -82,13 +27,14 @@ export const createWork = (work, data) => {
                 work_createdAt: new Date(),
                 work_selected: 1,
                 workid_backend: "",
-                work_deadline: ''
+                work_deadline:''
               }
             ];
             tx.executeSql(
               "Insert into WORK_DATA_UPDATE(update_type, workid) values(?,?)",
               ["POST", uuid],
-              () => {},
+              () => {
+                },
               error => {
                 console.log(
                   "-----user works data update post request error-----",
@@ -143,10 +89,10 @@ export const createTask = ({
   reminder,
   notificationid,
   workid_backend
-}, callback) => {
+},callback) => {
   console.log("creating Task", title, date, workid, description);
   const uuid = uuidv1();
-  return dispatch => {
+    return dispatch => {
     db.transaction(
       tx => {
         tx.executeSql(

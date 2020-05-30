@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import SQLite from "react-native-sqlite-storage";;
 import Modal from 'react-native-modal';
 import PushNotification from 'react-native-push-notification';
+import PushNotificationAndroid from  'react-native-push-notification';
 import {
   View,
   FlatList,
@@ -14,6 +15,7 @@ import {
   Animated,
   TouchableHighlight,
   Dimensions,
+  DeviceEventEmitter
 } from 'react-native';
 import { updateTask } from '../../database/updatequeries';
 
@@ -37,7 +39,7 @@ import {
   undoType,
   setloginfalse
 } from '../../actions/taskshowaction';
-
+import localNotication from './components/localNotification';
 import { cleareverything } from '../../actions/cleareverythingaction';
 import { deletework } from '../../database/deletequeries';
 import { setworkdataaftercloudupdate } from '../../actions/worklistaction';
@@ -68,6 +70,7 @@ const Animatedtouchablehighlight = Animated.createAnimatedComponent(TouchableHig
 class Taskshowup extends Component {
 
   constructor(props) {
+   // PushNotification.cancelAllLocalNotifications()
     super(props);
     this.child = this.child;
     this.props.clearAll();
@@ -87,25 +90,8 @@ class Taskshowup extends Component {
       deleteids:[]
     };
   }
-configure() {
-    PushNotification.configure({
-      onRegister: () => {}, //this._onRegister.bind(this),
 
-      onNotification: () => {}, //this._onNotification,
-permissions: {
-        alert: true,
-        badge: true,
-        sound: true
-      },
-
-      popInitialNotification: false,
-
-      
-      requestPermissions: true,
-    });
-  }
   
-
   componentDidMount() {
     this.props.navigation.setParams({
       onNavigateBack: this.handleRefresh.bind(this)
@@ -115,6 +101,7 @@ permissions: {
   }
   
   shouldComponentUpdate(nextProps) {
+   
    if (nextProps.updatetotaldatalist) {
       this.totaldata = nextProps.data;
       nextProps.setUpdatelist();
@@ -602,23 +589,11 @@ updatinglocalworklist = (worklistbackend) => {
       
       </View>
     );
-   //     }
   }
 }
 
 const mapStatetoprops = state => {
-let userid = '';
-  let email = '';
-  let defaultworkid = '';
-  if (state.signup.signup) {
-    userid = state.signup.id;
-    email = state.signup.email;
-    defaultworkid = state.signup.defaultwork.workid_backend;
-  } else {
-    userid = state.auth.id;
-    email = state.auth.email;
-    defaultworkid = state.auth.defaultwork.workid_backend;
-  }
+
   return {
     loading: state.show.loading,
     refreshing: state.show.refreshing,
@@ -635,11 +610,11 @@ let userid = '';
     workid: state.worklist.selectedwork.workid,
     title: state.worklist.selectedwork.work_title,
     workidbackend: state.worklist.selectedwork.workid_backend,
-    email,
-    userid,
+    email:state.user.email,
+    userid:state.user._id,
     undoTypetitle: state.show.undotype,
     count: state.show.count,
-    defaultworkid
+    defaultworkid:state.user.work._id
   };
 };
 

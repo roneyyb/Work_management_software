@@ -22,7 +22,6 @@ class Modal2Content extends Component {
         style={{
           flexDirection: 'column',
           backgroundColor: 'white',
-          width: SCREEN_WIDTH,
           paddingBottom: upadding /2,
           borderTopRightRadius: upadding,
           borderTopLeftRadius:upadding
@@ -36,7 +35,6 @@ class Modal2Content extends Component {
             borderBottomWidth: 0.4,
             borderColor: 'grey',
             flexDirection: 'row',
-            width: SCREEN_WIDTH,
             alignItems: 'center'
           }}
           onPress={() => {

@@ -8,6 +8,7 @@ import {
   Dimensions,
   TouchableHighlight
 } from 'react-native';
+import PushNotification from 'react-native-push-notification';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Monthview from './monthview';
 import Weekview from './weekview';
@@ -62,7 +63,6 @@ export default class reminderModal extends Component {
   render() {
     return (
       <View>
-       {/* <AlldayView days ={day}/> */}
         <View style={styles.staticContainerStyle}>
           <Text style={{color:'black', fontSize: fontSizeE * 1.1}}>{'Every'}</Text>
           <TextInput
@@ -148,7 +148,9 @@ export default class reminderModal extends Component {
 
         <View style={styles.buttonContainer}>
           <TouchableHighlight
-            onPress={() => {this._input.blur();  this.props.setOpacity(1);
+            onPress={() => {
+              console.log('cancel pressed');
+              this._input.blur();  this.props.setOpacity(1);
               this.props.visibleReminderModal(0);}}
             style={styles.touchablehighlightstyle}
             underlayColor={'#2B65EC33'}
@@ -157,9 +159,12 @@ export default class reminderModal extends Component {
           </TouchableHighlight>
           <TouchableHighlight
             onPress={() => {
+
+              console.log('saved pressed');
               this._input.blur();
               this.props.setOpacity(1);
               this.props.visibleReminderModal(0);
+              
             }}
             style={styles.touchablehighlightstyle}
             underlayColor={'#2B65EC33'}

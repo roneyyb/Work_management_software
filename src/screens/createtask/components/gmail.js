@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const upadding = Math.round(SCREEN_WIDTH * 0.03);
+
+
 class Gmail extends Component {
   render() {
     return (
@@ -9,16 +13,16 @@ class Gmail extends Component {
         style={{
           flexDirection: 'row',
           alignItems:'center',
-          padding:20,
+          padding:upadding*1.5,
           borderBottomColor: 'grey',
           borderBottomWidth: 0.4
         }}
       >
         <View
           style={{
-            height: 35,
-            width: 35,
-            borderRadius: 17.5,
+            height: upadding* 3,
+            width:upadding * 3,
+            borderRadius: upadding  * 1.5,
             backgroundColor: '#346ca5',
             justifyContent: 'center',
             alignItems: 'center'
@@ -28,17 +32,17 @@ class Gmail extends Component {
         </View>
         <View
           style={{
-            height: 40,
-            marginLeft:10,
-            paddingBottom: 10,
+            height: upadding & 3.5,
+            marginLeft:upadding ,
+            paddingBottom: upadding,
             flexDirection: 'column'
           }}
         >
           <Text
-            style={{ fontSize: 15 , color: '#000000CC', fontWeight:'bold' }}
+            style={{ fontSize: upadding * 1.3 , color: '#000000CC', fontWeight:'bold' }}
           >{`${this.props.username}`}</Text>
           <Text
-            style={{ fontSize: 10, color: '#8D8D8C' }}
+            style={{ fontSize: upadding , color: '#8D8D8C' }}
           >{`${this.props.email}`}</Text>
         </View>
       </View>
@@ -47,15 +51,10 @@ class Gmail extends Component {
 }
 
 const mapStateToProps = state => {
-  if (state.signup.signup) {
-    return {
-      email: state.signup.email,
-      username: state.signup.username
-    };
-  }
+  console.log(state);
   return {
-    email: state.auth.email,
-    username: state.auth.username
+    email: state.user.email,
+    username: state.user.username
   };
 };
 

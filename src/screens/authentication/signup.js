@@ -1,273 +1,241 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  KeyboardAvoidingView,
-  Dimensions,
-  ActivityIndicator,
-  StyleSheet
-} from 'react-native';
+import {Dimensions, Platform, StyleSheet, Text, View} from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
+import server from '../../constants/Server';
+import axios from 'axios';
+import Header from './components/Header';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import BasicInfo from './BasicInfo';
+import uuidv1 from 'uuid/v1';
+import AppConstant from '../../constants/AppConstant';
 import { connect } from 'react-redux';
-import LinearGradient from 'react-native-linear-gradient';
-import Textinput from './components/textinput';
-import Button from './components/button';
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-const upadding = Math.round(SCREEN_WIDTH * 0.03);
+import {setupUserOnStart } from '../../actions/UserActions';
+let deviceWidth = Dimensions.get('window').width;
 
-import {
-  onChangeusername,
-  onChangeconfirmpassword,
-  onChangeemail,
-  onChangepassword,
-  onSignup,
-  Clearall
-} from '../../actions/signupactions';
+class Signup extends React.Component {
+  static navigationOptions = {headerShown: false};
 
-class SignUp extends React.Component {
-  static navigationOptions = () => ({
-    headerTitle: () => {
-      <Text
-        style={{
-          fontSize: 25,
-          fontWeight: '400',
-          color: 'black',
-          paddingLeft: Math.round(Dimensions.get('window').width) / 2 - 120
-        }}
-      >
-        {'Signup'}
-      </Text>
-    },
-    headerStyle: {
-      backgroundColor: 'white',
-      borderBottomColor: '#202020'
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: '200'
-    }
-  });
   constructor(props) {
     super(props);
-    this.props.Clearall();
+    this.state = {
+      isLoading: false,
+      alertVisible: false,
+      alertText: ''
+    };
+
+    // this.onChangeField = this.onChangeField.bind(this);
+    this.showAlert = this.showAlert.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  shouldComponentUpdate(nextProps) {
-    if (nextProps.signup) {
-      this.props.navigation.navigate('settingupdatabase');
-      return false;
-    }
-    return true;
-  }
 
-  onChangeemails(email) {
-    this.props.onChangeemail(email);
-  }
-  onChangepasswords(password) {
-    this.props.onChangepassword(password,this.props.confirmpassword,this.props.error4);
-  }
-  onChangeconfirmpasswords(confirmpassword) {
-    this.props.onChangeconfirmpassword({
-      password: this.props.password,
-      confirmpassword,
-      error3: this.props.error3
+  showAlert(message) {
+    this.setState({
+      alertText: message,
+      alertVisible: true,
     });
   }
-  onChangeusernames(username) {
-    this.props.onChangeusername(username);
+
+  handleAlertConfirm() {
+    this.setState({
+      alertVisible: false,
+      alertText:''
+    });
   }
 
-  onSignups() {
-    const user = {
-      email: this.props.email,
-      password: this.props.password,
-      username: this.props.username,
-      confirmpassword: this.props.confirmpassword,
-      error1: this.props.error1,
-      error2: this.props.error2,
-      error3: this.props.error3,
-      error4: this.props.error4
-    };
-    this.props.onSignup(user);
-  }
-
-  iferror(error) {
-    if (error.length > 0) {
-      return 'red';
+  handleError(error) {
+    function isNetworkError(err) {
+      return !!err.isAxiosError && !err.response;
     }
-    return 'white';
+
+    let message;
+    if (isNetworkError(error)) {
+      message = 'Network Error';
+    } else {
+      let responseJson = error.response.data;
+      message = responseJson.error;
+    }
+    this.setState({isLoading: false});
+    this.showAlert(message);
   }
 
-  loadingorbutton() {
-    if (this.props.loading) {
-      return (
-        <View style={styles.ButtonContainerstyle}>
-          <ActivityIndicator size='large' color='black' />
-        </View>
-      );
-    }
-    return (
-      <Button
-        buttonLabel={'Signup'}
-        style={{ marginTop: upadding }}
-        onPressaction={this.onSignups.bind(this)}
-      />
-    );
-  }
+  onSubmit = (data) => {
+    console.log(data, `${server}/signup`);
+   this.setState({isLoading:true});
+     const uuid = uuidv1();
+   let config = {
+     headers: {
+     'defaultworkid':uuid,
+     'date':''
+     }
+   }
+    axios
+      .post(`${server}/signup`, data,config)
+      .then(response => {
+        const { navigation, setupUserOnStart} = this.props;
+        let responseJson = response.data;
+        this.setState({isLoading:false});
+        setupUserOnStart(responseJson);
+        navigation.navigate('settingupdatabase',{'signup':true});
+      })
+      .catch(error => {
+        console.log("error =>",error);
+        this.handleError(error);
+      });
+  };
+
   render() {
+    const {navigation} = this.props;
+
     return (
-      <LinearGradient
-        colors={['#ADD8E6', '#add8e6E6', '#add8e6CC']}
-        style={styles.linearGradient}
-      >
-        <KeyboardAvoidingView behavior='padding'>
-          <View style={styles.insideContainer}>
+        <Header type={'login'} navigation={navigation} >
+        <Spinner visible={this.state.isLoading} />
+        <View style={{paddingHorizontal: 30, marginVertical: 10}}>
+          <Text style={styles.headingWhiteBox}>Create your account</Text>
+        </View>
+        <View style={{paddingHorizontal: 30, flex: 1}}>
+          <BasicInfo
+            render={true}
+            updateState={this.onChangeField}
+            navigation={this.props.navigation}
+            showAlert={this.showAlert}
+            onSubmit={this.onSubmit}
+          />
+        </View>
+        <AwesomeAlert
+          show={this.state.alertVisible}
+          showProgress={false}
+          title={'Error'}
+          message={this.state.alertText}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          confirmText="OK"
+          cancelText={null}
+          confirmButtonColor={AppConstant.appColor}
+          overlayStyle={{
+            backgroundColor: 'rgba(0,0,0,0.7)',
+          }}
           
-          <LinearGradient
-            colors={['#ADD8E6', '#add8e6E6', '#add8e6CC']}
-            style={{ alignItems: 'center', justifyContent: 'center', flex: 4 }}
-          >
-            <Text style={styles.titleStyle}>{'Task'}</Text>
-          </LinearGradient>
-            <View style={{ padding: upadding, flex: 6 }}>
-            {this.props.error
-             ? (
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingTop: upadding/2,
-                paddingBottom:upadding/2
-              }}
-            >
-        <Text style={{ color: 'red' , fontSize:upadding * 1.8, fontWeight:'400', fontFamily:'cursive'}}>{this.props.error5}</Text>
-            </View>
-          ) : (
-            <View />
-          )}
-              <View style={styles.Individualcontainerstyle}>
-                <Textinput
-                  placeholder={'username'}
-                  error={this.props.error1}
-                  value={this.props.username}
-                  onChange={this.onChangeusernames.bind(this)}
-                  autocorrect={false}
-                />
-              </View>
-              <View style={styles.Individualcontainerstyle}>
-                <Textinput
-                  onChange={this.onChangeemails.bind(this)}
-                  placeholder='Email'
-                  error={this.props.error2}
-                  autocorrect={false}
-                  value={this.props.email}
-                />
-              </View>
-              <View style={styles.Individualcontainerstyle}>
-                <Textinput
-                  onChange={this.onChangepasswords.bind(this)}
-                  error={this.props.error3}
-                  placeholder='password'
-                  secureTextEntry={true}
-                  autocorrect={false}
-                  value={this.props.password}
-                />
-              </View>
-              <View style={styles.Individualcontainerstyle}>
-                <Textinput
-                  onChange={this.onChangeconfirmpasswords.bind(this)}
-                  error={this.props.error4}
-                  secureTextEntry={true}
-                  autocorrect={false}
-                  placeholder='confirmpassword'
-                  value={this.props.confirmpassword}
-                />
-              </View>
-              <View>{this.loadingorbutton()}</View>
-            </View>
-          </View>
-        </KeyboardAvoidingView>
-      </LinearGradient>
+          onConfirmPressed={() => {
+            this.handleAlertConfirm();
+          }}
+        />
+      </Header>
     );
   }
 }
-const mapStateToProps = state => {
-  return {
-    email: state.signup.email,
-    password: state.signup.password,
-    username: state.signup.username,
-    confirmpassword: state.signup.confirmpassword,
-    error: state.signup.error,
-    error1: state.signup.error1,
-    error2: state.signup.error2,
-    error3: state.signup.error3,
-    error4: state.signup.error4,
-    error5: state.signup.error5,
-    signup: state.signup.signup,
-    loading: state.signup.signuploading,
-    userid: state.signup.id
-  };
-};
 
-export default connect(mapStateToProps, {
-  onChangeconfirmpassword,
-  onChangeemail,
-  onChangepassword,
-  onChangeusername,
-  onSignup,
-  Clearall
-  //worklistfetch
-})(SignUp);
+const mapStateToProps = (state) => {
+  return {};
+}
 
-const styles = StyleSheet.create({
-  titleStyle: {
-    fontSize: upadding * 3,
-    fontWeight: 'bold',
-    fontFamily:'cursive',
-    color: 'black',
-    marginBottom: upadding
-  },
-  linearGradient: {
+export default connect(mapStateToProps,{setupUserOnStart})(Signup);
+
+export const styles = StyleSheet.create({
+  container: {
     flex: 1,
-    backgroundColor: 'white',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 5,
+    paddingBottom: 20,
+  },
+  whiteContainer: {
+    flex: 1,
+    paddingHorizontal: '10%',
+  },
+  heading: {
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-  Individualcontainerstyle: {
-    marginBottom: upadding
-  },
-  insideContainer: {
-    flexDirection: 'column',
-
-    height: SCREEN_HEIGHT * 0.85,
-    width: SCREEN_WIDTH * 0.9,
-    borderRadius: upadding,
-    backgroundColor: 'white',
-    elevation: 5,
-    marginTop: upadding * 2
-  },
-  textStyle: {
-    color: '#4B0082',
-    fontSize: upadding * 1.5
-  },
-  titleStyle: {
-    fontSize: upadding * 3,
-    fontWeight: '600',
-    fontFamily:'cursive',
+  headingWhiteBox: {
+    fontSize: 23,
+    fontWeight: 'bold',
     color: 'black',
-    marginBottom: upadding
   },
-  inputStyle: {
-    marginTop: upadding,
-    height: upadding * 1.5,
-    borderBottomColor: '#4B0082',
-    borderRadius: upadding / 2,
-    borderBottomWidth: upadding * 0.3,
-    backgroundColor: 'white'
+  button: {
+    alignItems: 'center',
+    borderRadius: 25,
+    marginTop: 25,
+    padding: 14,
+    backgroundColor: AppConstant.appColor,
+    marginBottom: 5,
   },
-  Viewstyle: {
-    marginBottom: 3
+  halfButton: {
+    alignItems: 'center',
+    borderRadius: 25,
+    marginTop: 25,
+    padding: 14,
+    backgroundColor: AppConstant.appColor,
+    marginBottom: 5,
+    flex: 1,
   },
-  Buttonstyle: {
-    padding: 3
-  }
+  formInputContainer: {
+    flexDirection: 'row',
+    height: 45,
+    backgroundColor: '#FFF',
+    borderRadius: 0,
+    marginTop: 12,
+    borderBottomWidth: 1,
+    borderColor: '#B0B0B0',
+  },
+  textInput: {
+    flex: 1,
+    paddingVertical: 0,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    height: 45,
+    color: 'black',
+  },
+  picker: {
+    height: 45,
+    // marginLeft: 10,
+    backgroundColor: 'transparent',
+    color: '#B0B0B0',
+    fontSize: 16,
+  },
+  datePicker: {
+    height: 45,
+    padding: 0,
+    paddingTop: 2,
+    width: deviceWidth - 100,
+  },
+  dateInput: {
+    marginLeft: 0,
+    height: 40,
+    borderWidth: 0,
+    paddingHorizontal: 3,
+  },
+  placeholderText: {
+    textAlign: 'left',
+    width: '100%',
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#B0B0B0',
+  },
+  dateText: {
+    textAlign: 'left',
+    width: '100%',
+    marginLeft: 10,
+    fontSize: 16,
+  },
+
+  pageIndicator: {
+    borderRadius: 8,
+    height: 16,
+    width: 16,
+  },
+  newsInterestContainer: {
+    paddingTop: 20,
+  },
+  saveButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: AppConstant.appColor,
+    borderRadius: 20,
+    marginHorizontal: 20,
+    paddingVertical: 10,
+    marginVertical: 20,
+  },
 });

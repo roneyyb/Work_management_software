@@ -1,8 +1,7 @@
 import axios from 'axios';
 import SQLite from "react-native-sqlite-storage";
 import NetInfo from '@react-native-community/netinfo';
-
-const url = 'http://13.234.204.70:3000';
+import url from '../constants/Server';
 
 const db = SQLite.openDatabase('multiutilityapp.db');
 
@@ -19,6 +18,7 @@ function convertingselectdatatoarray(results) {
 }
 
 function sendworkdeletetocloud(userid) {
+  console.log(url);
   db.transaction( tx => {
     tx.executeSql('Select * from WORK_DATA_UPDATE where update_type=? AND workid!=?',['DELETE',""], (td,result) => {
       const  _array = convertingselectdatatoarray(result);

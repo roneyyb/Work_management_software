@@ -4,21 +4,11 @@ export const PASSWORD_CHANGED = 'password_changed';
 export const LOGIN_USER_SUCCESS = 'login_user_success';
 export const LOGIN_USER_FAIL = 'login_user_fail';
 export const LOGIN_LOADING = 'login_loading';
+
 //signup
-export const SIGNUP_AGE_CHANGE = 'age_change';
-export const SIGNUP_USERNAME_CHANGE = 'username_change';
-export const SIGNUP_FAIL = 'signup_fail';
-export const SIGNUP_SUCCESS = 'signup_success';
-export const SIGNUP_PASSWORD = 'signup_password';
-export const SIGNUP_EMAIL = 'signup_email';
-export const SIGNUP_CONFIRMPASSWORD = 'signup_confirmpassword';
-export const FORM_SUBMIT_SUCCESS = 'form_submit_success';
-export const FORM_SUBMIT_FAIL = 'form_submit_fail';
 export const SET_STATE = 'set_state';
 export const CLEAR_ALL_LOGIN = 'clear_all_login';
-export const CLEAR_ALL_SIGNUP = 'clear_all_signup';
-export const SIGNUP_LOADING = 'signup_loading';
-export const ON_SIGNUP_DEFAULT_WORK = 'on_signup_default_work';
+export const SET_UP_USER_ON_START = 'set_up_user_on_start';
 
 //Work list action
 export const WORK_LIST_UPDATE = 'work_list_update';
@@ -32,7 +22,6 @@ export const FETCH_FAIL_WORK_LIST = 'fetch_fail_work_list';
 export const UPDATE_SUCCESS_WORK_LIST = 'update_success_work_list';
 export const UPDATE_FAIL_WORK_LIST = 'update_fail_work_list';
 export const DEFAULT_WORK = 'default_work';
-
 
 //work update action
 export const WORK_UPDATE_SUCCESS = 'work_update_success';
@@ -52,8 +41,6 @@ export const CLEAR_ALL_CREATE_TASK = 'clear_all_create_task';
 export const SET_STATE_WORK = 'set_state_work';
 export const DEADLINE_CHANGE = 'deadline_change';
 export const SET_NOTIFICATION = 'set_notification';
-export const SAVE_IMAGE = 'save_image';
-export const GET_ATTACHMENT = 'get_attachment';
 
 //Task update actions
 export const TASK_UPDATE_SUCCESS = 'task_success';

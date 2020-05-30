@@ -30,7 +30,7 @@ class Creatework extends React.Component {
   static navigationOptions = ({ navigation }) => ({
       headerTitle: () => 
         <Text style={{ color: '#8D8D8C', fontSize: upadding * 1.3 , fontWeight: 'bold' }}>
-        {`${navigation.getParam('update') ? 'UPDATE BOARD    ' : 'CREATE BOARD   '}`}
+        {`${navigation.getParam('update') ? 'UPDATE WORK' : 'CREATE WORK'}`}
         </Text>
       ,
       headerRight: () => 
@@ -134,7 +134,7 @@ class Creatework extends React.Component {
             autoFocus
             value={this.props.work}
             onChangeText={this.onChanges.bind(this)}
-            placeholder={'Enter Board Title'}
+            placeholder={'Enter work title'}
             autoCorrect={false}
             multiline
             placeholderTextColor='#8D8D8C'
@@ -146,15 +146,10 @@ class Creatework extends React.Component {
 }
 
 const mapStateToProps = state => {
-  let userid = '';
-  if (state.signup.signup) {
-    userid = state.signup.id;
-  } else {
-    userid = state.auth.id;
-  }
+  
   return {
     work: state.worklist.work,
-    userid,
+    userid:state.user_id,
     worklist: state.worklist.data,
     selectedwork: state.worklist.selectedwork,
     workupdated: state.worklist.workupdated,

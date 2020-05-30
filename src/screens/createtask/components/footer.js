@@ -18,8 +18,7 @@ class Footer extends Component {
 
   render() {
     return (
-      <View 
-      >
+      <View >
         <View
           style={[
             styles.backgroundContainer,
@@ -109,7 +108,9 @@ const styles = StyleSheet.create({
   backgroundContainer: {
     position: 'absolute',
     height: upadding * 5,
-    width: SCREEN_WIDTH,
+    //width: SCREEN_WIDTH,
+    left:0,
+    right:0,
     elevation: 10,
     bottom: 0,
     backgroundColor: 'white'
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: upadding * 2.5,
     backgroundColor: 'white',
     bottom: upadding * 2.5,
-    marginLeft: SCREEN_WIDTH / 2 - upadding * 2
+    alignSelf:'center'
   }
 });
 

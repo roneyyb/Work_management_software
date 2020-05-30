@@ -13,9 +13,7 @@ import {
   DELETE_SELECTED_TASK_SUCCESS,
   CLEAR_ALL_STATE,
   SET_NOTIFICATION,
-  DEADLINE_CHANGE,
-  SAVE_IMAGE,
-  GET_ATTACHMENT
+  DEADLINE_CHANGE
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -24,8 +22,6 @@ const INITIAL_STATE = {
   error: '',
   deadline: 'Add Task Deadline For Completion',
   reminder: 'Add Task Reminder For Completion',
-  image: [],
-  document: [],
   notificationid:0,
   createsuccess: false,
   id: '',
@@ -39,7 +35,6 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  console.log(action.type);
   switch (action.type) {
     case TITLE_CHANGE:
       return { ...state, title: action.payload };
@@ -68,15 +63,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         deadline: action.payload
-      };
-    case SAVE_IMAGE:
-      return {
-        ...state, image: (this.state.image.concat(action.payload))
-      };
-    case GET_ATTACHMENT:
-      return {
-        ...state, image: action.paylaod.images, document: action.payload.document
-      };
+      }
     case DELETE_SELECTED_TASK_SUCCESS:
       return {...state, message:action.payload, deletesuccess:true };
     case CLEAR_ALL_STATE:

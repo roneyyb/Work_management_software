@@ -10,14 +10,11 @@ import {
   TouchableHighlight
 } from 'react-native';
 import PushNotification from 'react-native-push-notification';
-import DocumentPicker from 'react-native-document-picker';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import FontawesomeIcons from 'react-native-vector-icons/FontAwesome';
 import Datetimemodal from './components/datetimemodal';
-import Attatchmentmodal from './components/attatchmentmodal';
-import Attachment from './components/attachment';
+
 import {
   onTitlechange,
   onDescriptionchange,
@@ -31,10 +28,9 @@ import {
   onDeadlinechange
 } from '../../actions/createtaskactions';
 import { onPressupdate } from '../../actions/updatingtaskaction';
-import { createTask, createImage } from '../../database/createqueries';
+import { createTask } from '../../database/createqueries';
 import { updateTask } from '../../database/updatequeries';
 import { undoType } from '../../actions/taskshowaction';
-import { Give_all_image } from '../../database/select';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
@@ -79,7 +75,7 @@ class Createtask extends Component {
           </TouchableOpacity>
         ) : (
           <View />
-        )}           
+        )}
       </View>
     ,
     headerTintColor: '#8D8D8C'
@@ -95,9 +91,6 @@ class Createtask extends Component {
       const id = navigation.getParam('id', props.id);
       const update = navigation.getParam('update', props.update);
       const deadline = navigation.getParam('deadline', props.deadline);
-      // const image = navigation.getParam('image',props.image);
-      // const document = navigation.getParam('document',props.document);
-      // const attachment_name = navigation.getParam('attachment_name',props.attachment_name);
       const notificationid = navigation.getParam(
         'notificationid',
         props.notificationid
@@ -138,7 +131,6 @@ class Createtask extends Component {
       opacity: 0,
       visibledatetimeModal: 0,
       visibleremindermodal: 0,
-      visibleattatchmentmodal: 0,
       date_modal_opacity: 1,
       reminder_modal_opacity: 1
     };
@@ -148,14 +140,9 @@ class Createtask extends Component {
     this.props.navigation.setParams({
       deleting: this.onPressdelete.bind(this)
     });
-    console.log('component did Mount',this.props.taskid);
-    
-    console.log('component did Mount');
     if (!this.props.navigation.getParam('update', false)) {
       this.props.clearall();
     }
-    
-    
   }
 
   shouldComponentUpdate(nextProps) {
@@ -165,10 +152,6 @@ class Createtask extends Component {
     ) {
       this.focustextinput = false;
       return true;
-    }
-
-    if(this.props.taskid!==nextProps.taskid) {
-      this.props.Give_all_image(nextProps.taskid);
     }
     
     return true;
@@ -188,7 +171,7 @@ class Createtask extends Component {
 
   visibleReminderModal = value => {
     this.setState({ visibleremindermodal: value });
-  };  
+  };
   setOpacity = value => {
     this.setState({ date_modal_opacity: value });
   };
@@ -430,36 +413,6 @@ class Createtask extends Component {
     }
   }
 
-  onAttatchment = (value) => {
-    this.setState({visibleattatchmentmodal:value});
-  }
-
-
-  pickImage = async () => {
-    try {
-   const ress = await DocumentPicker.pickMultiple({
-    type: [DocumentPicker.types.images],
-      });
-      console.log('ress =>',ress.length);
-      this.props.createImage(ress,'image',this.props.taskid);
-} catch(error) {
-    console.log(error);
-}
-}
-
-pickDocument = async() => {
-  try {
- const ress = await DocumentPicker.pickMultiple({
-  type: [DocumentPicker.types.allFiles],
-    });
-    console.log(ress);
-    this.props.createImage(ress,'document',this.props.taskid);
-    console.log('resss');
-} catch(error) {
-  console.log(error);
-}
-}
-
   render() {
     return (
       <View
@@ -615,50 +568,7 @@ pickDocument = async() => {
                 </View>
               </View>
             </TouchableHighlight>
-            <TouchableHighlight
-              onPress={() => {
-                this.onAttatchment(1);
-              }}
-              underlayColor={'#8D8D8C0F'}
-              style={styles.touchablehighlightstyle}
-            >
-              <View style={styles.remindercontainer}>
-                <View style={styles.firstrcontainer}>
-                  <FontawesomeIcons
-                    name='paperclip'
-                    size={upadding * 1.6}
-                    color='black'
-                  />
-                </View>
-                <View
-                  style={[
-                    styles.secondrcontainer,
-                    {
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'flex-start'
-                    }
-                  ]}
-                >
-                  <Text
-                    style={{
-                      color: '#8D8D8C',
-                      flex: 18,
-                      fontSize: upadding * 1.2,
-                      fontWeight: 'bold'
-                    }}
-                  >
-                  {'Add Attatchment'}
-                  </Text>
-                </View>
-              </View>
-            </TouchableHighlight>
             <View style={{ height: upadding * 4 }} />
-          <Attachment
-           image={this.state.image}
-           document={this.state.document}
-          
-          />
           </ScrollView>
         <Modal
           isVisible={this.state.visibledatetimeModal === 1}
@@ -673,31 +583,16 @@ pickDocument = async() => {
             description={this.props.description}
           />
         </Modal>
-
-        <Modal
-        isVisible={this.state.visibleattatchmentmodal===1}
-        useNativeDriver
-        >
-          <Attatchmentmodal
-          onAttatchment={this.onAttatchment}
-          createImage = {this.createImage}
-          pickDocument={this.pickDocument}
-          pickImage={this.pickImage}
-          />
-        </Modal>
       </View>
     );
   }
 }
 
 const mapStateToProps = state => {
-  console.log(state.task);
   return {
     tasklist: state.show.data,
     title: state.task.title,
     notificationid: state.task.notificationid,
-    image: state.task.image,
-    document: state.task.document,
     reminder: state.task.reminder,
     deadline: state.task.deadline,
     description: state.task.description,
@@ -723,8 +618,6 @@ export default connect(mapStateToProps, {
   updateTask,
   onPressdeletetask,
   onTitlechange,
-  Give_all_image,
-  createImage,
   onDescriptionchange,
   onPresscreate,
   onDeadlinechange,
@@ -738,7 +631,6 @@ export default connect(mapStateToProps, {
 })(Createtask);
 
 const styles = StyleSheet.create({
-  
   container: {
     flex: 1,
     backgroundColor: 'white'

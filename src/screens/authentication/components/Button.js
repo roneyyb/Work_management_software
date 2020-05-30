@@ -38,6 +38,6 @@ const styles = StyleSheet.create({
   },
   buttonLabelStyle: {
     fontSize: upadding * 1.5,
-    color: 'black'
+    color: 'white'
   }
 });

@@ -66,15 +66,10 @@ class Tasklist extends Component {
 }
 
 const mapStateToProps = state => {
-  let userid = '';
-  if (state.signup.signup) {
-    userid = state.signup.id;
-  } else {
-    userid = state.auth.id;
-  }
+  
   return {
     data: state.worklist.data,
-    userid,
+    userid:state.user._id,
     selected: state.worklist.selected,
     errorfetch: state.worklist.errorfetch,
     errorupdate: state.worklist.errorupdate

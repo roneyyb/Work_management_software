@@ -12,11 +12,19 @@ class Settingupdatabase extends Component {
 
     constructor(props) {
         super(props);
-        this.state={message:'Setting up database', set_database: false, updating_database:false, notificationmodal:0};
+        console.log('setting up database');
+        signup = this.props.navigation.getParam('signup',false);
+        this.state={
+        message:'Setting up database', 
+        set_database: false,
+        updating_database:false,
+        notificationmodal:0,
+        signup
+      };
     }
 
     actionwhensetdatabasecom = async () => {
-      if(!this.props.signup)
+      if(!this.state.signup)
       {
       this.setState({message:'Updating database with the previous progress',notificationmodal:1});
       }
@@ -27,9 +35,12 @@ class Settingupdatabase extends Component {
         this.props.navigation.navigate('App');
       }
     }
+    
     componentDidMount() {
-      this.props.createDatabase(this.props.work,this.actionwhensetdatabasecom,this.props.signup);
+     console.log('database ',this.props.work,this.state.signup);
+      this.props.createDatabase(this.props.work,this.actionwhensetdatabasecom,this.state.signup);
     }
+
     cancelFunction = (value) => {
       this.setState({notificationmodal:value});
       this.updatingdatabase();
@@ -66,22 +77,10 @@ class Settingupdatabase extends Component {
 }
 
 const mapStateToProps = state => {
-  var userid = '';
-  var signup = '';
-  var work = '';
-  if (state.signup.signup) {
-    userid = state.signup.id;
-    signup = true;
-    work=state.signup.defaultwork;
-    } else {
-    userid = state.auth.id;
-    signup = false;
-    work=state.auth.defaultwork;
-  }
+  console.log(state);
   return {
-    signup,
-    userid,
-    work
+    userid:state.user._id,
+    work:state.user.work
   };
 };
 

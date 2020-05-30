@@ -202,7 +202,7 @@ class Header extends Component {
   }
   render() {
     return (
-      <View style={{ position:'absolute', width:SCREEN_WIDTH, paddingTop: upadding * 0.5 }}>
+      <View style={{ position:'absolute', paddingTop: upadding * 0.5, left:upadding/2, right:upadding/2 }}>
         <FlipCard
           flip={this.state.isFlipped}
           friction={100}

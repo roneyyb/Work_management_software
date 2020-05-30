@@ -15,11 +15,20 @@ class Modal1 extends Component {
         <View
           style={styles.containerStyle}
         >
+           <View style={{flexDirection:'row', justifyContent:'space-between'}}>
           <Text
             style={styles.textStyle}
           >
             {'Task'}
           </Text>
+          {/* <MaterialIcons
+            name='clear'
+            size={upadding * 2}
+            color='grey'
+            style={{marginRight:upadding*2,marginTop:upadding*1.5}}
+            light
+          /> */}
+          </View>
           <TouchableOpacity
             onPress={() => {
               if (this.props.completed === false) {
@@ -148,7 +157,7 @@ class Modal1 extends Component {
             light
           />
           <Text style={{ marginLeft: upadding * 1.5, color: '#8D8D8C' }}>
-            {'Rename Board'}
+            {'Rename Work'}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -177,7 +186,7 @@ class Modal1 extends Component {
             light
           />
           <Text style={{ marginLeft: upadding * 1.5, color: '#8D8D8C' }}>
-            {'Delete Board'}
+            {'Delete Work'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -190,8 +199,7 @@ export default Modal1;
 const styles = StyleSheet.create({
   containerStyle:{
     flexDirection: 'column',
-    padding: upadding,
-    width: SCREEN_WIDTH,
+    paddingBottom: upadding,
     borderTopLeftRadius:upadding,
     borderTopRightRadius:upadding,
     borderBottomWidth: upadding * 0.03,

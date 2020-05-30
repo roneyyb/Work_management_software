@@ -155,12 +155,6 @@ export default class Deadlinescreen extends Component {
               onPress={
                 async () => {
                 await this.props.setOpacity(0,true);
-                //const value = await this.props.openAndroidTimePicker();
-                //console.log('android time deadline screen=>',value);
-                //if(value[0]!=='Dismissed') {
-                //this.setDeadline(value[0]);
-                //this.timeofday = value.slice(1,3);
-              //  }
               }
               }
               underlayColor={'#8D8D8C0F'}
@@ -198,40 +192,6 @@ export default class Deadlinescreen extends Component {
                 </View>
               </View>
             </TouchableHighlight>
-            {/* <TouchableHighlight
-              onPress={() => {
-                this.props.setModalscreen(1);
-                }}
-              underlayColor={'#8D8D8C0F'}
-              style={styles.touchablehighlightstyle }
-            >
-              <View
-                style={{ flex: 1, flexDirection: 'row', alignItems: 'center', height: paddingE * 1.5 }}
-              >
-                <View style={{ flex:1,justifyContent:'center', alignItems:'center'}}>
-                  <MaterialIcons
-                    name='repeat'
-                    size={fontSizeE * 1.5}
-                    color='grey'
-                  />
-                </View>
-                <View
-                  style={{
-                    flex: 3,
-                    height: paddingE * 1.5,
-                    marginRight:paddingE * 0.4,
-                    paddingLeft: paddingE * 0.8,
-                    backgroundColor: '#2B65EC0F',
-                    borderRadius: 3,
-                    justifyContent: 'center'
-                  }}
-                >
-                  <Text style={{ color: '#8D8D8C', fontSize: fontSizeE, fontWeight:'bold' }}>
-                    {'Repeat'}
-                  </Text>
-                </View>
-              </View>
-            </TouchableHighlight> */}
             <View style={styles.buttonContainer}>
               <TouchableHighlight
               onPress={() => {
