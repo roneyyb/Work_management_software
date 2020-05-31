@@ -1,5 +1,5 @@
 /* eslint-disable react/sort-comp */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   Text,
   View,
@@ -10,12 +10,12 @@ import {
   TouchableWithoutFeedback,
   LayoutAnimation,
   UIManager,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import FlipCard from 'react-native-flip-card';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
 const SWIPE_OUT_DURATION = 100;
 var colorArray = [
@@ -63,17 +63,19 @@ var colorArray = [
   '#4DB380',
   '#FF4D4D',
   '#99E6E6',
-  '#6666FF'
+  '#6666FF',
 ];
 
-const AnimateTouchablehightlight = Animated.createAnimatedComponent(TouchableHighlight);
+const AnimateTouchablehightlight = Animated.createAnimatedComponent(
+  TouchableHighlight,
+);
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
 
 class Return_background extends Component {
-  state = { name: 'done', paddingLeft: 0, paddingLeft: 0 };
+  state = {name: 'done', paddingLeft: 0, paddingLeft: 0};
 
   changeView = (name, paddingLeft) => {
-    this.setState({ name, paddingLeft });
+    this.setState({name, paddingLeft});
   };
 
   render() {
@@ -81,9 +83,8 @@ class Return_background extends Component {
       <View
         style={{
           position: 'absolute',
-          paddingLeft: this.state.paddingLeft
-        }}
-      >
+          paddingLeft: this.state.paddingLeft,
+        }}>
         {this.state.name === 'done' ? (
           <MaterialIcons name={this.state.name} size={30} color={'white'} />
         ) : (
@@ -125,7 +126,7 @@ class Taskeach extends Component {
           if (this.touched) {
             this.animated_card.setNativeProps({
               elevation: 1,
-              borderRadius: 8
+              borderRadius: 8,
             });
             this.touched = false;
           }
@@ -133,17 +134,17 @@ class Taskeach extends Component {
             this.touched1 = false;
             this.touched2 = true;
             this.return_background.changeView('done', 20);
-            this.view_change.setNativeProps({ backgroundColor: 'green' });
-             //this.setState({ zindex: 4, borderradius: upadding * 1.25, backcolor:'green' });
+            this.view_change.setNativeProps({backgroundColor: 'green'});
+            //this.setState({ zindex: 4, borderradius: upadding * 1.25, backcolor:'green' });
           }
           if (gesture.dx < 0 && this.touched2) {
             this.touched2 = false;
             this.touched1 = true;
             this.return_background.changeView('delete', SCREEN_WIDTH - 50);
-            this.view_change.setNativeProps({ backgroundColor: 'red' });
+            this.view_change.setNativeProps({backgroundColor: 'red'});
             //this.setState({ zindex: 4, borderradius: upadding * 1.25, backcolor:'green' });
           }
-          position.setValue({ x: gesture.dx, y: 0 });
+          position.setValue({x: gesture.dx, y: 0});
         }
       },
       onPanResponderRelease: (event, gesture) => {
@@ -155,9 +156,9 @@ class Taskeach extends Component {
           this.props.changescroll(true);
           this.resetPosition();
         }
-      }
+      },
     });
-   
+
     this.state = {
       isFlipped: false,
       panResponder,
@@ -167,7 +168,7 @@ class Taskeach extends Component {
       flag: 0,
       zIndex: 0,
       paddingright: 0,
-      borderradius: 0
+      borderradius: 0,
     };
   }
 
@@ -184,7 +185,7 @@ class Taskeach extends Component {
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     var createdate = new Date(Date.parse('2011-09-29 14:58:12'));
     const currentdate = new Date();
@@ -218,7 +219,7 @@ class Taskeach extends Component {
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     const createdate = new Date(date);
     const currentdate = new Date();
@@ -240,8 +241,8 @@ class Taskeach extends Component {
     const value =
       direction === 'right' ? SCREEN_WIDTH + 100 : -(SCREEN_WIDTH + 100);
     Animated.timing(this.state.position, {
-      toValue: { x: value, y: 0 },
-      duration: SWIPE_OUT_DURATION
+      toValue: {x: value, y: 0},
+      duration: SWIPE_OUT_DURATION,
     }).start(() => this.onSwipeComplete(direction));
   }
 
@@ -255,25 +256,24 @@ class Taskeach extends Component {
     } else {
       this.onPressdelete(this.props.items.taskid);
     }
-
   }
 
   getCardStyle() {
-    const { position } = this.state;
+    const {position} = this.state;
     return {
-      ...position.getLayout()
+      ...position.getLayout(),
     };
   }
 
   doit = () => {
-    this.animated_card.setNativeProps({ elevation: 0, borderRadius: 0 });
-    this.view_change.setNativeProps({ backgroundColor: 'white' });
+    this.animated_card.setNativeProps({elevation: 0, borderRadius: 0});
+    this.view_change.setNativeProps({backgroundColor: 'white'});
   };
   resetPosition() {
-    const { position } = this.state;
+    const {position} = this.state;
     Animated.timing(position, {
-      toValue: { x: 0, y: 0 },
-      duration: 250
+      toValue: {x: 0, y: 0},
+      duration: 250,
     }).start(() => {
       this.doit();
     });
@@ -288,9 +288,8 @@ class Taskeach extends Component {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInOut);
   }
-  
+
   UNSAFE_componentWillReceiveProps(nextProps) {
-   
     if (nextProps.setcolornormal) {
       nextProps.setcolornormal = false;
       this.front = 0;
@@ -298,7 +297,7 @@ class Taskeach extends Component {
         flag: 0,
         isFlipped: false,
         bgcolor: 'white',
-        paddingright: 0
+        paddingright: 0,
       });
     }
   }
@@ -316,7 +315,7 @@ class Taskeach extends Component {
     const todaydate = new Date();
     if (todaydate.getFullYear() == newdate[3]) {
       return `${newdate[0]}, ${newdate[1]} ${newdate[2]}, ${this.returntime(
-        time
+        time,
       )}`;
     } else {
       return `${newdate[0]}, ${newdate[1]} ${newdate[2]}, ${newdate[3]}`;
@@ -328,20 +327,21 @@ class Taskeach extends Component {
       if (this.props.items.task_deadline.length < 26) {
         return (
           <View
-            style={{ flex: 1 ,elevation:4, flexDirection: 'row', alignItems: 'flex-start' }}
-          >
+            style={{
+              flex: 1,
+              elevation: 4,
+              flexDirection: 'row',
+              alignItems: 'flex-start',
+            }}>
             <TouchableHighlight
               onPress={() => {
                 this.props.settingNotificationmodal(1, this.props.items);
               }}
-              underlayColor={'#2B65EC1A'}
-            >
+              underlayColor={'#2B65EC1A'}>
               <View style={styles.dedlineContainderstyle}>
-                <View
-                  style={{ alignSelf: 'center', paddingLeft: upadding / 3 }}
-                >
+                <View style={{alignSelf: 'center', paddingLeft: upadding / 3}}>
                   <MaterialIcons
-                    name='today'
+                    name="today"
                     size={upadding * 1.25}
                     width={5}
                     color={`${
@@ -350,7 +350,7 @@ class Taskeach extends Component {
                   />
                 </View>
                 <View style={styles.deadlineinsideContainer}>
-                  <Text style={{ color: '#8D8D8C', fontSize: upadding }}>
+                  <Text style={{color: '#8D8D8C', fontSize: upadding}}>
                     {this.props.items.task_deadline}
                   </Text>
                 </View>
@@ -362,80 +362,84 @@ class Taskeach extends Component {
       return <View />;
     }
     return (
-      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-start' }}>
+      <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-start'}}>
         <View style={styles.dedlineContainderstyle}>
-        <View style={{ alignSelf: 'center', paddingLeft: upadding / 3 }} >
-          <MaterialIcons
-            name='done'
-            size={upadding * 1.25}
-            width={5}
-            color={`${colorArray[this.props.index % colorArray.length]}99`}
-          />
+          <View style={{alignSelf: 'center', paddingLeft: upadding / 3}}>
+            <MaterialIcons
+              name="done"
+              size={upadding * 1.25}
+              width={5}
+              color={`${colorArray[this.props.index % colorArray.length]}99`}
+            />
           </View>
-        
-        <View style={styles.deadlineinsideContainer}>
-          <Text style={{ color: 'black', fontSize: upadding }}>
-            {this.returnCompletedDate(this.props.items.task_completedAt)}
-          </Text>
+
+          <View style={styles.deadlineinsideContainer}>
+            <Text style={{color: 'black', fontSize: upadding}}>
+              {this.returnCompletedDate(this.props.items.task_completedAt)}
+            </Text>
+          </View>
         </View>
-      </View>
       </View>
     );
   };
   onPresscomplete(id) {
-    if(this.props.Searchtask) {
-      this.props.deleteTask(this.props.items.taskid,this.props.items.workid);
+    if (this.props.Searchtask) {
+      this.props.deleteTask(this.props.items.taskid, this.props.items.workid);
     }
     this.props.undoType(
       this.props.tasklist,
-      [{ taskid: id, taskid_backend: this.props.items.taskid_backend }],
-      'Completed'
+      [{taskid: id, taskid_backend: this.props.items.taskid_backend}],
+      'Completed',
     );
-    this.props.callUndo([
-      { taskid: id, taskid_backend: this.props.items.taskid_backend }
-    ],'complete');
+    this.props.callUndo(
+      [{taskid: id, taskid_backend: this.props.items.taskid_backend}],
+      'complete',
+    );
   }
 
   onPressincomplete = id => {
-    if(this.props.Searchtask) {
-      this.props.deleteTask(this.props.items.taskid,this.props.items.workid);
+    if (this.props.Searchtask) {
+      this.props.deleteTask(this.props.items.taskid, this.props.items.workid);
     }
     this.props.undoType(
       this.props.tasklist,
-      [{ taskid: id, taskid_backend: this.props.items.taskid_backend }],
-      'Incompleted'
+      [{taskid: id, taskid_backend: this.props.items.taskid_backend}],
+      'Incompleted',
     );
-    this.props.callUndo([
-      { taskid: id, taskid_backend: this.props.items.taskid_backend }
-    ],'incomplete');
+    this.props.callUndo(
+      [{taskid: id, taskid_backend: this.props.items.taskid_backend}],
+      'incomplete',
+    );
   };
 
   onPressdelete(id) {
-    if(this.props.Searchtask) {
-      this.props.deleteTask(this.props.items.taskid,this.props.items.workid);
+    if (this.props.Searchtask) {
+      this.props.deleteTask(this.props.items.taskid, this.props.items.workid);
     }
     this.props.undoType(
       this.props.tasklist,
-      [{ taskid: id, taskid_backend: this.props.items.taskid_backend }],
-      'Deleted'
+      [{taskid: id, taskid_backend: this.props.items.taskid_backend}],
+      'Deleted',
     );
-    this.props.callUndo([
-      { taskid: id, taskid_backend: this.props.items.taskid_backend }
-    ],'delete');
+    this.props.callUndo(
+      [{taskid: id, taskid_backend: this.props.items.taskid_backend}],
+      'delete',
+    );
   }
 
   onPresstask() {
-    if(this.props.Searchtask) {
+    if (this.props.Searchtask) {
       this.props.settaskSearch(false);
     }
     this.props.navigation.navigate('createtask', {
       update: true,
+      items: this.props.items,
       title: this.props.items.task_title,
       description: this.props.items.task_description,
       id: this.props.items.taskid,
       workid: this.props.workid,
       Searchtask: this.props.Searchtask,
-      settaskSearch:this.props.settaskSearch,
+      settaskSearch: this.props.settaskSearch,
       notificationid: this.props.items.task_notificationid,
       reminder: this.props.items.task_reminder,
       work: this.props.work,
@@ -447,7 +451,7 @@ class Taskeach extends Component {
       onNavigateBack: this.props.navigation.getParam('onNavigateBack'),
       deleteid: this.props.deleteid,
       Deletetaskcountnumber: this.props.Deletetaskcountnumber,
-      changeflip: this.props.changeflip
+      changeflip: this.props.changeflip,
     });
   }
 
@@ -458,7 +462,7 @@ class Taskeach extends Component {
           backgroundColor: '#cfebfd',
           height: 100,
           margin: 0,
-          borderRadius: 6
+          borderRadius: 6,
         }}
       />
     );
@@ -482,20 +486,20 @@ class Taskeach extends Component {
   };
 
   showdescriptionornot = () => {
-    if (this.props.items.task_description.length > 0) {
-      if (this.props.items.task_description.length > 180) {
-        return (
-          <Text style={styles.descriptionstyle}>
-            {`${this.props.items.task_description.substring(0, 180)}......`}
-          </Text>
-        );
-      }
-      return (
-        <Text style={styles.descriptionstyle}>
-          {`${this.props.items.task_description}`}
-        </Text>
-      );
-    }
+    // if (this.props.items.task_description.length > 0) {
+    //   if (this.props.items.task_description.length > 180) {
+    //     return (
+    //       <Text style={styles.descriptionstyle}>
+    //         {`${this.props.items.task_description.substring(0, 180)}......`}
+    //       </Text>
+    //     );
+    //   }
+    //   return (
+    //     <Text style={styles.descriptionstyle}>
+    //       {`${this.props.items.task_description}`}
+    //     </Text>
+    //   );
+    // }
   };
 
   changecolor = () => {
@@ -503,7 +507,7 @@ class Taskeach extends Component {
       this.front = 1;
       this.props.deleteid.push({
         taskid: this.props.items.taskid,
-        taskid_backend: this.props.items.taskid_backend
+        taskid_backend: this.props.items.taskid_backend,
       });
       if (this.props.deleteid.length === 1) {
         this.props.changeflip(1);
@@ -515,14 +519,14 @@ class Taskeach extends Component {
         bgcolor: `#2B65EC1A`,
         paddingright: upadding,
         borderradius: upadding / 2,
-        backcolor: 'white'
+        backcolor: 'white',
       });
       return;
     }
     this.front = 0;
 
     var index = this.props.deleteid.findIndex(
-      obj => obj.taskid === this.props.items.taskid
+      obj => obj.taskid === this.props.items.taskid,
     );
     if (index > -1) {
       this.props.deleteid.splice(index, 1);
@@ -535,7 +539,7 @@ class Taskeach extends Component {
       isFlipped: false,
       bgcolor: 'white',
       paddingright: 0,
-      borderradius: 0
+      borderradius: 0,
     });
     return;
   };
@@ -550,136 +554,130 @@ class Taskeach extends Component {
           marginTop: upadding * 0.2,
           backgroundColor: this.state.backcolor,
           paddingLeft: this.state.paddingright,
-          justifyContent: 'center'
-        }}
-      >
+          justifyContent: 'center',
+        }}>
         <Return_background
           ref={child => {
             this.return_background = child;
           }}
         />
-    
-          <Animated.View
-            ref={child => {
-              this.animated_card = child;
-            }}
-            style={[
-              this.getCardStyle(),
-              {
-                backgroundColor: this.state.bgcolor,
-                borderRadius: this.state.borderradius
+
+        <Animated.View
+          ref={child => {
+            this.animated_card = child;
+          }}
+          style={[
+            this.getCardStyle(),
+            {
+              backgroundColor: this.state.bgcolor,
+              borderRadius: this.state.borderradius,
+            },
+          ]}
+          key={this.props.items.taskid}
+          {...this.state.panResponder.panHandlers}>
+          <AnimateTouchablehightlight
+            onPress={this.onPresstask.bind(this)}
+            onLongPress={() => {
+              if (!this.props.searchtask) {
+                this.changecolor();
               }
-            ]}
-            key={this.props.items.taskid}
-            {...this.state.panResponder.panHandlers}
-          >
-        <AnimateTouchablehightlight
-        onPress={this.onPresstask.bind(this)}
-        onLongPress={() => {
-        if(!this.props.searchtask){
-        this.changecolor();
-        }
-        }}   underlayColor={null}
-        >
-          <View style={{flexDirection:'row'}} >
-            <View
-              style={{
-                flex: 0.9,
-                paddingTop: (upadding/2) * 1.25,
-                paddingLeft: upadding/1.5 + upadding/1.5 - this.state.paddingright,
-                paddingRight: upadding,
-                paddingBottom: upadding/2
-              }}
-            >
-              <TouchableHighlight
-                underlayColor={null}
-                style={{ flex: 1 }}
-                onPress={() => {
-                  if(!this.props.Searchtask) {
-                  this.changecolor();
-                  }
-                }}
-              >
-                <FlipCard
-                  flip={this.state.isFlipped}
-                  clickable={false}
-                  friction={100}
-                  perspective={5000}
-                  flipHorizontal={true}
-                  flipVertical={false}
-                >
-                  {/* Face Side */}
-                  <View
-                    style={[
-                      styles.flipcoinstyle,
-                      {
-                        backgroundColor: `${
-                          colorArray[this.props.index % colorArray.length]
-                        }99`
-                      }
-                    ]}
-                  >
-                    <Text
-                      style={{ color: 'white', fontFamily:'cursive', fontSize: upadding * 1.6 }}
-                    >{`${
-                      this.props.items.task_title.length > 0
-                        ? this.props.items.task_title[0]
-                        : ''
-                    }`}</Text>
-                  </View>
-                  {/* BackSide */}
-                  <View
-                    style={[
-                      styles.flipcoinstyle,
-                      { backgroundColor: '#2B65EC' }
-                    ]}
-                  >
-                    <MaterialIcons
-                      name='check'
-                      size={upadding * 1.5}
-                      width={0}
-                      color='white'
-                      borderWidth={1}
-                      fontSize={2}
-                      iconSize={3}
-                      light
-                    />
-                  </View>
-                </FlipCard>
-              </TouchableHighlight>
-              <View style={{ flex: 1 }} />
-            </View>
-            <View style={styles.titledescontainer}>
+            }}
+            underlayColor={null}>
+            <View style={{flexDirection: 'row'}}>
               <View
-                style={{ flexDirection: 'row', marginBottom: upadding / 2 }}
-              >
-                <View
-                  style={{
-                    flex: 6,
-                    flexDirection: 'column'
-                  }}
-                >
-                  {this.showtitleornot()}
-                  {this.showdescriptionornot()}
-                </View>
-                <View style={{ flex: 1, paddingTop: upadding }}>
-                  <Text
-                    style={{
-                      fontSize: upadding,
-                      fontWeight: 'bold',
-                      color: 'black'
-                    }}
-                  >
-                    {this.returndatabaseDate(this.props.items.task_createdAt)}
-                  </Text>
-                </View>
+                style={{
+                  flex: 0.9,
+                  paddingTop: (upadding / 2) * 1.25,
+                  paddingLeft:
+                    upadding / 1.5 + upadding / 1.5 - this.state.paddingright,
+                  paddingRight: upadding,
+                  paddingBottom: upadding / 2,
+                }}>
+                <TouchableHighlight
+                  underlayColor={null}
+                  style={{flex: 1}}
+                  onPress={() => {
+                    if (!this.props.Searchtask) {
+                      this.changecolor();
+                    }
+                  }}>
+                  <FlipCard
+                    flip={this.state.isFlipped}
+                    clickable={false}
+                    friction={100}
+                    perspective={5000}
+                    flipHorizontal={true}
+                    flipVertical={false}>
+                    {/* Face Side */}
+                    <View
+                      style={[
+                        styles.flipcoinstyle,
+                        {
+                          backgroundColor: `${
+                            colorArray[this.props.index % colorArray.length]
+                          }99`,
+                        },
+                      ]}>
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontFamily: 'cursive',
+                          fontSize: upadding * 1.6,
+                        }}>{`${
+                        this.props.items.task_title.length > 0
+                          ? this.props.items.task_title[0]
+                          : ''
+                      }`}</Text>
+                    </View>
+                    {/* BackSide */}
+                    <View
+                      style={[
+                        styles.flipcoinstyle,
+                        {backgroundColor: '#2B65EC'},
+                      ]}>
+                      <MaterialIcons
+                        name="check"
+                        size={upadding * 1.5}
+                        width={0}
+                        color="white"
+                        borderWidth={1}
+                        fontSize={2}
+                        iconSize={3}
+                        light
+                      />
+                    </View>
+                  </FlipCard>
+                </TouchableHighlight>
+                <View style={{flex: 1}} />
               </View>
-              {this.returnDeadlineorCompleted()}
+              <View style={styles.titledescontainer}>
+                <View
+                  style={{flexDirection: 'row', marginBottom: upadding / 2}}>
+                  <View
+                    style={{
+                      flex: 6,
+                      flexDirection: 'column',
+                    }}>
+                    {this.showtitleornot()}
+                    {this.showdescriptionornot()}
+                  </View>
+                  <View style={{flex: 1, paddingTop: upadding}}>
+                    <Text
+                      style={{
+                        fontSize: upadding,
+                        fontWeight: 'bold',
+                        color: 'black',
+                      }}>
+                      {this.returndatabaseDate(this.props.items.task_createdAt)}
+                    </Text>
+                  </View>
+                </View>
+                {this.returnDeadlineorCompleted()}
+              </View>
             </View>
-          </View>
             {/* </View> */}
-            </AnimateTouchablehightlight>
-          </Animated.View>
+          </AnimateTouchablehightlight>
+        </Animated.View>
       </View>
     );
   }
@@ -691,35 +689,35 @@ const styles = StyleSheet.create({
     width: upadding * 2.5,
     borderRadius: upadding * 1.25,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   titlestyle: {
     fontSize: upadding * 1.4,
     fontWeight: 'bold',
-    color: 'black'
+    color: 'black',
   },
   descriptionstyle: {
-    fontSize: upadding*1.2,
-    color: 'black'
+    fontSize: upadding * 1.2,
+    color: 'black',
   },
   titledescontainer: {
     flex: 9,
-    paddingTop: upadding/2,
-    paddingBottom: upadding/2,
-    flexDirection: 'column'
+    paddingTop: upadding / 2,
+    paddingBottom: upadding / 2,
+    flexDirection: 'column',
   },
 
   dedlineContainderstyle: {
     backgroundColor: `#8D8D8C33`,
     flexDirection: 'row',
     height: upadding * 2.5,
-    borderRadius: upadding / 4
+    borderRadius: upadding / 4,
   },
   deadlineinsideContainer: {
     alignSelf: 'center',
     paddingLeft: upadding * 0.6,
-    paddingRight: upadding * 0.8
-  }
+    paddingRight: upadding * 0.8,
+  },
 });
 
 export default Taskeach;

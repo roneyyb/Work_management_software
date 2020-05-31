@@ -1,7 +1,8 @@
 import axios from 'axios';
 import SQLite from "react-native-sqlite-storage";;
+import url from '../../constants/Server';
 const db = SQLite.openDatabase('multiutilityapp.db');
-const url = 'http://13.234.204.70:3000';
+
 
 function Updatetaskindatabase(userid, callback) {
   axios({

@@ -8,8 +8,8 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import BasicInfo from './BasicInfo';
 import uuidv1 from 'uuid/v1';
 import AppConstant from '../../constants/AppConstant';
-import { connect } from 'react-redux';
-import {setupUserOnStart } from '../../actions/UserActions';
+import {connect} from 'react-redux';
+import {setupUserOnStart} from '../../actions/UserActions';
 let deviceWidth = Dimensions.get('window').width;
 
 class Signup extends React.Component {
@@ -20,14 +20,13 @@ class Signup extends React.Component {
     this.state = {
       isLoading: false,
       alertVisible: false,
-      alertText: ''
+      alertText: '',
     };
 
     // this.onChangeField = this.onChangeField.bind(this);
     this.showAlert = this.showAlert.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
-
 
   showAlert(message) {
     this.setState({
@@ -39,7 +38,7 @@ class Signup extends React.Component {
   handleAlertConfirm() {
     this.setState({
       alertVisible: false,
-      alertText:''
+      alertText: '',
     });
   }
 
@@ -59,27 +58,27 @@ class Signup extends React.Component {
     this.showAlert(message);
   }
 
-  onSubmit = (data) => {
+  onSubmit = data => {
     console.log(data, `${server}/signup`);
-   this.setState({isLoading:true});
-     const uuid = uuidv1();
-   let config = {
-     headers: {
-     'defaultworkid':uuid,
-     'date':''
-     }
-   }
+    this.setState({isLoading: true});
+    const uuid = uuidv1();
+    let config = {
+      headers: {
+        defaultworkid: uuid,
+        date: '',
+      },
+    };
     axios
-      .post(`${server}/signup`, data,config)
+      .post(`${server}/signup`, data, config)
       .then(response => {
-        const { navigation, setupUserOnStart} = this.props;
+        const {navigation, setupUserOnStart} = this.props;
         let responseJson = response.data;
-        this.setState({isLoading:false});
+        this.setState({isLoading: false});
         setupUserOnStart(responseJson);
-        navigation.navigate('settingupdatabase',{'signup':true});
+        navigation.navigate('settingupdatabase', {signup: true});
       })
       .catch(error => {
-        console.log("error =>",error);
+        console.log('error =>', error);
         this.handleError(error);
       });
   };
@@ -88,7 +87,7 @@ class Signup extends React.Component {
     const {navigation} = this.props;
 
     return (
-        <Header type={'login'} navigation={navigation} >
+      <Header type={'login'} navigation={navigation}>
         <Spinner visible={this.state.isLoading} />
         <View style={{paddingHorizontal: 30, marginVertical: 10}}>
           <Text style={styles.headingWhiteBox}>Create your account</Text>
@@ -117,7 +116,6 @@ class Signup extends React.Component {
           overlayStyle={{
             backgroundColor: 'rgba(0,0,0,0.7)',
           }}
-          
           onConfirmPressed={() => {
             this.handleAlertConfirm();
           }}
@@ -127,11 +125,14 @@ class Signup extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {};
-}
+};
 
-export default connect(mapStateToProps,{setupUserOnStart})(Signup);
+export default connect(
+  mapStateToProps,
+  {setupUserOnStart},
+)(Signup);
 
 export const styles = StyleSheet.create({
   container: {

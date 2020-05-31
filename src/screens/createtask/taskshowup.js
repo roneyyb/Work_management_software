@@ -1,12 +1,12 @@
 /* eslint-disable react/sort-comp */
 /* eslint-disable no-undef */
 /* eslint-disable no-underscore-dangle */
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import SQLite from "react-native-sqlite-storage";;
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import SQLite from 'react-native-sqlite-storage';
 import Modal from 'react-native-modal';
 import PushNotification from 'react-native-push-notification';
-import PushNotificationAndroid from  'react-native-push-notification';
+import PushNotificationAndroid from 'react-native-push-notification';
 import {
   View,
   FlatList,
@@ -15,9 +15,9 @@ import {
   Animated,
   TouchableHighlight,
   Dimensions,
-  DeviceEventEmitter
+  DeviceEventEmitter,
 } from 'react-native';
-import { updateTask } from '../../database/updatequeries';
+import {updateTask} from '../../database/updatequeries';
 
 import Modal1 from './components/modal1';
 import Modal2 from './components/modal2';
@@ -26,7 +26,7 @@ import Footer from './components/footer';
 import Header from './header';
 import Taskeach from './eachtask';
 import Logout from '../../database/droptable';
-import { Give_all_task } from '../../database/select';
+import {Give_all_task} from '../../database/select';
 import Datetimemodal from './components/datetimemodal';
 import SearchTask from './searchtask';
 import {
@@ -37,12 +37,12 @@ import {
   Searchtask,
   setUpdatelist,
   undoType,
-  setloginfalse
+  setloginfalse,
 } from '../../actions/taskshowaction';
 import localNotication from './components/localNotification';
-import { cleareverything } from '../../actions/cleareverythingaction';
-import { deletework } from '../../database/deletequeries';
-import { setworkdataaftercloudupdate } from '../../actions/worklistaction';
+import {cleareverything} from '../../actions/cleareverythingaction';
+import {deletework} from '../../database/deletequeries';
+import {setworkdataaftercloudupdate} from '../../actions/worklistaction';
 import Updatedatatocloud from '../../syncronusupdate/updatedatatocloud';
 const whichday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'];
 const monthNames = [
@@ -57,7 +57,7 @@ const monthNames = [
   'Sep',
   'Oct',
   'Nov',
-  'Dec'
+  'Dec',
 ];
 
 const db = SQLite.openDatabase('multiutilityapp.db');
@@ -65,12 +65,13 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
-const Animatedtouchablehighlight = Animated.createAnimatedComponent(TouchableHighlight);
+const Animatedtouchablehighlight = Animated.createAnimatedComponent(
+  TouchableHighlight,
+);
 
 class Taskshowup extends Component {
-
   constructor(props) {
-   // PushNotification.cancelAllLocalNotifications()
+    // PushNotification.cancelAllLocalNotifications()
     super(props);
     this.child = this.child;
     this.props.clearAll();
@@ -83,26 +84,24 @@ class Taskshowup extends Component {
       visibleModal: null,
       visibleWorkModal: false,
       opacity: new Animated.Value(0),
-      selected_task:'',
+      selected_task: '',
       task_search_enable: false,
-      scrollenable :true,
+      scrollenable: true,
       visibledatetimeModal: true,
-      deleteids:[]
+      deleteids: [],
     };
   }
 
-  
   componentDidMount() {
     this.props.navigation.setParams({
-      onNavigateBack: this.handleRefresh.bind(this)
+      onNavigateBack: this.handleRefresh.bind(this),
     });
-   Updatedatatocloud(this.props.userid,this.updatinglocalworklist,this.handleRefresh);
-    this.props.navigation.setParams({ title: this.props.title });
+    //Updatedatatocloud(this.props.userid,this.updatinglocalworklist,this.handleRefresh);
+    this.props.navigation.setParams({title: this.props.title});
   }
-  
+
   shouldComponentUpdate(nextProps) {
-   
-   if (nextProps.updatetotaldatalist) {
+    if (nextProps.updatetotaldatalist) {
       this.totaldata = nextProps.data;
       nextProps.setUpdatelist();
     }
@@ -112,7 +111,7 @@ class Taskshowup extends Component {
       nextProps.Give_all_task(
         nextProps.completed,
         nextProps.workid,
-        nextProps.sortBy
+        nextProps.sortBy,
       );
     }
 
@@ -121,24 +120,27 @@ class Taskshowup extends Component {
   componentWillUnmount() {
     this.props.clearAll();
   }
- 
+
   onchangetext(text) {
     this.props.onChangeTexts(text);
   }
-updatinglocalworklist = (worklistbackend) => {
-  this.props.setworkdataaftercloudupdate(this.props.worklist,worklistbackend);
-}
+  updatinglocalworklist = worklistbackend => {
+    this.props.setworkdataaftercloudupdate(
+      this.props.worklist,
+      worklistbackend,
+    );
+  };
 
   handleRefresh = () => {
     this.props.navigation.setParams({
-      onNavigateBack: this.handleRefresh.bind(this)
+      onNavigateBack: this.handleRefresh.bind(this),
     });
-    this.props.navigation.setParams({ title: this.props.title });
+    this.props.navigation.setParams({title: this.props.title});
 
     this.props.Give_all_task(
       this.props.completed,
       this.props.workid,
-      this.props.sortBy
+      this.props.sortBy,
     );
   };
 
@@ -148,19 +150,29 @@ updatinglocalworklist = (worklistbackend) => {
         height: 1,
         width: '86%',
         backgroundColor: '#CED0CE',
-        marginLeft: '14%'
+        marginLeft: '14%',
       }}
     />
   );
 
   renderHeader = () => (
-    <View style={{flexDirection: 'row', justifyContent:'center', height: 40}}>
-      <View style={{elevation:5, flexDirection:'row', backgroundColor: 'white', backgroundColor:'white', height:30, alignItems:'center', justifyContent:'center', borderRadius: 8 }}>
-      <Text style={{color:'#8D8D8C', padding:10}}>
-      {`${this.props.title.toUpperCase()}`}
-      </Text>
+    <View style={{flexDirection: 'row', justifyContent: 'center', height: 40}}>
+      <View
+        style={{
+          elevation: 5,
+          flexDirection: 'row',
+          backgroundColor: 'white',
+          backgroundColor: 'white',
+          height: 30,
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 8,
+        }}>
+        <Text style={{color: '#8D8D8C', padding: 10}}>
+          {`${this.props.title.toUpperCase()}`}
+        </Text>
       </View>
-      </View>
+    </View>
   );
 
   returnflatlistdata() {
@@ -172,7 +184,7 @@ updatinglocalworklist = (worklistbackend) => {
   }
 
   forceRerender = () => {
-    this.setState({ state: this.state });
+    this.setState({state: this.state});
   };
 
   deleted = () => {
@@ -180,7 +192,7 @@ updatinglocalworklist = (worklistbackend) => {
     this.props.Give_all_task(
       this.props.completed,
       this.props.workid,
-      this.props.sortBy
+      this.props.sortBy,
     );
   };
   setColordefault = () => {
@@ -192,97 +204,122 @@ updatinglocalworklist = (worklistbackend) => {
   handleViewRef = ref => (this.position = ref);
 
   onBackdropPress = state => {
-    this.setState({ visibleModal: state });
+    this.setState({visibleModal: state});
   };
   onCancelPressDeleteModal = state => {
-    this.setState({ visibleWorkModal: state });
+    this.setState({visibleWorkModal: state});
   };
 
   ClearAllState() {
     this.props.cleareverything();
   }
 
-   a = '';
+  a = '';
 
-  waitUndo = (deleteids,type) => {
-    const workid = {workid:this.props.workid, workidbackend:this.props.workidbackend};
-    this.a = setTimeout(() => { this.resetUndo(deleteids,type,workid); }, 4000);
-  }
-  
-  
+  waitUndo = (deleteids, type) => {
+    const workid = {
+      workid: this.props.workid,
+      workidbackend: this.props.workidbackend,
+    };
+    this.a = setTimeout(() => {
+      this.resetUndo(deleteids, type, workid);
+    }, 4000);
+  };
 
-  resetUndo = (deleteids,undotype,workid) => {
+  resetUndo = (deleteids, undotype, workid) => {
     Animated.timing(this.state.opacity, {
       toValue: 0,
-      duration: 1
+      duration: 1,
     }).start();
     this.undoinuse--;
     const todaydate = new Date();
-    const s = "sdf";
-   if (undotype === 'complete' || undotype === 'incomplete')
-   {
-    db.transaction(tx => {
-      if(undotype === 'complete')
-      {
-        var completed = 1;
-      }
-      else 
-      var completed = 0;
+    const s = 'sdf';
+    if (undotype === 'complete' || undotype === 'incomplete') {
+      db.transaction(
+        tx => {
+          if (undotype === 'complete') {
+            var completed = 1;
+          } else var completed = 0;
 
-      deleteids.forEach(taskid => {
-        tx.executeSql('update work_tasks set task_completed=?, task_completedAt=? where taskid=?',[completed,todaydate.toString(),taskid.taskid], () => {
-          tx.executeSql('Insert into TASK_DATA_UPDATE(update_type, workid, taskid) values(?,?,?)',['UPDATE',workid.workid, taskid.taskid],() => {
-          }, (error) => {
+          deleteids.forEach(taskid => {
+            tx.executeSql(
+              'update work_tasks set task_completed=?, task_completedAt=? where taskid=?',
+              [completed, todaydate.toString(), taskid.taskid],
+              () => {
+                tx.executeSql(
+                  'Insert into TASK_DATA_UPDATE(update_type, workid, taskid) values(?,?,?)',
+                  ['UPDATE', workid.workid, taskid.taskid],
+                  () => {},
+                  error => {},
+                );
+              },
+              (_, error) =>
+                Alert.alert('problem in deleting ids from database', error),
+            );
           });
-        }, (_, error) => (
-           Alert.alert('problem in deleting ids from database', error)
-        ));
-    });
-  }, (error) => {}, () => {});
-} else {
-  db.transaction(tx => {
-    deleteids.forEach(taskid => {
-      tx.executeSql('delete from work_tasks where taskid=?', [taskid.taskid], () => {
-        tx.executeSql('Insert into TASK_DATA_UPDATE(update_type, workid, taskid, task_pehchan) values(?,?,?,?)',['DELETE',workid.workidbackend, taskid.taskid_backend, taskid.taskid],() => {
-        }, (error) => {
+        },
+        error => {},
+        () => {},
+      );
+    } else {
+      db.transaction(tx => {
+        deleteids.forEach(taskid => {
+          tx.executeSql(
+            'delete from work_tasks where taskid=?',
+            [taskid.taskid],
+            () => {
+              tx.executeSql(
+                'Insert into TASK_DATA_UPDATE(update_type, workid, taskid, task_pehchan) values(?,?,?,?)',
+                [
+                  'DELETE',
+                  workid.workidbackend,
+                  taskid.taskid_backend,
+                  taskid.taskid,
+                ],
+                () => {},
+                error => {},
+              );
+            },
+            (_, error) =>
+              Alert.alert('problem in deleting ids from database', error),
+          );
         });
-      }, (_, error) => (
-         Alert.alert('problem in deleting ids from database', error)
-      ));
-  });
-});
- }
-}
+      });
+    }
+  };
 
-  deleteMultipletask = (deleteids,type) => {
+  deleteMultipletask = (deleteids, type) => {
     this.deleteid = [];
-    this.callUndo(deleteids,type);
-  }
-   
-  undoalreadyinuse = async (deleteids,type) => {
+    this.callUndo(deleteids, type);
+  };
+
+  undoalreadyinuse = async (deleteids, type) => {
     await clearTimeout(this.a);
-    const workid = {workid:this.props.workid, workidbackend:this.props.workid_backend};
-    this.resetUndo(this.state.deleteid,this.state.undotype,workid);
-    this.setState({deleteid:deleteids, undotype:type});
-    Animated.timing(this.state.opacity, { 
+    const workid = {
+      workid: this.props.workid,
+      workidbackend: this.props.workid_backend,
+    };
+    this.resetUndo(this.state.deleteid, this.state.undotype, workid);
+    this.setState({deleteid: deleteids, undotype: type});
+    Animated.timing(this.state.opacity, {
       toValue: 1,
-      duration: 500
-    }).start(this.waitUndo(deleteids,type));
-  }
-  callUndo = (deleteids,type) => {
-    if(this.undoinuse ===0){
-      Animated.timing(this.state.opacity, { 
+      duration: 500,
+    }).start(this.waitUndo(deleteids, type));
+  };
+  callUndo = (deleteids, type) => {
+    if (this.undoinuse === 0) {
+      Animated.timing(this.state.opacity, {
         toValue: 1,
-        duration: 500
-      }).start(this.waitUndo(deleteids,type));
-      this.setState({deleteid: deleteids, undotype:type});
+        duration: 500,
+      }).start(this.waitUndo(deleteids, type));
+      this.setState({deleteid: deleteids, undotype: type});
       this.undoinuse++;
-     } else {
-       this.undoalreadyinuse(deleteids,type);
-       this.undoinuse++;
-     }
-  }
- 
+    } else {
+      this.undoalreadyinuse(deleteids, type);
+      this.undoinuse++;
+    }
+  };
+
   deletingWorkconfirmation = () => {
     this.props.deletework(
       this.props.workid,
@@ -290,121 +327,124 @@ updatinglocalworklist = (worklistbackend) => {
       this.props.sortBy,
       this.props.defaultworkid,
       this.props.worklist,
-      this.props.workidbackend
+      this.props.workidbackend,
     );
-  }
+  };
 
   renderFooter = () => {
-    return (
-      <View style={{height: 70, width: SCREEN_WIDTH}}/>
-    );
-  }
+    return <View style={{height: 70, width: SCREEN_WIDTH}} />;
+  };
 
-  changescroll = (change) => {
-    this._eachtask.setNativeProps({ scrollEnabled: change});
-  }
+  changescroll = change => {
+    this._eachtask.setNativeProps({scrollEnabled: change});
+  };
 
-  settingNotificationmodal = (visibledatetimeModal,selected_task) => {
-    this.setState({visibledatetimeModal,selected_task});
-  }
+  settingNotificationmodal = (visibledatetimeModal, selected_task) => {
+    this.setState({visibledatetimeModal, selected_task});
+  };
 
-
-  onChangeDeadline = (dates, time, visibledatetimeModal, notificationid ) => {
+  onChangeDeadline = (dates, time, visibledatetimeModal, notificationid) => {
     const date = new Date(dates);
     const day = whichday[date.getDay()];
     const month = monthNames[date.getMonth()];
     const year = date.getFullYear();
-    if(time !== 'Select Deadline Time') {
-    if(year > (new Date()).getFullYear())
-    {
-      var deadline = `${day}, ${date.getDate()} ${month}, ${date.getFullYear()}, ${time}`; 
+    if (time !== 'Select Deadline Time') {
+      if (year > new Date().getFullYear()) {
+        var deadline = `${day}, ${date.getDate()} ${month}, ${date.getFullYear()}, ${time}`;
+      } else {
+        var deadline = `${day}, ${date.getDate()} ${month}, ${time}`;
+      }
+    } else {
+      if (year > new Date().getFullYear()) {
+        var deadline = `${day}, ${date.getDate()} ${month}, ${date.getFullYear()}`;
+      } else {
+        var deadline = `${day}, ${date.getDate()} ${month}`;
+      }
     }
-    else
-    {
-      var deadline = `${day}, ${date.getDate()} ${month}, ${time}`; 
-    }
-  } else {
-    if(year > (new Date()).getFullYear())
-    {
-      var deadline = `${day}, ${date.getDate()} ${month}, ${date.getFullYear()}`; 
-    }
-    else
-    {
-      var deadline = `${day}, ${date.getDate()} ${month}`; 
-    }
-  }
-    
-    
-    PushNotification.cancelLocalNotifications({id:this.state.selected_task.task_notificationid});
+
+    PushNotification.cancelLocalNotifications({
+      id: this.state.selected_task.task_notificationid,
+    });
     const {
       task_title: title,
       task_description: description,
       workid: workid,
-      taskid:taskid,
+      taskid: taskid,
       task_reminder: reminder,
       task_updatedAt: updatedAt,
-      workid_backend: workid_backend
+      workid_backend: workid_backend,
     } = this.state.selected_task;
 
-    this.props.updateTask({title,description,workid,taskid, reminder,updatedAt,workid_backend,notificationid, deadline},this.handleRefresh);
-    this.setState({visibledatetimeModal,selected_task:''});
-  }
-  
+    this.props.updateTask(
+      {
+        title,
+        description,
+        workid,
+        taskid,
+        reminder,
+        updatedAt,
+        workid_backend,
+        notificationid,
+        deadline,
+      },
+      this.handleRefresh,
+    );
+    this.setState({visibledatetimeModal, selected_task: ''});
+  };
 
-  ondate = (value) => {
-    this.setState({ visibledatetimeModal: value});
+  ondate = value => {
+    this.setState({visibledatetimeModal: value});
+  };
+
+  settaskSearch = value => {
+    this.setState({task_search_enable: value});
+  };
+
+  undoaction = async () => {
+    if (this.state.task_search_enable) {
+      this.searchtask.undoaction();
     }
+    await clearTimeout(this.a);
+    await Animated.timing(this.state.opacity, {
+      toValue: 0,
+      duration: 100,
+    }).start();
+    this.undoinuse = 0;
+    this.setState({deleteids: []});
+    await this.props.Give_all_task(
+      this.props.completed,
+      this.props.workid,
+      this.props.sortBy,
+    );
+  };
+  setfootertouch = value => {
+    this.footer.setpointer(value);
+  };
 
-    settaskSearch = (value) => {
-      this.setState({task_search_enable:value});
-    }
-
-    undoaction = async () => {
-      if(this.state.task_search_enable) {
-        this.searchtask.undoaction();
-      }
-      await clearTimeout(this.a);
-      await Animated.timing(this.state.opacity, {
-        toValue: 0,
-        duration: 100
-      }).start();
-      this.undoinuse = 0;
-      this.setState({deleteids:[]});
-      await this.props.Give_all_task(
-        this.props.completed,
-        this.props.workid,
-        this.props.sortBy
-      );            
-    }
-     setfootertouch = (value) => {
-       this.footer.setpointer(value);
-     }
-
-     loggingout = () => {
-      Updatedatatocloud(this.props.userid);
-      setTimeout(() => {
-        Logout();
-      }, 5000);
-     }
+  loggingout = () => {
+    Updatedatatocloud(this.props.userid);
+    setTimeout(() => {
+      Logout();
+    }, 5000);
+  };
 
   render() {
-    const { navigation } = this.props;
+    const {navigation} = this.props;
     const undosize = this.state.opacity.interpolate({
       inputRange: [0, 1],
-      outputRange: [0, 1]
+      outputRange: [0, 1],
     });
 
     return (
-      <View       
+      <View
         style={{
           flex: 1,
-          backgroundColor:'white',
+          backgroundColor: 'white',
         }}
-        accessible
-      >
+        accessible>
         <AnimatedFlatList
           data={this.returnflatlistdata()}
-          renderItem={({ item, index }) => (
+          renderItem={({item, index}) => (
             <Taskeach
               callUndo={this.callUndo}
               settingNotificationmodal={this.settingNotificationmodal}
@@ -428,8 +468,11 @@ updatinglocalworklist = (worklistbackend) => {
               changescroll={this.changescroll}
             />
           )}
-          ref={component => this._eachtask = component}
-          contentContainerStyle={{ paddingTop: upadding /2, paddingTop:upadding*4.5 }}
+          ref={component => (this._eachtask = component)}
+          contentContainerStyle={{
+            paddingTop: upadding / 2,
+            paddingTop: upadding * 4.5,
+          }}
           scrollEnabled
           keyExtractor={item => item.taskid}
           ListFooterComponent={this.renderFooter}
@@ -438,92 +481,110 @@ updatinglocalworklist = (worklistbackend) => {
           onEndReached={this.handleLoadMore}
           onEndReachedThreshold={6}
         />
- 
+
         <Footer
-          ref = {(refer) =>  {this.footer=refer}}
+          ref={refer => {
+            this.footer = refer;
+          }}
           navigation={this.props.navigation}
           callUndo={this.props.callUndo}
           completed={this.props.completed}
           onBackdropPress={this.onBackdropPress}
         />
-       <Header
+        <Header
           ref={childe => {
             this.child = childe;
           }}
-              setpointer={this.setfootertouch}
-              callUndo={this.callUndo}
-              settaskSearch={this.settaskSearch}
-              sortBy={this.props.sortBy}
-              Makeremoterequest={this.props.Give_all_task}
-              workid={this.props.workid}
-              settingNotificationmodal={this.settingNotificationmodal}
-              navigation={navigation}
-              handleRefresh={this.handleRefresh.bind(this)}
-              completed={this.props.completed}
-              userid={this.props.workid}
-              deleteid={this.deleteid}
-              tasklist={this.props.data}
-              deleteMultipletask={this.deleteMultipletask}
-              undoType={this.props.undoType}
-              deleted={this.deleted.bind(this)}
-              work={this.props.title}
-              setColordefault={this.setColordefault}
-              cleareverything={this.ClearAllState.bind(this)}
+          setpointer={this.setfootertouch}
+          callUndo={this.callUndo}
+          settaskSearch={this.settaskSearch}
+          sortBy={this.props.sortBy}
+          Makeremoterequest={this.props.Give_all_task}
+          workid={this.props.workid}
+          settingNotificationmodal={this.settingNotificationmodal}
+          navigation={navigation}
+          handleRefresh={this.handleRefresh.bind(this)}
+          completed={this.props.completed}
+          userid={this.props.workid}
+          deleteid={this.deleteid}
+          tasklist={this.props.data}
+          deleteMultipletask={this.deleteMultipletask}
+          undoType={this.props.undoType}
+          deleted={this.deleted.bind(this)}
+          work={this.props.title}
+          setColordefault={this.setColordefault}
+          cleareverything={this.ClearAllState.bind(this)}
         />
-        {this.state.task_search_enable? <SearchTask
-        ref = {(searchtask) => {this.searchtask = searchtask}}
-         callUndo={this.callUndo}
-         settaskSearch={this.settaskSearch}
-         settingNotificationmodal={this.settingNotificationmodal}
-      completed={this.props.completed}
-      sortBy={this.props.sortBy}
-      Makeremoterequest={this.props.Give_all_task}
-      workid={this.props.workid}
-      work={this.props.title}
-      navigation={navigation}
-      deleteid={this.deleteid}
-      tasklist={this.props.data}
-      handleRefresh={this.handleRefresh.bind(this)}
-      undoType={this.props.undoType}
-      changescroll={this.changescroll}
-      />:<View/>}
+        {this.state.task_search_enable ? (
+          <SearchTask
+            ref={searchtask => {
+              this.searchtask = searchtask;
+            }}
+            callUndo={this.callUndo}
+            settaskSearch={this.settaskSearch}
+            settingNotificationmodal={this.settingNotificationmodal}
+            completed={this.props.completed}
+            sortBy={this.props.sortBy}
+            Makeremoterequest={this.props.Give_all_task}
+            workid={this.props.workid}
+            work={this.props.title}
+            navigation={navigation}
+            deleteid={this.deleteid}
+            tasklist={this.props.data}
+            handleRefresh={this.handleRefresh.bind(this)}
+            undoType={this.props.undoType}
+            changescroll={this.changescroll}
+          />
+        ) : (
+          <View />
+        )}
         <Animated.View
           style={{
-              position: 'absolute',
-              bottom: upadding * 9,
-              alignSelf: 'center',
-              opacity: this.state.opacity,
-              padding:upadding * 1.5,
-              height: upadding * 4,
-              width: SCREEN_WIDTH - upadding * 1.5,
-              borderRadius: upadding/2 ,
-              elevation: upadding * 2,
-              backgroundColor: 'black',
-              flexDirection: 'row',
-              justifyContent:'space-between',
-              alignItems: 'center'
-          }}
-        >
-            <Animated.Text  
-            style={{ 
-              fontSize: upadding * 1.2, opacity: undosize , color: 'white' }}
-            >
-            {`${this.props.count} ${this.props.undoTypetitle} `}  
-            </Animated.Text>
-            <Animatedtouchablehighlight
+            position: 'absolute',
+            bottom: upadding * 9,
+            alignSelf: 'center',
+            opacity: this.state.opacity,
+            padding: upadding * 1.5,
+            height: upadding * 4,
+            width: SCREEN_WIDTH - upadding * 1.5,
+            borderRadius: upadding / 2,
+            elevation: upadding * 2,
+            backgroundColor: 'black',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <Animated.Text
+            style={{
+              fontSize: upadding * 1.2,
+              opacity: undosize,
+              color: 'white',
+            }}>
+            {`${this.props.count} ${this.props.undoTypetitle} `}
+          </Animated.Text>
+          <Animatedtouchablehighlight
+            style={{
+              elevation: 24,
+              height: upadding * 3,
+              width: upadding * 4,
+              borderRadius: upadding / 2,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            underlayColor={'#87cefa33'}
+            onPress={() => {
+              this.undoaction();
+            }}>
+            <Animated.Text
               style={{
-                elevation:24,
-                height: upadding *3,
-                width: upadding * 4,
-                borderRadius: upadding / 2,
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-              underlayColor={'#87cefa33'}
-                onPress={() => {this.undoaction()}}
-            >
-              <Animated.Text style={{ fontSize: upadding * 1.3, opacity: undosize, fontWeight: 'bold', color: '#FFA500' }}>{'Undo'}</Animated.Text>
-            </Animatedtouchablehighlight>
+                fontSize: upadding * 1.3,
+                opacity: undosize,
+                fontWeight: 'bold',
+                color: '#FFA500',
+              }}>
+              {'Undo'}
+            </Animated.Text>
+          </Animatedtouchablehighlight>
         </Animated.View>
         <Modal
           isVisible={this.state.visibleModal === 1}
@@ -531,8 +592,11 @@ updatinglocalworklist = (worklistbackend) => {
           onBackdropPress={() => {
             this.onBackdropPress(null);
           }}
-          style={{ justifyContent: 'flex-end', margin: 0, borderRadius: upadding * 1.5 }}
-        >
+          style={{
+            justifyContent: 'flex-end',
+            margin: 0,
+            borderRadius: upadding * 1.5,
+          }}>
           <Modal2
             cleareverything={this.props.cleareverything}
             navigation={this.props.navigation}
@@ -542,25 +606,26 @@ updatinglocalworklist = (worklistbackend) => {
           />
         </Modal>
         <DeleteModal
-       visibleornot={this.state.visibleWorkModal}
-       cancelFunction={this.onCancelPressDeleteModal}
-       actiononbuttonpress={this.deletingWorkconfirmation}
-      title={'Deleting the work'}
-      message= {'This action cannot be undo. If you delete the work all your related task will be deleted.'}
-      Rightbuttontitle={'Cancel'}
-      Leftbuttontitle={'Delete'}
+          visibleornot={this.state.visibleWorkModal}
+          cancelFunction={this.onCancelPressDeleteModal}
+          actiononbuttonpress={this.deletingWorkconfirmation}
+          title={'Deleting the work'}
+          message={
+            'This action cannot be undo. If you delete the work all your related task will be deleted.'
+          }
+          Rightbuttontitle={'Cancel'}
+          Leftbuttontitle={'Delete'}
         />
-         <Modal
+        <Modal
           isVisible={this.state.visibledatetimeModal === 1}
-          useNativeDriver
-        >
-        <Datetimemodal
-          onChangeDeadline={this.onChangeDeadline}
-          setOpacity={this.setOpacity}
-          onDate={this.ondate}
-          title={this.state.selected_task.task_title}
-          description={this.state.selected_task.task_description}
-        />
+          useNativeDriver>
+          <Datetimemodal
+            onChangeDeadline={this.onChangeDeadline}
+            setOpacity={this.setOpacity}
+            onDate={this.ondate}
+            title={this.state.selected_task.task_title}
+            description={this.state.selected_task.task_description}
+          />
         </Modal>
         <Modal
           isVisible={this.state.visibleModal === 2}
@@ -568,8 +633,7 @@ updatinglocalworklist = (worklistbackend) => {
           onBackdropPress={() => {
             this.onBackdropPress(null);
           }}
-          style={{ justifyContent: 'flex-end', margin: 0 }}
-        >
+          style={{justifyContent: 'flex-end', margin: 0}}>
           <Modal1
             workid={this.props.workid}
             userid={this.props.userid}
@@ -586,14 +650,13 @@ updatinglocalworklist = (worklistbackend) => {
             onBackdropPress={this.onBackdropPress}
           />
         </Modal>
-      
       </View>
     );
   }
 }
 
 const mapStatetoprops = state => {
-
+  console.log(state);
   return {
     loading: state.show.loading,
     refreshing: state.show.refreshing,
@@ -610,26 +673,29 @@ const mapStatetoprops = state => {
     workid: state.worklist.selectedwork.workid,
     title: state.worklist.selectedwork.work_title,
     workidbackend: state.worklist.selectedwork.workid_backend,
-    email:state.user.email,
-    userid:state.user._id,
+    email: state.user.email,
+    userid: state.user._id,
     undoTypetitle: state.show.undotype,
     count: state.show.count,
-    defaultworkid:state.user.work._id
+    defaultworkid: state.user.work._id,
   };
 };
 
-export default connect(mapStatetoprops, {
-  Give_all_task,
-  settasklisttototaldata,
-  undoType,
-  Refreshing,
-  onChangeTexts,
-  updateTask,
-  setworkdataaftercloudupdate,
-  clearAll,
-  deletework,
-  Searchtask,
-  setUpdatelist,
-  cleareverything,
-  setloginfalse
-})(Taskshowup);
+export default connect(
+  mapStatetoprops,
+  {
+    Give_all_task,
+    settasklisttototaldata,
+    undoType,
+    Refreshing,
+    onChangeTexts,
+    updateTask,
+    setworkdataaftercloudupdate,
+    clearAll,
+    deletework,
+    Searchtask,
+    setUpdatelist,
+    cleareverything,
+    setloginfalse,
+  },
+)(Taskshowup);
