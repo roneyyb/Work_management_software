@@ -1,10 +1,3 @@
-//login user
-export const EMAIL_CHANGED = 'email_changed';
-export const PASSWORD_CHANGED = 'password_changed';
-export const LOGIN_USER_SUCCESS = 'login_user_success';
-export const LOGIN_USER_FAIL = 'login_user_fail';
-export const LOGIN_LOADING = 'login_loading';
-
 //signup
 export const SET_STATE = 'set_state';
 export const CLEAR_ALL_LOGIN = 'clear_all_login';
@@ -28,24 +21,16 @@ export const WORK_UPDATE_SUCCESS = 'work_update_success';
 export const WORK_UPDATE_FAIL = 'work_update_fail';
 export const SELECTED_WORK_UPDATE = 'selected_work_update';
 export const SET_SELECTEDWORK_DATA = 'set_selectedwork_data';
-export const SET_WORKLIST_AFTER_CLOUD_DATA_UPDATION = 'set_worklist_after_cloud_data_updation';
+export const SET_WORKLIST_AFTER_CLOUD_DATA_UPDATION =
+  'set_worklist_after_cloud_data_updation';
 
 //Task create actions
-export const TITLE_CHANGE = 'title_change';
-export const DESCRIPTION_CHANGE = 'description_change';
-export const CREATE_SUCCESS = 'create_success';
-export const CREATE_FAIL = 'create_fail';
-export const DELETE_SELECTED_TASK_SUCCESS = 'delete_selected_task_success';
-export const DELETE_SELECTED_TASK_FAIL = 'delete_selected_task_fail';
-export const CLEAR_ALL_CREATE_TASK = 'clear_all_create_task';
 export const SET_STATE_WORK = 'set_state_work';
-export const DEADLINE_CHANGE = 'deadline_change';
-export const SET_NOTIFICATION = 'set_notification';
+export const ADD_TASK = 'add_task';
 
 //Task update actions
 export const TASK_UPDATE_SUCCESS = 'task_success';
 export const TASK_UPDATE_FAIL = 'task_fail';
-
 
 //Task show actions
 export const SEARCH_TASK = 'search_task';
@@ -72,12 +57,11 @@ export const HANDLE_DATE_TIME_PICKER = 'handle_date_time_picker';
 export const SET_LOGIN_FALSE = 'set_login_false';
 export const CLEAR_ALL_STATE = 'clear_all_state';
 
-
 //creating database
 export const CREATING_DATABASE = 'creating_database';
 export const DATABASE_CREATED = 'database_created';
 
 //Task action for undo
 
-export const UNDO_DELETE_TASK_SUCCESS = 'undo_delete_task_success';
-export const UNDO_DELETE_TASK_FAIL = 'undo_delete_task_fail';
+export const DELETE_TASKS = 'delete_task';
+export const DELETE_TASK_FAIL = 'delete_task_fail';

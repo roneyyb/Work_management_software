@@ -1,6 +1,5 @@
 import SQLite from "react-native-sqlite-storage";;
 
-import uuidv1 from "uuid/v1";
 import {
   CREATE_WORK_SUCCESS,
   CREATE_WORK_FAIL,
@@ -11,7 +10,7 @@ const db = SQLite.openDatabase("multiutilityapp.db");
 
 export const createWork = (work, data) => {
   return dispatch => {
-    const uuid = uuidv1();
+ 
     db.transaction(
       tx => {
         const date = new Date();
@@ -81,6 +80,7 @@ export const createWork = (work, data) => {
 };
 
 export const createTask = ({
+  taskid,
   title,
   description,
   date,
@@ -98,7 +98,7 @@ export const createTask = ({
         tx.executeSql(
           "insert into WORK_TASKS(taskid, task_title, task_description, task_createdAt, workid, task_updatedAt, task_completedAt, task_deadline, task_reminder, task_notificationid, workid_backend,taskid_backend) values(?,?,?,datetime(),?, datetime(),?, ?,?,?,?,?)",
           [
-            uuid,
+            taskid,
             title,
             description,
             workid,
