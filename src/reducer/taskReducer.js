@@ -46,7 +46,7 @@ const idReducer = produce((draft, action) => {
 	switch (action.type) {
 		case ADD_TASK:
 			action.payload.forEach(item => {
-				draft[item._id] = item;
+				draft[item.taskid] = item;
 			});
 			break;
 		case LOADING_DATA_SUCCESS:
@@ -68,15 +68,15 @@ const dataReducer = produce((draft, action) => {
 	switch (action.type) {
 		case ADD_TASK:
 			if (draft.sortBy == "myOrder") {
-				draft.data.unshift(item._id);
+				draft.data.unshift(item.taskid);
 			} else {
-				draft.data.push(item._id);
+				draft.data.push(item.taskid);
 			}
 			break;
 		case LOADING_DATA_SUCCESS:
 			draft.data = [];
 			action.payload.forEach(item => {
-				draft.data.push(item._id);
+				draft.data.push(item.taskid);
 			});
 			draft.sortBy = action.payload.sortBy;
 			draft.completed = action.payload.completed;

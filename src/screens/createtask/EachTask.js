@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import FlipCard from 'react-native-flip-card';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import colorArray from '../../constants/Color';
+import { undoType } from '../../actions/taskshowaction';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
 const SWIPE_OUT_DURATION = 100;
@@ -173,7 +174,6 @@ class Taskeach extends Component {
             'Nov',
             'Dec',
         ];
-        const createdate = new Date(date);
         const currentdate = new Date();
         const currentday = currentdate.getDay();
         const currentmonth = currentdate.getMonth();
@@ -201,12 +201,12 @@ class Taskeach extends Component {
     onSwipeComplete(direction) {
         if (direction === 'right') {
             if (!this.props.completed) {
-                this.onSwipeAction(false,true);
+                this.onSwipeAction(false, true);
             } else {
-                this.onSwipeAction(false,false);
+                this.onSwipeAction(false, false);
             }
         } else {
-            this.onSwipeAction(true,false);
+            this.onSwipeAction(true, false);
         }
     }
 
@@ -262,7 +262,7 @@ class Taskeach extends Component {
         hours = hours ? hours : 12;
         return hours + ':' + minutes + ' ' + newformat;
     };
-    
+
     returnCompletedDate = date => {
         const newdate = date.split(' ');
         const time = newdate[4].split(':');
@@ -276,7 +276,7 @@ class Taskeach extends Component {
         }
     };
 
-    onSwipeAction = (deletetask,complete) => {
+    onSwipeAction = (deletetask, complete) => {
         const { byIds } = this.props;
         const data = byIds[this.props.items];
         const { taskid, workid, taskid_backend } = data;
@@ -284,13 +284,13 @@ class Taskeach extends Component {
             this.props.deleteTask(taskid, workid);
         }
         this.props.undoType(
-            [ taskid ],
-            deletetask?'Deleted':(complete?'Completed':'Incompleted'),
+            [taskid],
+            deletetask ? 'Deleted' : (complete ? 'Completed' : 'Incompleted'),
         );
-        
+
         this.props.callUndo(
             [taskid],
-            deletetask?'delete':complete?'complete':'incomplete',
+            deletetask ? 'delete' : complete ? 'complete' : 'incomplete',
         );
     };
 
@@ -301,21 +301,9 @@ class Taskeach extends Component {
         this.props.navigation.navigate('createtask', {
             update: true,
             items: this.props.items,
-            title: this.props.items.task_title,
-            description: this.props.items.task_description,
-            id: this.props.items.taskid,
-            workid: this.props.workid,
             Searchtask: this.props.Searchtask,
             settaskSearch: this.props.settaskSearch,
-            notificationid: this.props.items.task_notificationid,
-            reminder: this.props.items.task_reminder,
-            work: this.props.work,
-            date: this.date,
-            createdAt: this.createdAt,
             callUndo: this.props.callUndo,
-            taskidbackend: this.props.items.taskid_backend,
-            deadline: this.props.items.task_deadline,
-            onNavigateBack: this.props.navigation.getParam('onNavigateBack'),
             deleteid: this.props.deleteid,
             Deletetaskcountnumber: this.props.Deletetaskcountnumber,
             changeflip: this.props.changeflip,
@@ -421,8 +409,7 @@ class Taskeach extends Component {
         if (this.front === 0) {
             this.front = 1;
             this.props.deleteid.push({
-                taskid: this.props.items.taskid,
-                taskid_backend: this.props.items.taskid_backend,
+                taskid: this.props.items.taskid
             });
             if (this.props.deleteid.length === 1) {
                 this.props.changeflip(1);
@@ -503,7 +490,7 @@ class Taskeach extends Component {
                         underlayColor={null}>
                         <View style={{ flexDirection: 'row' }}>
                             <View
-                                style={[styles.cardStyle,{   
+                                style={[styles.cardStyle, {
                                     paddingLeft:
                                         upadding / 1.5 + upadding / 1.5 - this.state.paddingright,
                                 }]}>
@@ -586,7 +573,7 @@ class Taskeach extends Component {
                                         </Text>
                                     </View>
                                 </View>
-                                {this.returnDeadlineorCompleted(task_deadline,task_completedAt)}
+                                {this.returnDeadlineorCompleted(task_deadline, task_completedAt)}
                             </View>
                         </View>
                         {/* </View> */}
@@ -600,11 +587,17 @@ class Taskeach extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        byIds: state.task.byIds
+        byIds: state.task.byIds,
+        workid: state.worklist.selectedwork.workid,
+        title: state.worklist.selectedwork.work_title,
+        completed: state.task.data.completed,
+        sortBy:state.task.data.sortBy
     }
 }
 
-export default connect(mapStateToProps, {})(Taskeach);
+export default connect(mapStateToProps, {
+    undoType
+})(Taskeach);
 
 const styles = StyleSheet.create({
     flipcoinstyle: {
@@ -625,10 +618,10 @@ const styles = StyleSheet.create({
     },
     cardStyle: {
         flex: 0.9,
-    paddingTop: (upadding / 2) * 1.25,
-    paddingRight: upadding,
-    paddingBottom: upadding / 2
-},
+        paddingTop: (upadding / 2) * 1.25,
+        paddingRight: upadding,
+        paddingBottom: upadding / 2
+    },
     titledescontainer: {
         flex: 9,
         paddingTop: upadding / 2,

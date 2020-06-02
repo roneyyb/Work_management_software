@@ -3,7 +3,11 @@ export const SET_STATE = 'set_state';
 export const CLEAR_ALL_LOGIN = 'clear_all_login';
 export const SET_UP_USER_ON_START = 'set_up_user_on_start';
 
-//Work list action
+//Work action
+export const ADD_WORK = 'add_work';
+export const UPDATE_WORK = 'update_work';
+export const CHANGE_SELECTED_WORK = 'change_selected_work';
+export const UPDATE_WORK_LIST = 'update_work_list';
 export const WORK_LIST_UPDATE = 'work_list_update';
 export const WORK_CHANGE = 'work_change';
 export const CREATE_WORK_FAIL = 'create_work_fail';

@@ -19,6 +19,7 @@ import Datetimemodal from './components/datetimemodal';
 import { onPressupdate } from '../../actions/updatingtaskaction';
 import { createTask } from '../../database/createqueries';
 import { addTask } from '../../actions/taskshowaction';
+import { giveAllTask } from '../../database/select';
 import { updateTask } from '../../database/updatequeries';
 import { undoType } from '../../actions/taskshowaction';
 import { whichday, monthNames } from '../../constants/Calender';
@@ -128,7 +129,6 @@ class Createtask extends Component {
 		if (Searchtask) {
 			const { callUndo, settaskSearch } = navigation.state.params;
 			this.props.undoType(
-				this.props.tasklist,
 				[
 					{
 						taskid: this.state.taskid,
@@ -166,7 +166,6 @@ class Createtask extends Component {
 				deleteid.splice(index, 1);
 				if (deleteid.length === 0) {
 					this.props.undoType(
-						this.props.tasklist,
 						[
 							{
 								taskid: this.state.taskid,
@@ -190,7 +189,6 @@ class Createtask extends Component {
 				}
 				Deletetaskcountnumber(deleteid.length);
 				this.props.undoType(
-					this.props.tasklist,
 					[
 						{
 							taskid: this.state.taskid,
@@ -213,7 +211,6 @@ class Createtask extends Component {
 			}
 
 			this.props.undoType(
-				this.props.tasklist,
 				[
 					{
 						taskid: this.state.taskid,
@@ -308,7 +305,7 @@ class Createtask extends Component {
 			data['date'] = '';
 			data['workid'] = this.props.workid;
 			data['workid_backend'] = this.props.workid_backend;
-			const { onNavigateBack } = navigation.state.params;
+			const { sortBy, completed, workid, giveAllTask} = this.props;
 			if (this.state.update) {
 				const items = this.state.items;
 				const {
@@ -324,7 +321,7 @@ class Createtask extends Component {
 				) {
 					data['taskid'] = items.taskid;
 					console.log(data);
-					this.props.updateTask(data, onNavigateBack);
+					this.props.updateTask(data, giveAllTask(completed,workid,sortBy));
 				}
 			} else {
 				if (
@@ -351,7 +348,7 @@ class Createtask extends Component {
 				<ScrollView style={styles.ScrollView}>
 					<View>
 						<Text style={styles.titleStyle}>
-							{this.props.work.toUpperCase()}
+							{this.props.work_title.toUpperCase()}
 						</Text>
 					</View>
 
@@ -446,8 +443,9 @@ class Createtask extends Component {
 
 const mapStateToProps = state => {
 	return {
-		tasklist: state.show.data,
-		work: state.worklist.selectedwork.work_title,
+		sortBy: state.task.data.sortBy,
+		completed: state.task.data.completed,
+		work_title: state.worklist.selectedwork.work_title,
 		workid: state.worklist.selectedwork.workid,
 		workid_backend: state.worklist.selectedwork.workid_backend,
 	};
@@ -456,6 +454,7 @@ const mapStateToProps = state => {
 export default connect(
 	mapStateToProps,
 	{
+		giveAllTask,
 		undoType,
 		addTask,
 		updateTask,

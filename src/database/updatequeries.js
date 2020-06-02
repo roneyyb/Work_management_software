@@ -1,8 +1,7 @@
 import SQLite from 'react-native-sqlite-storage';
-import { WORK_UPDATE_FAIL, WORK_UPDATE_SUCCESS } from '../actions/types';
 const db = SQLite.openDatabase('multiutilityapp.db');
 
-export const updateWork = (workid, work, selectedwork, data) => dispatch => {
+export const updateWork = (workid, work) => dispatch => {
     db.transaction(
         tx => {
             tx.executeSql(
@@ -14,47 +13,28 @@ export const updateWork = (workid, work, selectedwork, data) => dispatch => {
                         ['UPDATE', workid],
                         () => {
                             console.log(
-                                '----data update successfuly inserted into WORK_UPDATE TABLE-----',
+                                'Data update successfuly inserted into WORK_UPDATE TABLE.',
                             );
                         },
                         error => {
-                            console.log(
-                                '-----user works data update post request error-----',
+                            console.error(
+                                'Error while inserting data in cloud work update table.',
                                 error,
                             );
                         },
                     );
-                    data.forEach(item => {
-                        if (item.workid === workid) {
-                            item.work_title = work;
-                        }
-                    });
-                    return dispatch({
-                        type: WORK_UPDATE_SUCCESS,
-                        payload: {
-                            worklist: data,
-                            work: { ...selectedwork, work_title: work },
-                        },
-                    });
                 },
                 (_, error) => {
-                    console.log('error => ', error);
-                    return dispatch({
-                        type: WORK_UPDATE_FAIL,
-                        paylaod: error,
-                    });
+                    console.error('SQlite error:Work update failed in Work table ', error);
                 },
             );
         },
-        () => {
-            console.log('create work transaction success');
+        (error) => {
+            console.error('SQlite: work update failed',error);
         },
-        error => {
-            console.log('work update error =>', error);
-            return dispatch({
-                type: WORK_UPDATE_FAIL,
-                paylaod: error,
-            });
+        () => {
+            console.log('Work update success');
+            
         },
     );
 };
@@ -98,27 +78,27 @@ export const updateTask = (
                             ['UPDATE', task.workid, task.taskid],
                             () => {
                                 console.log(
-                                    '----data update method  task update -- updatequeries -- successfuly inserted into TASK_DATA_UPDATE TABLE-----',
+                                    'Data update success in cloud task table.',
                                 );
                             },
                             error => {
-                                console.log(
-                                    '-----task data update -- update queries -- update request error-----',
+                                console.error(
+                                    'SQlite: error while updating Task cloud table.',
                                     error,
                                 );
                             },
                         );
                     },
                     (_, error) => {
-                        console.log('task update error =>', error);
+                        console.error('SQLite: Task update table', error);
                     },
                 );
             },
             error => {
-                console.log('task update transaction error', error);
+                console.error('SQLite: Task update transaction error', error);
             },
             () => {
-                console.log('task update success');
+                console.log('Task update success');
             },
         );
     };

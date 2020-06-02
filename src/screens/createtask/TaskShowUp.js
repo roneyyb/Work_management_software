@@ -21,12 +21,12 @@ import Modal1 from './components/modal1';
 import Modal2 from './components/modal2';
 import DeleteModal from './components/generalmodalcomponent';
 import Footer from './components/footer';
-import Header from './header';
-import Taskeach from './eachtask';
+import Header from './Header';
+import Taskeach from './EachTask';
 import Logout from '../../database/droptable';
-import { Give_all_task } from '../../database/select';
+import { giveAllTask } from '../../database/select';
 import Datetimemodal from './components/datetimemodal';
-import SearchTask from './searchtask';
+import SearchTask from './SearchTask';
 import {
     Refreshing,
     onChangeTexts,
@@ -131,9 +131,9 @@ class Taskshowup extends Component {
         this.props.navigation.setParams({
             onNavigateBack: this.handleRefresh.bind(this),
         });
-        this.props.navigation.setParams({ title: this.props.title });
+        //this.props.navigation.setParams({ title: this.props.title });
 
-        this.props.Give_all_task(
+        this.props.giveAllTask(
             this.props.completed,
             this.props.workid,
             this.props.sortBy,
@@ -154,16 +154,7 @@ class Taskshowup extends Component {
     renderHeader = () => (
         <View style={{ flexDirection: 'row', justifyContent: 'center', height: 40 }}>
             <View
-                style={{
-                    elevation: 5,
-                    flexDirection: 'row',
-                    backgroundColor: 'white',
-                    backgroundColor: 'white',
-                    height: 30,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 8,
-                }}>
+                style={styles.headerStyle}>
                 <Text style={{ color: '#8D8D8C', padding: 10 }}>
                     {`${this.props.title.toUpperCase()}`}
                 </Text>
@@ -173,7 +164,7 @@ class Taskshowup extends Component {
 
     returnflatlistdata() {
         if (!this.firsttime) {
-            return this.props.data;
+            return this.props.task.;
         }
         this.firsttime = false;
         return [];
@@ -185,7 +176,7 @@ class Taskshowup extends Component {
 
     deleted = () => {
         this.deleteid = [];
-        this.props.Give_all_task(
+        this.props.giveAllTask(
             this.props.completed,
             this.props.workid,
             this.props.sortBy,
@@ -302,7 +293,7 @@ class Taskshowup extends Component {
             duration: 500,
         }).start(this.waitUndo(deleteids, type));
     };
-    
+
     callUndo = (deleteids, type) => {
         if (this.undoinuse === 0) {
             Animated.timing(this.state.opacity, {
@@ -318,14 +309,11 @@ class Taskshowup extends Component {
     };
 
     deletingWorkconfirmation = () => {
-        this.props.deletework(
+        this.deletework(
             this.props.workid,
-            this.props.completed,
-            this.props.sortBy,
-            this.props.defaultworkid,
-            this.props.worklist,
             this.props.workidbackend,
         );
+
     };
 
     renderFooter = () => {
@@ -446,30 +434,21 @@ class Taskshowup extends Component {
                             callUndo={this.callUndo}
                             settingNotificationmodal={this.settingNotificationmodal}
                             setcolornormal={this.setcolornormal}
-                            completed={this.props.completed}
-                            sortBy={this.props.sortBy}
                             Makeremoterequest={this.props.Give_all_task}
-                            workid={this.props.workid}
                             index={index}
                             Searchtask={false}
-                            work={this.props.title}
                             navigation={navigation}
                             deleteid={this.deleteid}
-                            tasklist={this.props.data}
                             items={item}
                             setColordefault={this.setColordefault.bind(this)}
                             handleRefresh={this.handleRefresh.bind(this)}
                             changeflip={this.child.changeflip}
-                            undoType={this.props.undoType}
                             Deletetaskcountnumber={this.child.Deletetaskcountnumber}
                             changescroll={this.changescroll}
                         />
                     )}
                     ref={component => (this._eachtask = component)}
-                    contentContainerStyle={{
-                        paddingTop: upadding / 2,
-                        paddingTop: upadding * 4.5,
-                    }}
+                    contentContainerStyle={styles.flatList}
                     scrollEnabled
                     keyExtractor={item => item.taskid}
                     ListFooterComponent={this.renderFooter}
@@ -495,20 +474,13 @@ class Taskshowup extends Component {
                     setpointer={this.setfootertouch}
                     callUndo={this.callUndo}
                     settaskSearch={this.settaskSearch}
-                    sortBy={this.props.sortBy}
                     Makeremoterequest={this.props.Give_all_task}
-                    workid={this.props.workid}
                     settingNotificationmodal={this.settingNotificationmodal}
                     navigation={navigation}
                     handleRefresh={this.handleRefresh.bind(this)}
-                    completed={this.props.completed}
-                    userid={this.props.workid}
                     deleteid={this.deleteid}
-                    tasklist={this.props.data}
                     deleteMultipletask={this.deleteMultipletask}
-                    undoType={this.props.undoType}
                     deleted={this.deleted.bind(this)}
-                    work={this.props.title}
                     setColordefault={this.setColordefault}
                     cleareverything={this.ClearAllState.bind(this)}
                 />
@@ -520,54 +492,23 @@ class Taskshowup extends Component {
                         callUndo={this.callUndo}
                         settaskSearch={this.settaskSearch}
                         settingNotificationmodal={this.settingNotificationmodal}
-                        completed={this.props.completed}
-                        sortBy={this.props.sortBy}
                         Makeremoterequest={this.props.Give_all_task}
-                        workid={this.props.workid}
-                        work={this.props.title}
                         navigation={navigation}
                         deleteid={this.deleteid}
-                        tasklist={this.props.data}
                         handleRefresh={this.handleRefresh.bind(this)}
-                        undoType={this.props.undoType}
                         changescroll={this.changescroll}
                     />
                 ) : (
                         <View />
                     )}
                 <Animated.View
-                    style={{
-                        position: 'absolute',
-                        bottom: upadding * 9,
-                        alignSelf: 'center',
-                        opacity: this.state.opacity,
-                        padding: upadding * 1.5,
-                        height: upadding * 4,
-                        width: SCREEN_WIDTH - upadding * 1.5,
-                        borderRadius: upadding / 2,
-                        elevation: upadding * 2,
-                        backgroundColor: 'black',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                    }}>
+                    style={style.undoContainer}>
                     <Animated.Text
-                        style={{
-                            fontSize: upadding * 1.2,
-                            opacity: undosize,
-                            color: 'white',
-                        }}>
+                        style={styles.undoCountText}>
                         {`${this.props.count} ${this.props.undoTypetitle} `}
                     </Animated.Text>
                     <Animatedtouchablehighlight
-                        style={{
-                            elevation: 24,
-                            height: upadding * 3,
-                            width: upadding * 4,
-                            borderRadius: upadding / 2,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
+                        style={styles.undoButton}
                         underlayColor={'#87cefa33'}
                         onPress={() => {
                             this.undoaction();
@@ -577,8 +518,7 @@ class Taskshowup extends Component {
                                 fontSize: upadding * 1.3,
                                 opacity: undosize,
                                 fontWeight: 'bold',
-                                color: '#FFA500',
-                            }}>
+                                color: '#FFA500',}}>
                             {'Undo'}
                         </Animated.Text>
                     </Animatedtouchablehighlight>
@@ -589,11 +529,7 @@ class Taskshowup extends Component {
                     onBackdropPress={() => {
                         this.onBackdropPress(null);
                     }}
-                    style={{
-                        justifyContent: 'flex-end',
-                        margin: 0,
-                        borderRadius: upadding * 1.5,
-                    }}>
+                    style={styles.Modal2}>
                     <Modal2
                         cleareverything={this.props.cleareverything}
                         navigation={this.props.navigation}
@@ -615,7 +551,8 @@ class Taskshowup extends Component {
                 />
                 <Modal
                     isVisible={this.state.visibledatetimeModal === 1}
-                    useNativeDriver>
+                    useNativeDriver
+                >
                     <Datetimemodal
                         onChangeDeadline={this.onChangeDeadline}
                         setOpacity={this.setOpacity}
@@ -630,20 +567,13 @@ class Taskshowup extends Component {
                     onBackdropPress={() => {
                         this.onBackdropPress(null);
                     }}
-                    style={{ justifyContent: 'flex-end', margin: 0 }}>
+                    style={{ justifyContent: 'flex-end', margin: 0 }}
+                >
                     <Modal1
-                        workid={this.props.workid}
-                        userid={this.props.userid}
                         onCancelPressDeleteModal={this.onCancelPressDeleteModal}
-                        completed={this.props.completed}
-                        defaultworkid={this.props.defaultworkid}
-                        worklist={this.props.worklist}
-                        sortBy={this.props.sortBy}
-                        title={this.props.title}
-                        workidbackend={this.props.workidbackend}
                         Makeremoterequest={this.props.Give_all_task}
                         navigation={this.props.navigation}
-                        handleRefresh={this.handleRefresh}
+                        //handleRefresh={this.handleRefresh}
                         onBackdropPress={this.onBackdropPress}
                     />
                 </Modal>
@@ -682,17 +612,66 @@ const mapStatetoprops = state => {
 export default connect(
     mapStatetoprops,
     {
-        Give_all_task,
-        undoType,
+        giveAllTask,
         Refreshing,
         onChangeTexts,
         updateTask,
         setworkdataaftercloudupdate,
         clearAll,
-        deletework,
         Searchtask,
         setUpdatelist,
         cleareverything,
         setloginfalse,
     },
 )(Taskshowup);
+
+const styles = StyleSheet.create({
+    flatList: {
+        paddingTop: upadding / 2,
+        paddingTop: upadding * 4.5,
+    },
+    Modal2: {
+        justifyContent: 'flex-end',
+        margin: 0,
+        borderRadius: upadding * 1.5,
+    },
+    undoButton: {
+        elevation: 24,
+        height: upadding * 3,
+        width: upadding * 4,
+        borderRadius: upadding / 2,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    undoContainer: {
+        position: 'absolute',
+        bottom: upadding * 9,
+        alignSelf: 'center',
+        opacity: this.state.opacity,
+        padding: upadding * 1.5,
+        height: upadding * 4,
+        width: SCREEN_WIDTH - upadding * 1.5,
+        borderRadius: upadding / 2,
+        elevation: upadding * 2,
+        backgroundColor: 'black',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    undoCountText: {
+        fontSize: upadding * 1.2,
+        opacity: undosize,
+        color: 'white',
+    },
+    headerStyle: {
+        elevation: 5,
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        backgroundColor: 'white',
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 8,
+    }
+
+});
