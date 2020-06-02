@@ -221,6 +221,4 @@ const styles = StyleSheet.create({
 		marginLeft: upadding * 3,
 		marginTop: upadding * 1.5
 	},
-
-
 });

@@ -16,11 +16,9 @@ import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Datetimemodal from './components/datetimemodal';
-import { onPressupdate } from '../../actions/updatingtaskaction';
-import { createTask } from '../../database/createqueries';
-import { addTask } from '../../actions/taskshowaction';
-import { giveAllTask } from '../../database/select';
-import { updateTask } from '../../database/updatequeries';
+import { addTaskInDatabase } from '../../database/createqueries';
+import { addTaskInRedux, updateTaskInRedux } from '../../actions/taskshowaction';
+import { updateTaskInDatabase } from '../../database/updatequeries';
 import { undoType } from '../../actions/taskshowaction';
 import { whichday, monthNames } from '../../constants/Calender';
 
@@ -305,7 +303,6 @@ class Createtask extends Component {
 			data['date'] = '';
 			data['workid'] = this.props.workid;
 			data['workid_backend'] = this.props.workid_backend;
-			const { sortBy, completed, workid, giveAllTask} = this.props;
 			if (this.state.update) {
 				const items = this.state.items;
 				const {
@@ -321,15 +318,16 @@ class Createtask extends Component {
 				) {
 					data['taskid'] = items.taskid;
 					console.log(data);
-					this.props.updateTask(data, giveAllTask(completed,workid,sortBy));
+					updateTaskInDatabase(data);
+					this.props.updateTaskInRedux({ task_deadline, task_description, task_notificationid, task_reminder, task_title, taskid:this.state.taskid, workid: data.workid, workid_backend: data.workid_backend, taskid_backend: this.state.taskid_backend });
 				}
 			} else {
 				if (
 					this.state.task_title.length > 0 ||
 					this.state.task_description.length > 0
 				) {
-					this.props.createTask(data);
-					this.props.addTask({task_deadline,task_description,task_notificationid,task_reminder,task_title,taskid:uuid,workid:data.workid,workid_backend:data.workid_backend,taskid_backend:''});
+					addTaskInDatabase(data);
+					this.props.addTaskInRedux({task_deadline,task_description,task_notificationid,task_reminder,task_title,taskid:uuid,workid:data.workid,workid_backend:data.workid_backend,taskid_backend:''});
 				}
 			}
 		} else {
@@ -454,12 +452,9 @@ const mapStateToProps = state => {
 export default connect(
 	mapStateToProps,
 	{
-		giveAllTask,
 		undoType,
-		addTask,
-		updateTask,
-		onPressupdate,
-		createTask,
+		addTaskInRedux,
+		updateTaskInRedux,
 	},
 )(Createtask);
 

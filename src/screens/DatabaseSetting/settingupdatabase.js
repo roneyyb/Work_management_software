@@ -54,7 +54,6 @@ class Settingupdatabase extends Component {
         Updatingdatabase(this.props.userid, this.afterdatabaseupdatedcom);
     }
 
-
     render() {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

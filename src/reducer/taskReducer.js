@@ -1,8 +1,7 @@
 import {
 	ADD_TASK,
-	LOADING_UP_DATA,
-	LOADING_DATA_FAIL,
-	LOADING_DATA_SUCCESS,
+	UPDATE_TASK,
+	LOADING_ALL_TASK,
 	REFRESHING,
 	COMPLETE_SUCCESS,
 	SEARCH_CHANGE,
@@ -49,18 +48,20 @@ const idReducer = produce((draft, action) => {
 				draft[item.taskid] = item;
 			});
 			break;
-		case LOADING_DATA_SUCCESS:
+		case LOADING_ALL_TASK:
 			draft = [];
-			action.payload.forEach(item => {
-				draft[item._id] = item;
+			action.payload.message.forEach(item => {
+				draft[item.taskid] = item;
 			});
 			break;
 		case DELETE_TASKS:
-			for (var i = 0; i < deleteids.length(); i++) {
+			for (var i = 0; i < action.payload.deleteids.length(); i++) {
 				delete draft[deleteids[i].taskid];
 			}
 			break;
-				
+		case UPDATE_TASK:
+			draft[action.payload.taskid] = action.payload;
+			break;
 	}
 }, initialState.byIds);
 
@@ -73,7 +74,7 @@ const dataReducer = produce((draft, action) => {
 				draft.data.push(item.taskid);
 			}
 			break;
-		case LOADING_DATA_SUCCESS:
+		case LOADING_ALL_TASK:
 			draft.data = [];
 			action.payload.forEach(item => {
 				draft.data.push(item.taskid);
@@ -87,7 +88,7 @@ const dataReducer = produce((draft, action) => {
 				const index = draft.data.indexOf(deleteids[i].taskid);
 				draft.data.splice(index, 1);
 			}
-			break;	
+			break;
 	}
 }, initialState.state);
 

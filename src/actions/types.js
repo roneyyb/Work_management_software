@@ -8,6 +8,8 @@ export const ADD_WORK = 'add_work';
 export const UPDATE_WORK = 'update_work';
 export const CHANGE_SELECTED_WORK = 'change_selected_work';
 export const UPDATE_WORK_LIST = 'update_work_list';
+export const DELTE_WORK = 'delete_work';
+
 export const WORK_LIST_UPDATE = 'work_list_update';
 export const WORK_CHANGE = 'work_change';
 export const CREATE_WORK_FAIL = 'create_work_fail';
@@ -33,8 +35,7 @@ export const SET_STATE_WORK = 'set_state_work';
 export const ADD_TASK = 'add_task';
 
 //Task update actions
-export const TASK_UPDATE_SUCCESS = 'task_success';
-export const TASK_UPDATE_FAIL = 'task_fail';
+export const UPDATE_TASK = 'update_task';
 
 //Task show actions
 export const SEARCH_TASK = 'search_task';

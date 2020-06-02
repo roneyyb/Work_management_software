@@ -1,7 +1,7 @@
 import SQLite from 'react-native-sqlite-storage';
 const db = SQLite.openDatabase('multiutilityapp.db');
 
-export const updateWork = (workid, work) => dispatch => {
+export const updateWorkInDatabase = (workid, work) => dispatch => {
     db.transaction(
         tx => {
             tx.executeSql(
@@ -39,7 +39,7 @@ export const updateWork = (workid, work) => dispatch => {
     );
 };
 
-export const updateTask = (
+export const updateTaskInDatabase = (
     {
         title,
         description,
@@ -69,9 +69,9 @@ export const updateTask = (
                         workid,
                     ],
                     () => {
-                        if (callback !== 0) {
-                            callback(1);
-                        }
+                        // if (callback !== 0) {
+                        //     callback(1);
+                        // }
                         console.log('Task updated Successfully.');
                         tx.executeSql(
                             'Insert into TASK_DATA_UPDATE(update_type, workid, taskid) values(?,?,?)',

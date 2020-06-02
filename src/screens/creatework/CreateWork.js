@@ -16,7 +16,7 @@ import {
     createWork
 } from '../../database/createqueries';
 import {
-    updateWork
+    updateWorkInDatabase
 } from '../../database/updatequeries';
 
 import { giveAllTask } from '../../database/select';
@@ -85,7 +85,7 @@ class Creatework extends React.Component {
     onUpdate() {
         const data = { ...this.props.selectedwork, work_title: this.state.work };
         this.props.updatetheWork(data);
-        updateWork(this.props.selectedwork.workid, this.state.work);
+        updateWorkInDatabase(this.props.selectedwork.workid, this.state.work);
         this.props.navigation.navigate('task');
     }
 

@@ -1,9 +1,8 @@
 import SQLite from "react-native-sqlite-storage";;
 const db = SQLite.openDatabase("multiutilityapp.db");
 
-export const createWork = (work) => {
+export const addWorkInDatabase = (work) => {
     return dispatch => {
-
         db.transaction(
             tx => {
                 tx.executeSql(
@@ -39,7 +38,7 @@ export const createWork = (work) => {
     };
 };
 
-export const createTask = ({
+export const addTaskInDatabase = ({
     taskid,
     title,
     description,

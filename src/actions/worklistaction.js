@@ -2,31 +2,29 @@ import {
     ADD_WORK,
     UPDATE_WORK,
     CHANGE_SELECTED_WORK,
+    DELETE_WORK,
     SET_WORKLIST_AFTER_CLOUD_DATA_UPDATION,
 } from './types';
 
-export const addWork = (work) => (
-    {
+export const addWork = (work) => ({
         type: ADD_WORK,
         payload: work
-    }
-);
+});
 
-export const updatetheWork = (work) => (
-    {
+export const updatetheWork = (work) => ({
         type: UPDATE_WORK,
         payload: work
-    }
-);
+});
 
 export const changeSelectedWork = (work) => ({
     type: CHANGE_SELECTED_WORK,
     payload: work
 });
 
-export const setWorkList = () => ({
-    
-});
+export const deletetheWork = (workid, selectedwork) => ({
+    type: DELETE_WORK,
+    payload: {workid, selectedwork}
+})
 
 export const setworkdataaftercloudupdate = (data, workidbackendlist) => (
     (dispatch) => {
@@ -56,7 +54,3 @@ export const setworkdataaftercloudupdate = (data, workidbackendlist) => (
         });
     }
 );
-
-export const worklistclearall = () => ({
-    type: WORK_LIST_CLEAR_ALL
-});

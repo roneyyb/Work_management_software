@@ -1,12 +1,12 @@
 import {combineReducers} from 'redux';
 import userReducer from './userReducer';
 import taskReducer from './taskReducer';
-import worklistreducer from './workReducer';
+import workReducer from './workReducer';
 import createdatabasereducer from './databaseReducer';
 
 export default combineReducers({
   user: userReducer,
   task: taskReducer,
-  worklist: worklistreducer,
+  worklist: workReducer,
   createdatabase: createdatabasereducer,
 });

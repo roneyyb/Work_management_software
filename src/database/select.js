@@ -1,5 +1,5 @@
 import SQLite from "react-native-sqlite-storage";
-import { FETCH_SUCCESS_WORK_LIST, FETCH_FAIL_WORK_LIST, LOADING_DATA_FAIL, LOADING_UP_DATA, LOADING_DATA_SUCCESS } from '../actions/types';
+import {  UPDATE_WORK_LIST, LOADING_ALL_TASK } from '../actions/types';
 
 const db = SQLite.openDatabase('multiutilityapp.db');
 
@@ -14,14 +14,14 @@ export const giveAllWork = () => {
                 (td, results) => {
                     console.log('inside give_all_work action array=>', results.rows);
                     const rows = results.rows;
-                    let users = [];
+                    let works = [];
 
                     for (let i = 0; i <= rows.length; i++) {
                         if (i === rows.length) {
                             console.log('users =>', users);
                             return dispatch({
-                                type: FETCH_SUCCESS_WORK_LIST,
-                                payload: users
+                                type: UPDATE_WORK_LIST,
+                                payload: works
                             });
                         } else {
                             users.push({
@@ -31,15 +31,12 @@ export const giveAllWork = () => {
                     }
                 },
                 (_, error) => {
-                    return dispatch({
-                        type: FETCH_FAIL_WORK_LIST,
-                        payload: error
-                    });
+                    console.error("Error while selecting work from database.",error);
                 }
             );
         }, (error) => {
-            console.log('error give allwork', error);
-        }, () => { console.log('transaction success'); });
+            console.log('Error while selecting work from database.', error);
+        }, () => { console.log('All work selected.'); });
     };
 };
 
@@ -49,20 +46,17 @@ export const giveAllTask = (completed, workid, sortBy) => {
     if (completed) { task_completed = 1; }
     else { task_completed = 0; }
     return dispatch => {
-        dispatch({ type: LOADING_UP_DATA });
         db.transaction(tx => {
             tx.executeSql(`Select * from WORK_TASKS where task_completed=? and workid=? ORDER BY task_createdAt ${sortBy === 'myOrder' ? 'ASC' : 'DESC'}`, [task_completed, workid], (_, results) => {
                 console.log('inside give_all_work action array=>', results.rows);
                 const rows = results.rows;
-                let users = [];
+                let tasks = [];
 
                 for (let i = 0; i <= rows.length; i++) {
                     if (i === rows.length) {
-                        console.log('users =>', users);
-
                         return dispatch({
-                            type: LOADING_DATA_SUCCESS,
-                            payload: { message: users, completed, sortBy }
+                            type: LOADING_ALL_TASK,
+                            payload: { message: tasks, completed, sortBy }
                         });
                     } else {
                         users.push({
@@ -72,13 +66,9 @@ export const giveAllTask = (completed, workid, sortBy) => {
                 }
 
             }, (_, error) => {
-                console.log('error =>', error);
-                return dispatch({
-                    type: LOADING_DATA_FAIL,
-                    payload: error
-                });
+                console.log('Error while selecting task from databse', error);
             });
-        }, (error) => { console.log('Give all task error select.js=>', error); }, () => { console.log('transaction successful'); });
+        }, (error) => { console.log('Error while selecting task from databse', error); }, () => { console.log('All task selected.'); });
     };
 };
 

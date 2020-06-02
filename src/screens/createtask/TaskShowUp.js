@@ -15,7 +15,7 @@ import {
     TouchableHighlight,
     Dimensions,
 } from 'react-native';
-import { updateTask } from '../../database/updatequeries';
+import { updateTaskInDatabase } from '../../database/updatequeries';
 
 import Modal1 from './components/modal1';
 import Modal2 from './components/modal2';
@@ -28,17 +28,16 @@ import { giveAllTask } from '../../database/select';
 import Datetimemodal from './components/datetimemodal';
 import SearchTask from './SearchTask';
 import {
-    Refreshing,
-    onChangeTexts,
     clearAll,
     Searchtask,
     setUpdatelist,
-    undoType,
     setloginfalse,
+    updateTaskInRedux,
 } from '../../actions/taskshowaction';
+import { updateTaskInDatabase } from '../../database/updatequeries';
 import { cleareverything } from '../../actions/cleareverythingaction';
-import { deletework } from '../../database/deletequeries';
-import { setworkdataaftercloudupdate } from '../../actions/worklistaction';
+import { deleteWork } from '../../database/deletequeries';
+import { setworkdataaftercloudupdate, deletetheWork } from '../../actions/worklistaction';
 import Updatedatatocloud from '../../syncronusupdate/updatedatatocloud';
 const whichday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'];
 const monthNames = [
@@ -92,7 +91,7 @@ class Taskshowup extends Component {
         this.props.navigation.setParams({
             onNavigateBack: this.handleRefresh.bind(this),
         });
-        //Updatedatatocloud(this.props.userid,this.updatinglocalworklist,this.handleRefresh);
+        Updatedatatocloud(this.props.userid,this.updatinglocalworklist,this.handleRefresh);
         this.props.navigation.setParams({ title: this.props.title });
     }
 
@@ -104,7 +103,7 @@ class Taskshowup extends Component {
 
         if (nextProps.updatetaskdata) {
             nextProps.setloginfalse();
-            nextProps.Give_all_task(
+            nextProps.giveAllTask(
                 nextProps.completed,
                 nextProps.workid,
                 nextProps.sortBy,
@@ -117,9 +116,6 @@ class Taskshowup extends Component {
         this.props.clearAll();
     }
 
-    onchangetext(text) {
-        this.props.onChangeTexts(text);
-    }
     updatinglocalworklist = worklistbackend => {
         this.props.setworkdataaftercloudupdate(
             this.props.worklist,
@@ -128,9 +124,9 @@ class Taskshowup extends Component {
     };
 
     handleRefresh = () => {
-        this.props.navigation.setParams({
-            onNavigateBack: this.handleRefresh.bind(this),
-        });
+        // this.props.navigation.setParams({
+        //     onNavigateBack: this.handleRefresh.bind(this),
+        // });
         //this.props.navigation.setParams({ title: this.props.title });
 
         this.props.giveAllTask(
@@ -309,11 +305,10 @@ class Taskshowup extends Component {
     };
 
     deletingWorkconfirmation = () => {
-        this.deletework(
-            this.props.workid,
-            this.props.workidbackend,
-        );
-
+        const { workid, workidbackend, defaultwork, completed, sortBy } = this.props;
+        this.props.deleteWork(workid,workidbackend);
+        this.props.deletetheWork(workid,defaultwork);
+        this.props.giveAllTask(sortBy,defaultwork.workid,completed);
     };
 
     renderFooter = () => {
@@ -350,6 +345,7 @@ class Taskshowup extends Component {
         PushNotification.cancelLocalNotifications({
             id: this.state.selected_task.task_notificationid,
         });
+
         const {
             task_title: title,
             task_description: description,
@@ -360,8 +356,7 @@ class Taskshowup extends Component {
             workid_backend: workid_backend,
         } = this.state.selected_task;
 
-        this.props.updateTask(
-            {
+        updateTaskInDatabase({
                 title,
                 description,
                 workid,
@@ -371,11 +366,10 @@ class Taskshowup extends Component {
                 workid_backend,
                 notificationid,
                 deadline,
-            },
-            this.handleRefresh,
-        );
+        });
+        this.props.updateTaskInRedux({ ...this.state.selected_task, task_deadline: deadline });
         this.setState({ visibledatetimeModal, selected_task: '' });
-    };
+    }
 
     ondate = value => {
         this.setState({ visibledatetimeModal: value });
@@ -396,7 +390,7 @@ class Taskshowup extends Component {
         }).start();
         this.undoinuse = 0;
         this.setState({ deleteids: [] });
-        await this.props.Give_all_task(
+        await this.props.giveAllTask(
             this.props.completed,
             this.props.workid,
             this.props.sortBy,
@@ -434,7 +428,7 @@ class Taskshowup extends Component {
                             callUndo={this.callUndo}
                             settingNotificationmodal={this.settingNotificationmodal}
                             setcolornormal={this.setcolornormal}
-                            Makeremoterequest={this.props.Give_all_task}
+                            Makeremoterequest={this.props.giveAllTask}
                             index={index}
                             Searchtask={false}
                             navigation={navigation}
@@ -474,7 +468,7 @@ class Taskshowup extends Component {
                     setpointer={this.setfootertouch}
                     callUndo={this.callUndo}
                     settaskSearch={this.settaskSearch}
-                    Makeremoterequest={this.props.Give_all_task}
+                    Makeremoterequest={this.props.giveAllTask}
                     settingNotificationmodal={this.settingNotificationmodal}
                     navigation={navigation}
                     handleRefresh={this.handleRefresh.bind(this)}
@@ -492,7 +486,7 @@ class Taskshowup extends Component {
                         callUndo={this.callUndo}
                         settaskSearch={this.settaskSearch}
                         settingNotificationmodal={this.settingNotificationmodal}
-                        Makeremoterequest={this.props.Give_all_task}
+                        Makeremoterequest={this.props.giveAllTask}
                         navigation={navigation}
                         deleteid={this.deleteid}
                         handleRefresh={this.handleRefresh.bind(this)}
@@ -571,7 +565,7 @@ class Taskshowup extends Component {
                 >
                     <Modal1
                         onCancelPressDeleteModal={this.onCancelPressDeleteModal}
-                        Makeremoterequest={this.props.Give_all_task}
+                        Makeremoterequest={this.props.giveAllTask}
                         navigation={this.props.navigation}
                         //handleRefresh={this.handleRefresh}
                         onBackdropPress={this.onBackdropPress}
@@ -605,17 +599,19 @@ const mapStatetoprops = state => {
         workidbackend: state.worklist.selectedwork.workid_backend,
         email: state.user.email,
         userid: state.user._id,
-        defaultworkid: state.user.work._id,
+        defaultwork: state.user.work
     };
 };
 
 export default connect(
     mapStatetoprops,
     {
+        deletetheWork,
+        deleteWork,
         giveAllTask,
         Refreshing,
-        onChangeTexts,
-        updateTask,
+        updateTaskInRedux,
+        updateTaskInDatabase,
         setworkdataaftercloudupdate,
         clearAll,
         Searchtask,

@@ -1,6 +1,7 @@
 
 import {
 	ADD_TASK,
+	UPDATE_TASK,
 	REFRESHING,
 	SEARCH_CHANGE,
 	CLEAR_ALL_IN_TASKSHOW,
@@ -11,7 +12,7 @@ import {
 	DELETE_TASKS
 } from './types';
 
-export const addTask = (data) => {
+export const addTaskInRedux = (data) => {
 	(dispatch) => {
 		return dispatch({
 			type: ADD_TASK,
@@ -28,6 +29,10 @@ export const undoType = (deleteids, type) => (
 		});
 });
 
+export const updateTaskInRedux = (task) => ({
+	type: UPDATE_TASK,
+	payload: task
+});
 
 export const settasklisttototaldata = (totaldata) => ({
 	type: SET_DATA_TO_TOTALTASK,
