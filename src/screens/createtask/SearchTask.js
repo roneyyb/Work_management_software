@@ -9,6 +9,7 @@ import {
     Animated,
     TouchableHighlight
 } from 'react-native';
+import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Taskeach from './EachTask';
 
@@ -28,28 +29,21 @@ class Searchtask extends Component {
     }
 
 
-    searchtask = text => {
+    
+    searchTask = (text, total) => {
         text.trim();
-        const items = this.state.searchresult.filter(item => {
-            const data = `${item.task_title.toLowerCase()} ${item.task_description.toLowerCase()}`;
+        const arr = total ? this.totaldata : this.state.searchresult;
+        const byIds = this.props.byIds;
+        const items = arr.filter(item => {
+            const task = byIds[item.taskid];
+            const data = `${task.task_title.toLowerCase()} ${task.task_description.toLowerCase()}`;
             const textData = text.toLowerCase();
             const index = data.indexOf(textData);
             return index > -1;
         });
         this.setState({ searchresult: items, searchValue: text });
     };
-
-    Searchtotaltask = text => {
-        text.trim();
-        const items = this.totaldata.filter(item => {
-            let data = `${item.task_title.toLowerCase()} ${item.task_description.toLowerCase()}`;
-            let textData = text.toLowerCase();
-            let index = data.indexOf(textData);
-            return index > -1;
-        });
-        this.setState({ searchresult: items, searchValue: text });
-    };
-
+    
     changescroll = (change) => {
         this._eachtask.setNativeProps({ scrollEnabled: change });
     }
@@ -68,13 +62,13 @@ class Searchtask extends Component {
         this.totaldata.push(this.deleteelement.element);
     }
 
-    deleteTask = (taskid, workid) => {
+    deleteTask = (taskid) => {
         const arr = this.state.searchresult;
-        var index = arr.findIndex((obj) => { return obj.taskid === taskid && obj.workid === workid; });
+        var index = arr.indexOf(taskid);
         this.deleteelement = { index, element: arr[index] };
         arr.splice(index, 1);
-        index = this.totaldata.findIndex((obj) => { return obj.taskid === taskid && obj.workid === workid; });
-        this.totaldata.splice(index, 1);
+        index = this.totaldata.indexOf(taskid);
+        this.totaldata.splice(index,1);
         this.setState({ searchresult: arr });
     }
 
@@ -103,14 +97,14 @@ class Searchtask extends Component {
                                     this.setState({ searchActive: true });
                                 }
                                 if (this.state.searchValue.length === 0) {
-                                    this.Searchtotaltask(text);
+                                    this.searchTask(text,true);
                                 } else if (text.length === 0) {
                                     this.setState({ searchresult: [], searchValue: text, searchActive: false });
                                 } else if (text.length > this.state.searchValue.length) {
-                                    this.searchtask(text);
+                                    this.searchTask(text,false);
                                 } else {
                                     false
-                                    this.Searchtotaltask(text);
+                                    this.searchTask(text,true);
                                 }
                             }}
                             ref={c => {
@@ -172,6 +166,14 @@ class Searchtask extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        tasklist: state.task.data.data,
+        byIds: state.task.byIds
+    }
+}
+
+export default connect(mapStateToProps,{})(SearchTask);
 const styles = StyleSheet.create({
     containerstyle: {
         flex: 1,

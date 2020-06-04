@@ -27,8 +27,8 @@ export const WORK_UPDATE_SUCCESS = 'work_update_success';
 export const WORK_UPDATE_FAIL = 'work_update_fail';
 export const SELECTED_WORK_UPDATE = 'selected_work_update';
 export const SET_SELECTEDWORK_DATA = 'set_selectedwork_data';
-export const SET_WORKLIST_AFTER_CLOUD_DATA_UPDATION =
-  'set_worklist_after_cloud_data_updation';
+export const UPDATE_WORKLIST_AFTER_CLOUD_DATA_UPDATION =
+  'update_worklist_after_cloud_data_updation';
 
 //Task create actions
 export const SET_STATE_WORK = 'set_state_work';

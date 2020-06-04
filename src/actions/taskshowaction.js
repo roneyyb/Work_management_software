@@ -3,8 +3,6 @@ import {
 	ADD_TASK,
 	UPDATE_TASK,
 	REFRESHING,
-	SEARCH_CHANGE,
-	CLEAR_ALL_IN_TASKSHOW,
 	SEARCH_TASK,
 	SET_UPDATE_DATA_LIST,
 	SET_LOGIN_FALSE,
@@ -39,10 +37,6 @@ export const settasklisttototaldata = (totaldata) => ({
 	payload: totaldata
 });
 
-export const setloginfalse = () => ({
-	type: SET_LOGIN_FALSE
-});
-
 
 export const setUpdatelist = () => ({
 	type: SET_UPDATE_DATA_LIST
@@ -53,15 +47,7 @@ export const Searchtask = (items, searchvalue) => ({
 	payload: { data: items, searchvalue }
 });
 
-export const clearAll = () => ({
-	type: CLEAR_ALL_IN_TASKSHOW
-});
-
 export const Refreshing = () => ({
 	type: REFRESHING
 });
 
-export const onChangeTexts = text => ({
-	type: SEARCH_CHANGE,
-	payload: text
-});

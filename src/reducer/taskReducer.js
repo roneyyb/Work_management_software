@@ -28,16 +28,9 @@ const initialState = {
 	},
 	state: {
 		loading: false,
-		data: [],
-		completed: false,
-		sortBy: 'myOrder',
-		error: '',
-		refreshing: false,
 		count: 0,
 		undotype: '',
-		search: '',
-		updatetotaldatalist: false,
-		searchvalue: ''
+		refreshing:false
 	}
 };
 
@@ -94,53 +87,15 @@ const dataReducer = produce((draft, action) => {
 
 const stateReducer = produce(((draft, action) => {
 	switch (action.type) {
-		case LOADING_UP_DATA:
-			return { ...state, loading: true };
-		case LOADING_DATA_SUCCESS:
-			draft.loading = false,
-				draft.refreshing = false,
-				draft.updatetotaldatalist = true;
-			break;
-		case COMPLETE_SUCCESS:
-			draft.complete = true;
-			break;
-		case DELETE_WORK_LOADING:
-			draft.loading = true;
-			break;
-		case DELETE_WORK_SUCCESS:
-			draft.loading = false;
-			draft.data = action.payload.tasklist;
-			break;
 		case DELETE_TASKS:
-			draft.count = action.payload.count;
-			draft.undotype = action.payload.undoType;
-			draft.updatetotaldatalist = true;
-			break;
-		case DELETE_TASK_FAIL:
-			draft.error = action.payload;
-		case LOADING_DATA_FAIL:
-			draft.error = action.payload;
-			draft.loading = false;
+			draft.undoType = action.payload.undoType;
+			draft.count - action.payload.count;
 			break;
 		case REFRESHING:
 			draft.refreshing = true;
 			break;
-		case SEARCH_TASK:
-			draft.data = action.payload.data;
-			draft.searchvalue = action.payload.searchvalue;
-			break;
-		case SEARCH_CHANGE:
-			draft.search = action.payload;
-			break;
-		case CLEAR_ALL_STATE:
-			return { ...INITIAL_STATE };
-		case CLEAR_ALL_IN_TASKSHOW:
-				draft.data= state.data,
-				draft.sortBy= state.sortBy,
-				draft.completed= state.completed
-			    break;
-		case SET_UPDATE_DATA_LIST:
-			draft.updatetotaldatalist = false;
+		case LOADING_ALL_TASK:
+			draft.refreshing = false;
 			break;
 	}
 }), initialState.state);

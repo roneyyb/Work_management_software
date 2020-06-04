@@ -4,7 +4,7 @@ import {
     CHANGE_SELECTED_WORK,
     UPDATE_WORK_LIST,
     DELETE_WORK,
-    SET_WORKLIST_AFTER_CLOUD_DATA_UPDATION,
+    UPDATE_WORKLIST_AFTER_CLOUD_DATA_UPDATION,
     SET_LOGIN_FALSE,
 } from '../actions/types';
 
@@ -37,6 +37,11 @@ const idReducer = produce((draft, action) => {
             break;
         case DELETE_WORK:
             delete draft[action.payload.workid];
+        case UPDATE_WORKLIST_AFTER_CLOUD_DATA_UPDATION:
+            action.payload.forEach(item => {
+                draft[item.workid] = item.workid_backend;
+            });
+            break;
     }
 }, initialState.byIds);
 

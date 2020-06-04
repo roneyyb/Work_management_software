@@ -3,14 +3,12 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import SQLite from 'react-native-sqlite-storage';
 import Modal from 'react-native-modal';
 import PushNotification from 'react-native-push-notification';
 import {
     View,
     FlatList,
     Text,
-    Alert,
     Animated,
     TouchableHighlight,
     Dimensions,
@@ -28,17 +26,15 @@ import { giveAllTask } from '../../database/select';
 import Datetimemodal from './components/datetimemodal';
 import SearchTask from './SearchTask';
 import {
-    clearAll,
-    Searchtask,
-    setUpdatelist,
-    setloginfalse,
+    Refreshing,
     updateTaskInRedux,
 } from '../../actions/taskshowaction';
 import { updateTaskInDatabase } from '../../database/updatequeries';
 import { cleareverything } from '../../actions/cleareverythingaction';
-import { deleteWork } from '../../database/deletequeries';
-import { setworkdataaftercloudupdate, deletetheWork } from '../../actions/worklistaction';
-import Updatedatatocloud from '../../syncronusupdate/updatedatatocloud';
+import { deleteWorkInDatabase } from '../../database/deletequeries';
+import { updateWorkListAfterCloud, deleteWorkInRedux } from '../../actions/worklistaction';
+import UpdateCloudData from '../../syncronusupdate/UpdateCloudData';
+import { actionAfterNotUndoOnDatabase } from '../DatabaseSetting/updatingdatabase';
 const whichday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'];
 const monthNames = [
     'Jan',
@@ -55,7 +51,6 @@ const monthNames = [
     'Dec',
 ];
 
-const db = SQLite.openDatabase('multiutilityapp.db');
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -91,24 +86,20 @@ class Taskshowup extends Component {
         this.props.navigation.setParams({
             onNavigateBack: this.handleRefresh.bind(this),
         });
-        Updatedatatocloud(this.props.userid,this.updatinglocalworklist,this.handleRefresh);
+        UpdateCloudData(this.props.userid,this.updatinglocalworklist,this.handleRefresh);
         this.props.navigation.setParams({ title: this.props.title });
     }
 
     shouldComponentUpdate(nextProps) {
-        if (nextProps.updatetotaldatalist) {
-            this.totaldata = nextProps.data;
-            nextProps.setUpdatelist();
-        }
 
-        if (nextProps.updatetaskdata) {
-            nextProps.setloginfalse();
-            nextProps.giveAllTask(
-                nextProps.completed,
-                nextProps.workid,
-                nextProps.sortBy,
-            );
-        }
+        // if (nextProps.updatetaskdata) {
+        //     nextProps.setloginfalse();
+        //     nextProps.giveAllTask(
+        //         nextProps.completed,
+        //         nextProps.workid,
+        //         nextProps.sortBy,
+        //     );
+        // }
 
         return true;
     }
@@ -117,9 +108,8 @@ class Taskshowup extends Component {
     }
 
     updatinglocalworklist = worklistbackend => {
-        this.props.setworkdataaftercloudupdate(
-            this.props.worklist,
-            worklistbackend,
+        this.props.updateWorkListAfterCloud(
+            worklistbackend
         );
     };
 
@@ -130,9 +120,9 @@ class Taskshowup extends Component {
         //this.props.navigation.setParams({ title: this.props.title });
 
         this.props.giveAllTask(
-            this.props.completed,
-            this.props.workid,
-            this.props.sortBy,
+            this.props.data.completed,
+            this.props.selectedwork.workid,
+            this.props.data.sortBy,
         );
     };
 
@@ -160,7 +150,7 @@ class Taskshowup extends Component {
 
     returnflatlistdata() {
         if (!this.firsttime) {
-            return this.props.task.;
+            return this.props.data.data;
         }
         this.firsttime = false;
         return [];
@@ -171,11 +161,12 @@ class Taskshowup extends Component {
     };
 
     deleted = () => {
+        const { sortBy, complete } = this.props.data;
         this.deleteid = [];
         this.props.giveAllTask(
-            this.props.completed,
+            completed,
             this.props.workid,
-            this.props.sortBy,
+            sortBy,
         );
     };
     setColordefault = () => {
@@ -201,8 +192,8 @@ class Taskshowup extends Component {
 
     waitUndo = (deleteids, type) => {
         const workid = {
-            workid: this.props.workid,
-            workidbackend: this.props.workidbackend,
+            workid: this.props.selectedwork.workid,
+            workidbackend: this.props.selectedwork.workidbackend,
         };
         this.a = setTimeout(() => {
             this.resetUndo(deleteids, type, workid);
@@ -215,60 +206,8 @@ class Taskshowup extends Component {
             duration: 1,
         }).start();
         this.undoinuse--;
-        const todaydate = new Date();
         const s = 'sdf';
-        if (undotype === 'complete' || undotype === 'incomplete') {
-            db.transaction(
-                tx => {
-                    if (undotype === 'complete') {
-                        var completed = 1;
-                    } else var completed = 0;
-
-                    deleteids.forEach(taskid => {
-                        tx.executeSql(
-                            'update work_tasks set task_completed=?, task_completedAt=? where taskid=?',
-                            [completed, todaydate.toString(), taskid.taskid],
-                            () => {
-                                tx.executeSql(
-                                    'Insert into TASK_DATA_UPDATE(update_type, workid, taskid) values(?,?,?)',
-                                    ['UPDATE', workid.workid, taskid.taskid],
-                                    () => { },
-                                    error => { },
-                                );
-                            },
-                            (_, error) =>
-                                Alert.alert('problem in deleting ids from database', error),
-                        );
-                    });
-                },
-                error => { },
-                () => { },
-            );
-        } else {
-            db.transaction(tx => {
-                deleteids.forEach(taskid => {
-                    tx.executeSql(
-                        'delete from work_tasks where taskid=?',
-                        [taskid.taskid],
-                        () => {
-                            tx.executeSql(
-                                'Insert into TASK_DATA_UPDATE(update_type, workid, taskid, task_pehchan) values(?,?,?,?)',
-                                [
-                                    'DELETE',
-                                    workid.workidbackend,
-                                    taskid.taskid_backend,
-                                    taskid.taskid,
-                                ],
-                                () => { },
-                                error => { },
-                            );
-                        },
-                        (_, error) =>
-                            Alert.alert('problem in deleting ids from database', error),
-                    );
-                });
-            });
-        }
+       actionAfterNotUndoOnDatabase(deleteids,undotype,workid)
     };
 
     deleteMultipletask = (deleteids, type) => {
@@ -279,11 +218,11 @@ class Taskshowup extends Component {
     undoalreadyinuse = async (deleteids, type) => {
         await clearTimeout(this.a);
         const workid = {
-            workid: this.props.workid,
-            workidbackend: this.props.workid_backend,
+            workid: this.props.selectedwork.workid,
+            workidbackend: this.props.selectedwork.workid_backend,
         };
-        this.resetUndo(this.state.deleteid, this.state.undotype, workid);
-        this.setState({ deleteid: deleteids, undotype: type });
+        this.resetUndo(this.state.deleteid, type, workid);
+        this.setState({ deleteid: deleteids });
         Animated.timing(this.state.opacity, {
             toValue: 1,
             duration: 500,
@@ -296,7 +235,7 @@ class Taskshowup extends Component {
                 toValue: 1,
                 duration: 500,
             }).start(this.waitUndo(deleteids, type));
-            this.setState({ deleteid: deleteids, undotype: type });
+            this.setState({ deleteid: deleteids});
             this.undoinuse++;
         } else {
             this.undoalreadyinuse(deleteids, type);
@@ -305,10 +244,12 @@ class Taskshowup extends Component {
     };
 
     deletingWorkconfirmation = () => {
-        const { workid, workidbackend, defaultwork, completed, sortBy } = this.props;
-        this.props.deleteWork(workid,workidbackend);
-        this.props.deletetheWork(workid,defaultwork);
-        this.props.giveAllTask(sortBy,defaultwork.workid,completed);
+        const { workid, workidbackend } = this.props.selectedwork;
+        const { sortBy, completed } = this.props.data;
+
+        this.props.deleteWorkInDatabase(workid,workidbackend);
+        this.props.deleteWorkInRedux(workid,this.props.defaultwork);
+        this.props.giveAllTask(sortBy,this.props.defaultwork.workid,completed);
     };
 
     renderFooter = () => {
@@ -391,9 +332,9 @@ class Taskshowup extends Component {
         this.undoinuse = 0;
         this.setState({ deleteids: [] });
         await this.props.giveAllTask(
-            this.props.completed,
+            this.props.data.completed,
             this.props.workid,
-            this.props.sortBy,
+            this.props.data.sortBy,
         );
     };
     setfootertouch = value => {
@@ -447,7 +388,7 @@ class Taskshowup extends Component {
                     keyExtractor={item => item.taskid}
                     ListFooterComponent={this.renderFooter}
                     onRefresh={this.handleRefresh.bind(this)}
-                    refreshing={this.props.refreshing}
+                    refreshing={this.props.state.refreshing}
                     onEndReached={this.handleLoadMore}
                     onEndReachedThreshold={6}
                 />
@@ -458,7 +399,7 @@ class Taskshowup extends Component {
                     }}
                     navigation={this.props.navigation}
                     callUndo={this.props.callUndo}
-                    completed={this.props.completed}
+                    completed={this.props.data.completed}
                     onBackdropPress={this.onBackdropPress}
                 />
                 <Header
@@ -499,7 +440,7 @@ class Taskshowup extends Component {
                     style={style.undoContainer}>
                     <Animated.Text
                         style={styles.undoCountText}>
-                        {`${this.props.count} ${this.props.undoTypetitle} `}
+                        {`${this.props.state.count} ${this.props.state.undoType} `}
                     </Animated.Text>
                     <Animatedtouchablehighlight
                         style={styles.undoButton}
@@ -567,7 +508,6 @@ class Taskshowup extends Component {
                         onCancelPressDeleteModal={this.onCancelPressDeleteModal}
                         Makeremoterequest={this.props.giveAllTask}
                         navigation={this.props.navigation}
-                        //handleRefresh={this.handleRefresh}
                         onBackdropPress={this.onBackdropPress}
                     />
                 </Modal>
@@ -580,23 +520,7 @@ const mapStatetoprops = state => {
     return {
         data: state.task.data,
         state: state.task.state,
-        loading: state.show.state.loading,
-        refreshing: state.show.state.refreshing,
-        data: state.show.data,
-        error: state.show.error,
-        searchvalue: state.show.searchvalue,
-        undoTypetitle: state.show.undotype,
-        count: state.show.count,
-        completed: state.show.completed,
-        search: state.show.search,
-        updatetotaldatalist: state.show.updatetotaldatalist,
-        sortBy: state.show.sortBy,
-        updatetaskdata: state.worklist.updatetaskdata,
         selectedwork: state.worklist.selectedwork,
-        worklist: state.worklist.data,
-        workid: state.worklist.selectedwork.workid,
-        title: state.worklist.selectedwork.work_title,
-        workidbackend: state.worklist.selectedwork.workid_backend,
         email: state.user.email,
         userid: state.user._id,
         defaultwork: state.user.work
@@ -606,18 +530,14 @@ const mapStatetoprops = state => {
 export default connect(
     mapStatetoprops,
     {
-        deletetheWork,
-        deleteWork,
+        deleteWorkInRedux,
+        deleteWorkInDatabase,
         giveAllTask,
-        Refreshing,
         updateTaskInRedux,
         updateTaskInDatabase,
-        setworkdataaftercloudupdate,
-        clearAll,
-        Searchtask,
-        setUpdatelist,
+        updateWorkListAfterCloud,
+        Refreshing,
         cleareverything,
-        setloginfalse,
     },
 )(Taskshowup);
 

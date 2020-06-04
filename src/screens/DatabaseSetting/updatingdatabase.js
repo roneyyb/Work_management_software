@@ -4,6 +4,63 @@ import url from '../../constants/Server';
 const db = SQLite.openDatabase('multiutilityapp.db');
 
 
+export function actionAfterNotUndoOnDatabase(deleteids, undotype, workid) {
+  const todaydate = new Date();
+  if (undotype === 'complete' || undotype === 'incomplete') {
+    db.transaction(
+      tx => {
+        if (undotype === 'complete') {
+          var completed = 1;
+        } else var completed = 0;
+
+        deleteids.forEach(taskid => {
+          tx.executeSql(
+            'update work_tasks set task_completed=?, task_completedAt=? where taskid=?',
+            [completed, todaydate.toString(), taskid.taskid],
+            () => {
+              tx.executeSql(
+                'Insert into TASK_DATA_UPDATE(update_type, workid, taskid) values(?,?,?)',
+                ['UPDATE', workid.workid, taskid.taskid],
+                (_, error) => { console.error('Problem in deleting ids from database', error), },
+                () => { console.log('Data update after undo successfull.'); },
+              );
+            },
+            (_, error) =>
+              console.error('Problem in deleting ids from database', error),
+            () => { console.log('Data update after undo successfull.'); }
+          );
+        });
+      },
+      error => { console.error('Problem in deleting ids from database', error);},
+      () => { console.log('Data update after undo successfull.'); }
+    );
+  } else {
+    db.transaction(tx => {
+      deleteids.forEach(taskid => {
+        tx.executeSql(
+          'delete from work_tasks where taskid=?',
+          [taskid.taskid],
+          () => {
+            tx.executeSql(
+              'Insert into TASK_DATA_UPDATE(update_type, workid, taskid, task_pehchan) values(?,?,?,?)',
+              [
+                'DELETE',
+                workid.workidbackend,
+                taskid.taskid_backend,
+                taskid.taskid,
+              ],
+              (_, error) => { console.error('Problem in deleting ids from database updatingdatabase.js', error) },
+              () => { console.log('Data update after undo successfull.'); },
+            );
+          },
+          (_, error) =>
+            Console.error('Problem in deleting ids from database', error),
+        );
+      }, error => { console.error('Problem in deleting ids from database', error); },
+        () => { console.log('Data update after undo successfull.'); });
+    });
+  }
+}
 function Updatetaskindatabase(userid, callback) {
   axios({
     url: `${url}/alltaskget`,
@@ -34,13 +91,11 @@ function Updatetaskindatabase(userid, callback) {
               task.workid_backend,
               task._id
             ],
-            () => {
-            },
-            (_, error) => {
-            }
+            (_, error) => { console.error('Problem in deleting ids from database updatingdatabase.js', error) },
+            () => { console.log('Data update after undo successfull.'); },
           );
         })
-    },(error) => {},() => {
+    }, (error) => { console.error('Problem in deleting ids from database updatingdatabase.js', error)},() => {
         callback();
     });
 } else 
@@ -48,12 +103,12 @@ function Updatetaskindatabase(userid, callback) {
       
 }
   })
-  .catch(error => {
-  
+    .catch(error => {
+      console.error('updatingdatabase.js',error);
   });
 }
 
-export default function Updatingdatabase(userid, callback) {
+export function updatingDatabase(userid, callback) {
   axios({
     url: `${url}/worklistget`,
     method: 'GET',

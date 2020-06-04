@@ -1,12 +1,7 @@
 import SQLite from "react-native-sqlite-storage";;
 
-import {
-    DELETE_SELECTED_TASK_FAIL,
-    DELETE_SELECTED_TASK_SUCCESS
-} from '../actions/types';
-
 const db = SQLite.openDatabase('multiutilityapp.db');
-export const deleteWork = (workid, workidbackend) => {
+export const deleteWorkInDatabase = (workid, workidbackend) => {
     console.log(
         'workid completed sortBy workidbackend =>',
         workid,
