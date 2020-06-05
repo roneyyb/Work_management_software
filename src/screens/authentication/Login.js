@@ -99,6 +99,7 @@ class Login extends Component {
         if (isNetworkError(error)) {
             message = 'Network Error';
         } else {
+            console.log(error);
             let responseJson = error.response.data;
             message = responseJson.error;
         }
@@ -134,11 +135,13 @@ class Login extends Component {
             .post(`${Server}/login`, data)
             .then(response => {
                 let responseJson = response.data;
+                console.log(responseJson);
                 this.setState({ isLoading: false });
                 setupUserOnStart(responseJson);
                 navigation.navigate('settingupdatabase');
             })
             .catch(error => {
+                console.log('Error while login',error);
                 this.handleError(error);
             });
     }

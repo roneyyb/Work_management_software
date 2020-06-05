@@ -4,8 +4,8 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
 import { createDatabase } from '../../database/createtable';
-import Updatingdatabase from './updatingdatabase';
-import { giveAllWork } from '../../database/select';
+import { updatingDatabase } from './updatingdatabase';
+import { giveAllWork, giveAllTask } from '../../database/select';
 import GeneralModal from '../createtask/components/generalmodalcomponent';
 
 class Settingupdatabase extends Component {
@@ -47,11 +47,12 @@ class Settingupdatabase extends Component {
     afterdatabaseupdatedcom = async () => {
         await AsyncStorage.setItem('userToken', this.props.userid);
         this.props.giveAllWork();
+        this.props.giveAllTask(this.props.work.workid);
         this.props.navigation.navigate('App');
     }
 
     updatingdatabase = () => {
-        Updatingdatabase(this.props.userid, this.afterdatabaseupdatedcom);
+        updatingDatabase(this.props.userid, this.afterdatabaseupdatedcom);
     }
 
     render() {
@@ -76,12 +77,12 @@ class Settingupdatabase extends Component {
 const mapStateToProps = state => {
     console.log(state);
     return {
-        userid: state.user._id,
-        work: state.user.work
+        userid: state.user.user._id,
+        work: state.user.user.work
     };
 };
 
 export default connect(
     mapStateToProps,
-    { createDatabase, giveAllWork}
+    { createDatabase, giveAllWork, giveAllTask}
 )(Settingupdatabase);

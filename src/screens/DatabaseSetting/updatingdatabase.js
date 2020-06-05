@@ -21,7 +21,7 @@ export function actionAfterNotUndoOnDatabase(deleteids, undotype, workid) {
               tx.executeSql(
                 'Insert into TASK_DATA_UPDATE(update_type, workid, taskid) values(?,?,?)',
                 ['UPDATE', workid.workid, taskid.taskid],
-                (_, error) => { console.error('Problem in deleting ids from database', error), },
+                (_, error) => { console.error('Problem in deleting ids from database', error); },
                 () => { console.log('Data update after undo successfull.'); },
               );
             },
@@ -49,8 +49,10 @@ export function actionAfterNotUndoOnDatabase(deleteids, undotype, workid) {
                 taskid.taskid_backend,
                 taskid.taskid,
               ],
-              (_, error) => { console.error('Problem in deleting ids from database updatingdatabase.js', error) },
-              () => { console.log('Data update after undo successfull.'); },
+              () => {
+                console.log('Data update after undo successfull.')
+              },
+              (_, error) => { console.error('Problem in deleting ids from database updatingdatabase.js', error) }
             );
           },
           (_, error) =>
@@ -91,8 +93,8 @@ function Updatetaskindatabase(userid, callback) {
               task.workid_backend,
               task._id
             ],
-            (_, error) => { console.error('Problem in deleting ids from database updatingdatabase.js', error) },
-            () => { console.log('Data update after undo successfull.'); },
+            () => { console.log('Updating task in database successfull.'); },
+            (_, error) => { console.error('Problem in deleting ids from database updatingdatabase.js', error) }
           );
         })
     }, (error) => { console.error('Problem in deleting ids from database updatingdatabase.js', error)},() => {

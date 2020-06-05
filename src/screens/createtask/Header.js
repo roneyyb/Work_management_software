@@ -170,10 +170,11 @@ class Header extends Component {
 }
 
 const mapStateToProps = (state) => {
+    console.log(state.worklist.state);
     return {
-        workid: state.worklist.selectedwork.workid,
-        title: state.worklist.selectedwork.work_title,
-        completed: state.task.state.completed,
+        workid:state.worklist.state.selectedwork.workid,
+        title: state.worklist.state.selectedwork.work_title,
+        completed: state.task.data.completed,
     };
 }
 

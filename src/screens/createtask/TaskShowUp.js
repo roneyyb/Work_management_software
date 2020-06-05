@@ -1,20 +1,19 @@
 /* eslint-disable react/sort-comp */
 /* eslint-disable no-undef */
 /* eslint-disable no-underscore-dangle */
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 import PushNotification from 'react-native-push-notification';
 import {
     View,
     FlatList,
+    StyleSheet,
     Text,
     Animated,
     TouchableHighlight,
     Dimensions,
 } from 'react-native';
-import { updateTaskInDatabase } from '../../database/updatequeries';
-
 import Modal1 from './components/modal1';
 import Modal2 from './components/modal2';
 import DeleteModal from './components/generalmodalcomponent';
@@ -29,12 +28,14 @@ import {
     Refreshing,
     updateTaskInRedux,
 } from '../../actions/taskshowaction';
+import { resetRedux } from '../../actions/UserActions';
 import { updateTaskInDatabase } from '../../database/updatequeries';
 import { cleareverything } from '../../actions/cleareverythingaction';
 import { deleteWorkInDatabase } from '../../database/deletequeries';
 import { updateWorkListAfterCloud, deleteWorkInRedux } from '../../actions/worklistaction';
 import UpdateCloudData from '../../syncronusupdate/UpdateCloudData';
 import { actionAfterNotUndoOnDatabase } from '../DatabaseSetting/updatingdatabase';
+import { FileProtectionKeys } from 'react-native-fs';
 const whichday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'];
 const monthNames = [
     'Jan',
@@ -61,10 +62,9 @@ const Animatedtouchablehighlight = Animated.createAnimatedComponent(
 
 class Taskshowup extends Component {
     constructor(props) {
-        // PushNotification.cancelAllLocalNotifications()
+        // PushNotification.cancelAllLocalNotifications(
         super(props);
-        this.child = this.child;
-        this.props.clearAll();
+        this.child = createRef();
         this.setcolornormal = false;
         this.deleteid = [];
         this.undoinuse = 0;
@@ -86,7 +86,7 @@ class Taskshowup extends Component {
         this.props.navigation.setParams({
             onNavigateBack: this.handleRefresh.bind(this),
         });
-        UpdateCloudData(this.props.userid,this.updatinglocalworklist,this.handleRefresh);
+        // UpdateCloudData(this.props.userid,this.updatinglocalworklist,this.handleRefresh);
         this.props.navigation.setParams({ title: this.props.title });
     }
 
@@ -103,9 +103,9 @@ class Taskshowup extends Component {
 
         return true;
     }
-    componentWillUnmount() {
-        this.props.clearAll();
-    }
+    // componentWillUnmount() {
+    //     this.props.clearAll();
+    // }
 
     updatinglocalworklist = worklistbackend => {
         this.props.updateWorkListAfterCloud(
@@ -119,11 +119,7 @@ class Taskshowup extends Component {
         // });
         //this.props.navigation.setParams({ title: this.props.title });
 
-        this.props.giveAllTask(
-            this.props.data.completed,
-            this.props.selectedwork.workid,
-            this.props.data.sortBy,
-        );
+        this.props.giveAllTask(this.props.selectedwork.workid);
     };
 
     renderSeparator = () => (
@@ -163,11 +159,7 @@ class Taskshowup extends Component {
     deleted = () => {
         const { sortBy, complete } = this.props.data;
         this.deleteid = [];
-        this.props.giveAllTask(
-            completed,
-            this.props.workid,
-            sortBy,
-        );
+        this.props.giveAllTask(this.props.workid);
     };
     setColordefault = () => {
         this.setcolornormal = true;
@@ -245,11 +237,10 @@ class Taskshowup extends Component {
 
     deletingWorkconfirmation = () => {
         const { workid, workidbackend } = this.props.selectedwork;
-        const { sortBy, completed } = this.props.data;
-
+      
         this.props.deleteWorkInDatabase(workid,workidbackend);
         this.props.deleteWorkInRedux(workid,this.props.defaultwork);
-        this.props.giveAllTask(sortBy,this.props.defaultwork.workid,completed);
+        this.props.giveAllTask(this.props.defaultwork.workid);
     };
 
     renderFooter = () => {
@@ -332,9 +323,7 @@ class Taskshowup extends Component {
         this.undoinuse = 0;
         this.setState({ deleteids: [] });
         await this.props.giveAllTask(
-            this.props.data.completed,
             this.props.workid,
-            this.props.data.sortBy,
         );
     };
     setfootertouch = value => {
@@ -342,7 +331,8 @@ class Taskshowup extends Component {
     };
 
     loggingout = () => {
-        Updatedatatocloud(this.props.userid);
+        //UpdateCloudData(this.props.userid);
+        this.props.resetRedux();
         setTimeout(() => {
             Logout();
         }, 5000);
@@ -437,9 +427,9 @@ class Taskshowup extends Component {
                         <View />
                     )}
                 <Animated.View
-                    style={style.undoContainer}>
+                    style={[{opacity:this.state.opacity},styles.undoContainer]}>
                     <Animated.Text
-                        style={styles.undoCountText}>
+                        style={[styles.undoCountText, { opacity:undosize}]}>
                         {`${this.props.state.count} ${this.props.state.undoType} `}
                     </Animated.Text>
                     <Animatedtouchablehighlight
@@ -520,7 +510,7 @@ const mapStatetoprops = state => {
     return {
         data: state.task.data,
         state: state.task.state,
-        selectedwork: state.worklist.selectedwork,
+        selectedwork:state.worklist.state.selectedwork,
         email: state.user.email,
         userid: state.user._id,
         defaultwork: state.user.work
@@ -530,6 +520,7 @@ const mapStatetoprops = state => {
 export default connect(
     mapStatetoprops,
     {
+        resetRedux,
         deleteWorkInRedux,
         deleteWorkInDatabase,
         giveAllTask,
@@ -563,7 +554,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: upadding * 9,
         alignSelf: 'center',
-        opacity: this.state.opacity,
         padding: upadding * 1.5,
         height: upadding * 4,
         width: SCREEN_WIDTH - upadding * 1.5,
@@ -576,7 +566,6 @@ const styles = StyleSheet.create({
     },
     undoCountText: {
         fontSize: upadding * 1.2,
-        opacity: undosize,
         color: 'white',
     },
     headerStyle: {

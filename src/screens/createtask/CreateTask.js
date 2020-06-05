@@ -300,9 +300,10 @@ class Createtask extends Component {
 			data['reminder'] = task_reminder;
 			data['notificationid'] = task_notificationid;
 			data['updatedAt'] = toString(new Date());
-			data['date'] = '';
+			data['date'] = (new Date()).toString();
 			data['workid'] = this.props.workid;
 			data['workid_backend'] = this.props.workid_backend;
+
 			if (this.state.update) {
 				const items = this.state.items;
 				const {
@@ -317,7 +318,7 @@ class Createtask extends Component {
 					data.notificationid !== notificationid
 				) {
 					data['taskid'] = items.taskid;
-					console.log(data);
+					data['task_createdAt'] = items.task_createdAt;
 					updateTaskInDatabase(data);
 					this.props.updateTaskInRedux({ task_deadline, task_description, task_notificationid, task_reminder, task_title, taskid:this.state.taskid, workid: data.workid, workid_backend: data.workid_backend, taskid_backend: this.state.taskid_backend });
 				}
@@ -327,7 +328,7 @@ class Createtask extends Component {
 					this.state.task_description.length > 0
 				) {
 					addTaskInDatabase(data);
-					this.props.addTaskInRedux({task_deadline,task_description,task_notificationid,task_reminder,task_title,taskid:uuid,workid:data.workid,workid_backend:data.workid_backend,taskid_backend:''});
+					this.props.addTaskInRedux({ task_deadline, task_description, task_notificationid, task_reminder, task_title, taskid: uuid, workid: data.workid, workid_backend: data.workid_backend, taskid_backend: '', task_createdAt: (new Date()).toString()});
 				}
 			}
 		} else {
@@ -360,9 +361,7 @@ class Createtask extends Component {
 							iconTitle={'title'}
 							autoCorrect={false}
 							autoFocus={true}
-							ref={c => {
-								this._input = c;
-							}}
+							ref={() => {}}
 						/>
 						<WrappedTextInput
 							placeholder={'Add Description'}
@@ -443,9 +442,9 @@ const mapStateToProps = state => {
 	return {
 		sortBy: state.task.data.sortBy,
 		completed: state.task.data.completed,
-		work_title: state.worklist.selectedwork.work_title,
-		workid: state.worklist.selectedwork.workid,
-		workid_backend: state.worklist.selectedwork.workid_backend,
+		work_title: state.worklist.state.selectedwork.work_title,
+		workid: state.worklist.state.selectedwork.workid,
+		workid_backend: state.worklist.state.selectedwork.workid_backend,
 	};
 };
 

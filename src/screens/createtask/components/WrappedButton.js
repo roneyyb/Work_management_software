@@ -14,7 +14,7 @@ export default class extends Component {
                 >
                     <MaterialIcons
                         name={iconTitle}
-                        size={upadding * 2.2}
+                        size={24}
                         color='#2B65EC'
                     />
                 </TouchableHighlight>
@@ -30,9 +30,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     touchstyle: {
-        height: upadding * 3,
-        width: upadding * 3,
-        borderRadius: upadding * 1.5,
+        height: 36,
+        width: 36,
+        borderRadius: 18,
         alignItems: 'center',
         justifyContent: 'center'
     },

@@ -4,12 +4,12 @@ import {
 } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
-import Login from '../screens/authentication/login';
-import SignUp from '../screens/authentication/signup';
-import TaskShowUp from '../screens/createtask/taskshowup';
-import CreateTask from '../screens/createtask/createtask';
-import CreateWork from '../screens/creatework/creatework';
-import StatusChange from '../screens/creatework/statuschange';
+import Login from '../screens/authentication/Login';
+import SignUp from '../screens/authentication/Signup';
+import TaskShowUp from '../screens/createtask/TaskShowUp';
+import CreateTask from '../screens/createtask/CreateTask';
+import CreateWork from '../screens/creatework/CreateWork';
+import StatusChange from '../screens/creatework/Work';
 import SettingUpDatabase from '../screens/DatabaseSetting/settingupdatabase';
 import Splash from '../onLoad/splash';
 

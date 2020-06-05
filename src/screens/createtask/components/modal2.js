@@ -65,7 +65,6 @@ class Modal2Content extends Component {
           onPress={() => {
             AsyncStorage.clear();
             this.props.Logout();
-            this.props.cleareverything();
             this.props.navigation.navigate('Auth');
           }}
         >

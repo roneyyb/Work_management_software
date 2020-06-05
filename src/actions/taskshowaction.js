@@ -5,19 +5,14 @@ import {
 	REFRESHING,
 	SEARCH_TASK,
 	SET_UPDATE_DATA_LIST,
-	SET_LOGIN_FALSE,
 	SET_DATA_TO_TOTALTASK,
 	DELETE_TASKS
 } from './types';
 
-export const addTaskInRedux = (data) => {
-	(dispatch) => {
-		return dispatch({
+export const addTaskInRedux = (data) => ({
 			type: ADD_TASK,
 			payload: data
 		});
-	}
-}
 
 export const undoType = (deleteids, type) => (
 	(dispatch) => {

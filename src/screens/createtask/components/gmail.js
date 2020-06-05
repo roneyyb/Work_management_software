@@ -39,7 +39,7 @@ class Gmail extends Component {
           }}
         >
           <Text
-            style={{ fontSize: upadding * 1.3 , color: '#000000CC', fontWeight:'bold' }}
+            style={{ fontSize: upadding * 1.3 , color: '#8d8d8c', fontWeight:'bold' }}
           >{`${this.props.username}`}</Text>
           <Text
             style={{ fontSize: upadding , color: '#8D8D8C' }}
@@ -53,8 +53,8 @@ class Gmail extends Component {
 const mapStateToProps = state => {
   console.log(state);
   return {
-    email: state.user.email,
-    username: state.user.username
+    email: state.user.user.email,
+    username: state.user.user.username
   };
 };
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Text, View, Dimensions, TouchableOpacity, StyleSheet } from 'react-native';
 import { changeSelectedWork } from '../../actions/worklistaction';
+import { giveAllTask } from '../../database/select';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
@@ -10,8 +11,10 @@ const upadding = Math.round(SCREEN_WIDTH * 0.03);
 class Item extends Component {
 
     onPressWork = (work) => {
-        if (work.workid !== this.props.selectedwork.workid) {
+        const { selectedwork } = this.props;
+        if (work.workid !== selectedwork.workid) {
             this.props.changeSelectedWork(work);
+            this.props.giveAllTask(work.workid);
         }
         this.props.navigation.navigate('task');
         // this.props.dataupdates(
@@ -22,16 +25,18 @@ class Item extends Component {
 
     render() {
         const work = this.props.byIds[this.props.item];
+        const { selectedwork } = this.props;
         return (
             <View style={styles.container}>
                 <View style={[{
-                    backgroundColor: work.workid===this.props.selectedwork.workid
+                    backgroundColor: work.workid===selectedwork.workid
                         ? `${this.props.color}66`
                         : 'white'
                 }, styles.containerInside]}
                 >
                     <View style={styles.identity}>
-                        <View style={styles.identityInside}>
+                        <View style={[ styles.identityInside , {
+                            backgroundColor: `${this.props.color}CC`}]}>
                             {
                                 work.work_title.length !== 0 ?
                                 <Text style={{ color: 'white', fontSize: upadding * 1.5 }}>
@@ -70,10 +75,10 @@ class Item extends Component {
 const mapStateToProps = (state) => {
     return {
         byIds: state.worklist.byIds,
-        selectedwork: state.worklist.state.selectedwork
+        selectedwork: state.worklist.state.selectedwork,
     }
 }
-export default connect(mapStateToProps, { changeSelectedWork })(Item);
+export default connect(mapStateToProps, { changeSelectedWork, giveAllTask })(Item);
 
 const styles = StyleSheet.create({
     container: {
@@ -93,7 +98,6 @@ const styles = StyleSheet.create({
         height: upadding * 3,
         width: upadding * 3,
         borderRadius: upadding * 1.5,
-        backgroundColor: `${this.props.color}CC`,
         justifyContent: 'center',
         alignItems: 'center'
     },

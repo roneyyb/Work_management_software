@@ -18,13 +18,12 @@ export const giveAllWork = () => {
 
                     for (let i = 0; i <= rows.length; i++) {
                         if (i === rows.length) {
-                            console.log('users =>', users);
                             return dispatch({
                                 type: UPDATE_WORK_LIST,
                                 payload: works
                             });
                         } else {
-                            users.push({
+                            works.push({
                                 ...rows.item(i),
                             });
                         }
@@ -40,26 +39,27 @@ export const giveAllWork = () => {
     };
 };
 
-export const giveAllTask = (completed, workid, sortBy) => {
-    let task_completed = 0;
-    console.log('completed, workid, sortBy', completed, workid, sortBy);
-    if (completed) { task_completed = 1; }
-    else { task_completed = 0; }
-    return dispatch => {
+export const giveAllTask = (workid) => {
+
+    return async (dispatch, getState) => {
+        const { completed, sortBy } = getState().task.data;
+        let task_completed = 0;
+        if (completed) { task_completed = 1; }
         db.transaction(tx => {
             tx.executeSql(`Select * from WORK_TASKS where task_completed=? and workid=? ORDER BY task_createdAt ${sortBy === 'myOrder' ? 'ASC' : 'DESC'}`, [task_completed, workid], (_, results) => {
                 console.log('inside give_all_work action array=>', results.rows);
                 const rows = results.rows;
                 let tasks = [];
-
+                console.log("all rows task",rows);
                 for (let i = 0; i <= rows.length; i++) {
                     if (i === rows.length) {
+                        console.log('dispatching action');
                         return dispatch({
                             type: LOADING_ALL_TASK,
                             payload: { message: tasks, completed, sortBy }
                         });
                     } else {
-                        users.push({
+                        tasks.push({
                             ...rows.item(i),
                         });
                     }

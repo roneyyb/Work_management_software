@@ -4,9 +4,10 @@ import taskReducer from './taskReducer';
 import workReducer from './workReducer';
 import createdatabasereducer from './databaseReducer';
 
-export default combineReducers({
+export default appReducer = combineReducers({
   user: userReducer,
   task: taskReducer,
   worklist: workReducer,
   createdatabase: createdatabasereducer,
 });
+

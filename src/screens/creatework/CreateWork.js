@@ -7,13 +7,13 @@ import {
     Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { uuidv1 } from 'uuid/v1';
+import uuidv1 from 'uuid/v1';
 import {
-    addWork,
-    updatetheWork
+    addWorkInRedux,
+    updateWorkInRedux
 } from '../../actions/worklistaction';
 import {
-    createWork
+    addWorkInDatabase
 } from '../../database/createqueries';
 import {
     updateWorkInDatabase
@@ -35,9 +35,6 @@ class Creatework extends React.Component {
             <TouchableHighlight
                 underlayColor={'#2B65EC33'}
                 style={{
-                    height: upadding * 3,
-                    width: upadding * 4,
-                    borderRadius: upadding / 2,
                     alignItems: 'center',
                     marginRight: upadding,
                     justifyContent: 'center'
@@ -48,8 +45,8 @@ class Creatework extends React.Component {
                         : navigation.getParam('creating', () => { })
                 }
             >
-                <Text style={{ fontSize: upadding * 1.3, color: '#2B65EC', fontWeight: 'bold' }}>
-                    1{navigation.getParam('update', false)?'CREATE':'UPDATE'}
+                <Text style={{ fontSize: upadding, color: '#2B65EC', fontWeight: 'bold' }}>
+                    {navigation.getParam('update', false)?'UPDATE':'CREATE'}
                 </Text>
             </TouchableHighlight>
         ,
@@ -78,13 +75,9 @@ class Creatework extends React.Component {
         this.props.navigation.setParams({ creating: this.onCreate.bind(this), updating: this.onUpdate.bind(this) });
     }
 
-    componentWillUnmount() {
-        this.props.clearallwork();
-    }
-
     onUpdate() {
         const data = { ...this.props.selectedwork, work_title: this.state.work };
-        this.props.updatetheWork(data);
+        this.props.updateWorkInRedux(data);
         updateWorkInDatabase(this.props.selectedwork.workid, this.state.work);
         this.props.navigation.navigate('task');
     }
@@ -99,8 +92,9 @@ class Creatework extends React.Component {
             work_deadline: "",
             workid_bakcend:""
         }
-        this.props.addWork(data);
-        createWork(data);
+        this.props.addWorkInRedux(data);
+        addWorkInDatabase(data);
+        this.props.giveAllTask(uuid);
         this.props.navigation.navigate('task');
     }
 
@@ -143,18 +137,15 @@ class Creatework extends React.Component {
 }
 
 const mapStateToProps = state => {
-
     return {
-        selectedwork: state.worklist.selectedwork,
+        selectedwork: state.worklist.state.selectedwork,
     };
 };
 export default connect(
     mapStateToProps,
     {
-        updatetheWork,
-        addWork,
-        onChangework,
-        clearallwork,
-        setState
+        giveAllTask,
+        updateWorkInRedux,
+        addWorkInRedux
     }
 )(Creatework);

@@ -14,7 +14,7 @@ import {
 import { connect } from 'react-redux';
 import FlipCard from 'react-native-flip-card';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import colorArray from '../../constants/Color';
+import { colorArray } from '../../constants/Color';
 import { undoType } from '../../actions/taskshowaction';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
@@ -157,9 +157,8 @@ class Taskeach extends Component {
     };
 
     returndatabaseDate = date => {
-        const a = date.split(' ');
-        const time = a[1].split(':');
-        const datee = a[0].split('-');
+        const created = date.split(' ');
+        const time = created[5].split(':');
         const monthNames = [
             'Jan',
             'Feb',
@@ -178,9 +177,9 @@ class Taskeach extends Component {
         const currentday = currentdate.getDay();
         const currentmonth = currentdate.getMonth();
         const currentyear = currentdate.getFullYear();
-        const day = datee[2];
-        const month = datee[1];
-        const year = datee[0];
+        const day = created[2];
+        const year = created[3];
+        const month = monthNames.indexOf(created[1])+1;
         if (year === currentyear && month === currentmonth && day === currentday) {
             return `${time[0]}:${time[1]}`;
         } else if (year == currentyear) {
@@ -298,9 +297,10 @@ class Taskeach extends Component {
         if (this.props.Searchtask) {
             this.props.settaskSearch(false);
         }
+        const { byIds, items } = this.props;
         this.props.navigation.navigate('createtask', {
             update: true,
-            items: this.props.items,
+            items: byIds[items],
             Searchtask: this.props.Searchtask,
             settaskSearch: this.props.settaskSearch,
             callUndo: this.props.callUndo,
@@ -333,7 +333,7 @@ class Taskeach extends Component {
                                         size={upadding * 1.25}
                                         width={5}
                                         color={`${
-                                            colorArray[this.props.index % colorArray.length]
+                                            colorArray[this.props.index % colorArray.length()]
                                             }99`}
                                     />
                                 </View>
@@ -447,9 +447,12 @@ class Taskeach extends Component {
     };
 
     render() {
+        // return (
+        //     <View/>
+        // );
         const { byIds } = this.props;
         const data = byIds[this.props.items];
-        const { taskid, task_title, task_description, task_deadline, task_completedAt } = data;
+        const { taskid, task_title, task_description, task_deadline, task_completedAt, task_createdAt } = data;
         return (
             <View
                 ref={child => {
@@ -562,16 +565,16 @@ class Taskeach extends Component {
                                         {this.showtitleornot(task_title)}
                                         {this.showdescriptionornot(task_description)}
                                     </View>
-                                    <View style={{ flex: 1, paddingTop: upadding }}>
+                                    {/* <View style={{ flex: 1, paddingTop: upadding }}>
                                         <Text
                                             style={{
                                                 fontSize: upadding,
                                                 fontWeight: 'bold',
                                                 color: 'black',
                                             }}>
-                                            {this.returndatabaseDate(this.props.items.task_createdAt)}
+                                            {this.returndatabaseDate(task_createdAt)}
                                         </Text>
-                                    </View>
+                                    </View> */}
                                 </View>
                                 {this.returnDeadlineorCompleted(task_deadline, task_completedAt)}
                             </View>
@@ -588,8 +591,8 @@ class Taskeach extends Component {
 const mapStateToProps = (state) => {
     return {
         byIds: state.task.byIds,
-        workid: state.worklist.selectedwork.workid,
-        title: state.worklist.selectedwork.work_title,
+        workid: state.worklist.state.selectedwork.workid,
+        title: state.worklist.state.selectedwork.work_title,
         completed: state.task.data.completed,
         sortBy:state.task.data.sortBy
     }

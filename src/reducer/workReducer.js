@@ -5,7 +5,6 @@ import {
     UPDATE_WORK_LIST,
     DELETE_WORK,
     UPDATE_WORKLIST_AFTER_CLOUD_DATA_UPDATION,
-    SET_LOGIN_FALSE,
 } from '../actions/types';
 
 import produce from 'immer';
@@ -25,10 +24,12 @@ const initialState = {
 const idReducer = produce((draft, action) => {
     switch (action.type) {
         case ADD_WORK:
+            console.log('ADD_WORk',action.payload);
             draft[action.payload.workid] = action.payload;
             break;
         case UPDATE_WORK:
-            draft[action.payload.workid] = aciton.payload;
+            draft[action.payload.workid] = action.payload;
+            break;
         case UPDATE_WORK_LIST:
             draft = {};
             action.payload.forEach((item) => {
@@ -37,9 +38,10 @@ const idReducer = produce((draft, action) => {
             break;
         case DELETE_WORK:
             delete draft[action.payload.workid];
+            break;
         case UPDATE_WORKLIST_AFTER_CLOUD_DATA_UPDATION:
             action.payload.forEach(item => {
-                draft[item.workid] = item.workid_backend;
+                draft[item.workid].workid_backend = item.workid_backend;
             });
             break;
     }
@@ -48,6 +50,8 @@ const idReducer = produce((draft, action) => {
 const stateReducer = produce((draft, action) => {
     switch (action.type) {
         case ADD_WORK:
+            const item = action.payload;
+            console.log("ADD_WORK",item);
             draft.data.push(item.workid);
             draft.selectedwork = item;
             break;

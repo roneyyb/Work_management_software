@@ -3,17 +3,7 @@ import {
 	UPDATE_TASK,
 	LOADING_ALL_TASK,
 	REFRESHING,
-	COMPLETE_SUCCESS,
-	SEARCH_CHANGE,
-	CLEAR_ALL_IN_TASKSHOW,
-	SEARCH_TASK,
-	SET_UPDATE_DATA_LIST,
-	DELETE_WORK_LOADING,
-	DELETE_WORK_SUCCESS,
-	SET_DATA_TO_TOTALTASK,
-	DELETE_TASKS,
-	DELETE_TASK_FAIL,
-	CLEAR_ALL_STATE
+	DELETE_TASKS
 } from '../actions/types';
 
 import produce from 'immer';
@@ -35,22 +25,26 @@ const initialState = {
 };
 
 const idReducer = produce((draft, action) => {
+	console.log(action.type);
 	switch (action.type) {
 		case ADD_TASK:
-			action.payload.forEach(item => {
-				draft[item.taskid] = item;
-			});
+			const item = action.payload;
+			draft[item.taskid] = item;
 			break;
 		case LOADING_ALL_TASK:
-			draft = [];
+			draft = {};
+			console.log(draft);
 			action.payload.message.forEach(item => {
+				console.log("item",item);
 				draft[item.taskid] = item;
 			});
+			console.log(draft);
 			break;
 		case DELETE_TASKS:
-			for (var i = 0; i < action.payload.deleteids.length(); i++) {
-				delete draft[deleteids[i].taskid];
-			}
+			const deleteids = action.payload.deleteids;
+			deleteids.forEach((item) => {
+				delete draft[item.taskid];
+			});
 			break;
 		case UPDATE_TASK:
 			draft[action.payload.taskid] = action.payload;
@@ -61,6 +55,7 @@ const idReducer = produce((draft, action) => {
 const dataReducer = produce((draft, action) => {
 	switch (action.type) {
 		case ADD_TASK:
+			const item = action.payload;
 			if (draft.sortBy == "myOrder") {
 				draft.data.unshift(item.taskid);
 			} else {
@@ -69,7 +64,7 @@ const dataReducer = produce((draft, action) => {
 			break;
 		case LOADING_ALL_TASK:
 			draft.data = [];
-			action.payload.forEach(item => {
+			action.payload.message.forEach(item => {
 				draft.data.push(item.taskid);
 			});
 			draft.sortBy = action.payload.sortBy;
@@ -77,19 +72,19 @@ const dataReducer = produce((draft, action) => {
 			break;
 		case DELETE_TASKS:
 			const deleteids = action.payload.deleteids;
-			for (var i = 0; i < deleteids.length(); i++) {
-				const index = draft.data.indexOf(deleteids[i].taskid);
+			deleteids.forEach((item) => {
+				const index = draft.data.indexOf(item.taskid);
 				draft.data.splice(index, 1);
-			}
+			}); 
 			break;
 	}
-}, initialState.state);
+}, initialState.data);
 
 const stateReducer = produce(((draft, action) => {
 	switch (action.type) {
 		case DELETE_TASKS:
 			draft.undoType = action.payload.undoType;
-			draft.count - action.payload.count;
+			draft.count = action.payload.count;
 			break;
 		case REFRESHING:
 			draft.refreshing = true;

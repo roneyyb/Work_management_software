@@ -2,7 +2,6 @@ import SQLite from "react-native-sqlite-storage";;
 const db = SQLite.openDatabase("multiutilityapp.db");
 
 export const addWorkInDatabase = (work) => {
-    return dispatch => {
         db.transaction(
             tx => {
                 tx.executeSql(
@@ -35,7 +34,6 @@ export const addWorkInDatabase = (work) => {
                 console.log('Create work Success');
             }
         );
-    };
 };
 
 export const addTaskInDatabase = ({
@@ -50,16 +48,15 @@ export const addTaskInDatabase = ({
     workid_backend
 }, callback) => {
     console.log("creating Task", title, date, workid, description);
-
-    return dispatch => {
         db.transaction(
             tx => {
                 tx.executeSql(
-                    "insert into WORK_TASKS(taskid, task_title, task_description, task_createdAt, workid, task_updatedAt, task_completedAt, task_deadline, task_reminder, task_notificationid, workid_backend,taskid_backend) values(?,?,?,datetime(),?, datetime(),?, ?,?,?,?,?)",
+                    "insert into WORK_TASKS(taskid, task_title, task_description, task_createdAt, workid, task_updatedAt, task_completedAt, task_deadline, task_reminder, task_notificationid, workid_backend,taskid_backend) values(?,?,?,?,?, datetime(),?, ?,?,?,?,?)",
                     [
                         taskid,
                         title,
                         description,
+                        date,
                         workid,
                         "",
                         deadline,
@@ -99,5 +96,4 @@ export const addTaskInDatabase = ({
                 console.log(error);
             }
         );
-    };
 };

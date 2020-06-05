@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { FlatList, View, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
-import COLORS from '../../constants/Color';
-import Items from './EachWork';
+import { colorArray as COLORS } from '../../constants/Color';
+import EachWork from './EachWork';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
 
@@ -16,7 +16,7 @@ class Tasklist extends Component {
           <FlatList
             data={this.props.data}
             renderItem={({ item, index }) => (
-              <Items
+              <EachWork
                 item={item}
                 color={COLORS[index % COLORS.length]}
                 data={this.props.data}

@@ -20,7 +20,7 @@ const Height = SCREEN_HEIGHT * 0.07;
 const th_height = Height - 20;
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
 
-class Searchtask extends Component {
+class SearchTask extends Component {
     constructor(props) {
         super(props);
         this.state = { searchActive: false, searchValue: '', searchresult: [] };
@@ -216,5 +216,3 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     }
 });
-
-export default Searchtask;

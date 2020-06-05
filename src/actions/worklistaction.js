@@ -6,12 +6,12 @@ import {
     UPDATE_WORKLIST_AFTER_CLOUD_DATA_UPDATION,
 } from './types';
 
-export const addWork = (work) => ({
+export const addWorkInRedux = (work) => ({
         type: ADD_WORK,
         payload: work
 });
 
-export const updatetheWork = (work) => ({
+export const updateWorkInRedux = (work) => ({
         type: UPDATE_WORK,
         payload: work
 });

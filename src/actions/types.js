@@ -9,6 +9,8 @@ export const UPDATE_WORK = 'update_work';
 export const CHANGE_SELECTED_WORK = 'change_selected_work';
 export const UPDATE_WORK_LIST = 'update_work_list';
 export const DELTE_WORK = 'delete_work';
+export const LOADING_ALL_TASK = 'loading_all_task';
+
 
 export const WORK_LIST_UPDATE = 'work_list_update';
 export const WORK_CHANGE = 'work_change';
@@ -70,3 +72,6 @@ export const DATABASE_CREATED = 'database_created';
 
 export const DELETE_TASKS = 'delete_task';
 export const DELETE_TASK_FAIL = 'delete_task_fail';
+
+
+export const DESTROY_STATE = 'destroy_state';
