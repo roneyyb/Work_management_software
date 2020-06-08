@@ -50,10 +50,8 @@ export const updateTaskInDatabase = (
         notificationid,
         workid_backend,
         taskid,
-    },
-    callback = 0,
+    }
 ) => {
-    return dispatch => {
         db.transaction(
             tx => {
                 tx.executeSql(
@@ -69,9 +67,6 @@ export const updateTaskInDatabase = (
                         workid,
                     ],
                     () => {
-                        // if (callback !== 0) {
-                        //     callback(1);
-                        // }
                         console.log('Task updated Successfully.');
                         tx.executeSql(
                             'Insert into TASK_DATA_UPDATE(update_type, workid, taskid) values(?,?,?)',
@@ -101,5 +96,4 @@ export const updateTaskInDatabase = (
                 console.log('Task update success');
             },
         );
-    };
 };

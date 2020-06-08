@@ -293,13 +293,12 @@ class Createtask extends Component {
 				task_reminder,
 				task_notificationid,
 			} = this.state;
-			data['taskid'] = uuid;
 			data['title'] = task_title;
 			data['description'] = task_description;
 			data['deadline'] = task_deadline;
 			data['reminder'] = task_reminder;
 			data['notificationid'] = task_notificationid;
-			data['updatedAt'] = toString(new Date());
+			data['updatedAt'] = (new Date()).toString();
 			data['date'] = (new Date()).toString();
 			data['workid'] = this.props.workid;
 			data['workid_backend'] = this.props.workid_backend;
@@ -318,15 +317,17 @@ class Createtask extends Component {
 					data.notificationid !== notificationid
 				) {
 					data['taskid'] = items.taskid;
-					data['task_createdAt'] = items.task_createdAt;
+					console.log('updating task in database',data);
 					updateTaskInDatabase(data);
-					this.props.updateTaskInRedux({ task_deadline, task_description, task_notificationid, task_reminder, task_title, taskid:this.state.taskid, workid: data.workid, workid_backend: data.workid_backend, taskid_backend: this.state.taskid_backend });
+					this.props.updateTaskInRedux({ task_deadline, task_description, task_notificationid, task_reminder, task_title, taskid:this.state.taskid, workid: data.workid, workid_backend: data.workid_backend, taskid_backend: this.state.taskid_backend,task_createdAt:items.task_createdAt });
 				}
 			} else {
 				if (
 					this.state.task_title.length > 0 ||
 					this.state.task_description.length > 0
 				) {
+
+					data['taskid'] = uuid;
 					addTaskInDatabase(data);
 					this.props.addTaskInRedux({ task_deadline, task_description, task_notificationid, task_reminder, task_title, taskid: uuid, workid: data.workid, workid_backend: data.workid_backend, taskid_backend: '', task_createdAt: (new Date()).toString()});
 				}

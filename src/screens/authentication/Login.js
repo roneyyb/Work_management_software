@@ -137,7 +137,7 @@ class Login extends Component {
                 let responseJson = response.data;
                 this.setState({ isLoading: false });
                 setupUserOnStart(responseJson);
-                navigation.navigate('settingupdatabase');
+                navigation.navigate('settingupdatabase',{'signup':false});
             })
             .catch(error => {
                 console.log('Error while login',error);
@@ -281,6 +281,7 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => {
+    console.log(state);
     return {};
 };
 export default connect(

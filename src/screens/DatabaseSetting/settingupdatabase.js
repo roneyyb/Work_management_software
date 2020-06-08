@@ -13,7 +13,8 @@ class Settingupdatabase extends Component {
     constructor(props) {
         super(props);
         console.log('setting up database');
-        signup = this.props.navigation.getParam('signup', false);
+        const signup = this.props.navigation.getParam('signup', false);
+        console.log(signup);
         this.state = {
             message: 'Setting up database',
             set_database: false,
@@ -35,8 +36,7 @@ class Settingupdatabase extends Component {
     }
 
     componentDidMount() {
-        console.log('database ', this.props.work, this.state.signup);
-        this.props.createDatabase(this.props.work, this.actionwhensetdatabasecom, this.state.signup);
+       this.props.createDatabase(this.props.work, this.actionwhensetdatabasecom, this.state.signup);
     }
 
     cancelFunction = (value) => {
@@ -75,7 +75,6 @@ class Settingupdatabase extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state);
     return {
         userid: state.user.user._id,
         work: state.user.user.work

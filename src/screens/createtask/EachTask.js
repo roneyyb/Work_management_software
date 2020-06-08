@@ -53,15 +53,14 @@ class Return_background extends Component {
 class Taskeach extends Component {
     constructor(props) {
         super(props);
+        console.log('constructor',this.props.items);
         this.front = 0;
         this.touched1 = true;
         this.touched2 = true;
         this.touched = true;
         const position = new Animated.ValueXY();
         const panResponder = PanResponder.create({
-            onStartShouldSetPanResponder: (evt, gestureState) => {
-                return false;
-            },
+            onStartShouldSetPanResponder: (evt, gestureState) => false,
             onMoveShouldSetPanResponder: (evt, gestureState) => {
                 if (
                     (gestureState.dx > upadding * 1.25 ||
@@ -198,6 +197,7 @@ class Taskeach extends Component {
     }
 
     onSwipeComplete(direction) {
+        this.setState({ backcolor: 'white' });
         if (direction === 'right') {
             if (!this.props.completed) {
                 this.onSwipeAction(false, true);
@@ -207,6 +207,7 @@ class Taskeach extends Component {
         } else {
             this.onSwipeAction(true, false);
         }
+
     }
 
     getCardStyle() {
@@ -283,12 +284,12 @@ class Taskeach extends Component {
             this.props.deleteTask(taskid, workid);
         }
         this.props.undoType(
-            [taskid],
+            [{ taskid }],
             deletetask ? 'Deleted' : (complete ? 'Completed' : 'Incompleted'),
         );
 
         this.props.callUndo(
-            [taskid],
+            [{ taskid }],
             deletetask ? 'delete' : complete ? 'complete' : 'incomplete',
         );
     };
@@ -405,6 +406,11 @@ class Taskeach extends Component {
         }
     };
 
+    shouldComponentUpdate(nextProps) {
+        console.log(nextProps.items,this.props.items);
+        return this.props.items === nextProps.items;
+    }
+
     changecolor = () => {
         if (this.front === 0) {
             this.front = 1;
@@ -446,10 +452,15 @@ class Taskeach extends Component {
         return;
     };
 
+    componentWillUnmount() {
+        console.log('component unmounted');
+    }
+
     render() {
         // return (
         //     <View/>
         // );
+        console.log('rerender', this.props.items);
         const { byIds } = this.props;
         const data = byIds[this.props.items];
         const { taskid, task_title, task_description, task_deadline, task_completedAt, task_createdAt } = data;

@@ -14,13 +14,10 @@ export const addTaskInRedux = (data) => ({
 			payload: data
 		});
 
-export const undoType = (deleteids, type) => (
-	(dispatch) => {
-		return dispatch({
+export const undoType = (deleteids, type) => ({
 			type: DELETE_TASKS,
 			payload: { deleteids, count: deleteids.length, undoType: type }
 		});
-});
 
 export const updateTaskInRedux = (task) => ({
 	type: UPDATE_TASK,

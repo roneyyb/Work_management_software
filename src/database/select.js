@@ -1,5 +1,5 @@
 import SQLite from "react-native-sqlite-storage";
-import {  UPDATE_WORK_LIST, LOADING_ALL_TASK } from '../actions/types';
+import {  UPDATE_WORK_LIST, LOADING_ALL_TASK} from '../actions/types';
 
 const db = SQLite.openDatabase('multiutilityapp.db');
 
@@ -45,19 +45,22 @@ export const giveAllTask = (workid) => {
         const { completed, sortBy } = getState().task.data;
         let task_completed = 0;
         if (completed) { task_completed = 1; }
+        console.log('giveAlltask',completed,sortBy);
         db.transaction(tx => {
             tx.executeSql(`Select * from WORK_TASKS where task_completed=? and workid=? ORDER BY task_createdAt ${sortBy === 'myOrder' ? 'ASC' : 'DESC'}`, [task_completed, workid], (_, results) => {
                 console.log('inside give_all_work action array=>', results.rows);
                 const rows = results.rows;
-                let tasks = [];
+                var tasks = [];
                 console.log("all rows task",rows);
                 for (let i = 0; i <= rows.length; i++) {
                     if (i === rows.length) {
                         console.log('dispatching action');
-                        return dispatch({
+                        console.log(tasks);
+                        dispatch({
                             type: LOADING_ALL_TASK,
                             payload: { message: tasks, completed, sortBy }
                         });
+                        return;
                     } else {
                         tasks.push({
                             ...rows.item(i),

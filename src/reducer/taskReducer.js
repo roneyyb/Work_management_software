@@ -20,7 +20,7 @@ const initialState = {
 		loading: false,
 		count: 0,
 		undotype: '',
-		refreshing:false
+		refreshing: false
 	}
 };
 
@@ -31,10 +31,16 @@ const idReducer = produce((draft, action) => {
 			draft[item.taskid] = item;
 			break;
 		case LOADING_ALL_TASK:
-			draft = {};
+			var i,
+				keys = Object.keys(draft);
+			for (i = 0; i < keys.length; i++) {
+				delete draft[keys[i]];
+			}
 			action.payload.message.forEach(item => {
+				console.log(item.taskid);
 				draft[item.taskid] = item;
 			});
+			console.log(draft);
 			break;
 		case DELETE_TASKS:
 			const deleteids = action.payload.deleteids;
@@ -68,10 +74,12 @@ const dataReducer = produce((draft, action) => {
 			break;
 		case DELETE_TASKS:
 			const deleteids = action.payload.deleteids;
+			console.log('deletion =>',draft.data);
 			deleteids.forEach((item) => {
 				const index = draft.data.indexOf(item.taskid);
 				draft.data.splice(index, 1);
-			}); 
+			});
+			console.log('deletion task ->',draft.data);
 			break;
 	}
 }, initialState.data);

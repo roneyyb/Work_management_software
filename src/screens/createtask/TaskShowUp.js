@@ -146,6 +146,7 @@ class Taskshowup extends Component {
 
     returnflatlistdata() {
         if (!this.firsttime) {
+            console.log('tasklist to render',this.props.data.data.length);
             return this.props.data.data;
         }
         this.firsttime = false;
@@ -323,7 +324,7 @@ class Taskshowup extends Component {
         this.undoinuse = 0;
         this.setState({ deleteids: [] });
         await this.props.giveAllTask(
-            this.props.workid,
+            this.props.selectedwork.workid
         );
     };
     setfootertouch = value => {
@@ -507,6 +508,8 @@ class Taskshowup extends Component {
 }
 
 const mapStatetoprops = state => {
+    console.log(state.task.data.data.length);
+    console.log(Object.keys(state.task.byIds).length);
     return {
         data: state.task.data,
         state: state.task.state,

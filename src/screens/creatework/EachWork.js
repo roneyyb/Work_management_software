@@ -14,6 +14,7 @@ class Item extends Component {
         const { selectedwork } = this.props;
         if (work.workid !== selectedwork.workid) {
             this.props.changeSelectedWork(work);
+            console.log('Eachwork =>','giveAllWork',work);
             this.props.giveAllTask(work.workid);
         }
         this.props.navigation.navigate('task');
