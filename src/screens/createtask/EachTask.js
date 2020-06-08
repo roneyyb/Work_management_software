@@ -197,7 +197,6 @@ class Taskeach extends Component {
     }
 
     onSwipeComplete(direction) {
-        this.setState({ backcolor: 'white' });
         if (direction === 'right') {
             if (!this.props.completed) {
                 this.onSwipeAction(false, true);
@@ -407,8 +406,10 @@ class Taskeach extends Component {
     };
 
     shouldComponentUpdate(nextProps) {
-        console.log(nextProps.items,this.props.items);
-        return this.props.items === nextProps.items;
+        if (this.props.items != nextProps.items) {
+            this.state.position.setValue({ x: 0, y: 0 });
+        }
+        return true;
     }
 
     changecolor = () => {
