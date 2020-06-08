@@ -21,13 +21,15 @@ export function actionAfterNotUndoOnDatabase(deleteids, undotype, workid) {
               tx.executeSql(
                 'Insert into TASK_DATA_UPDATE(update_type, workid, taskid) values(?,?,?)',
                 ['UPDATE', workid.workid, taskid.taskid],
-                (_, error) => { console.error('Problem in deleting ids from database', error); },
                 () => { console.log('Data update after undo successfull.'); },
+                (_, error) => { console.error('Problem in deleting ids from database', error); }
+               
               );
             },
+            () => { console.log('Data update after undo successfull.'); },
             (_, error) =>
               console.error('Problem in deleting ids from database', error),
-            () => { console.log('Data update after undo successfull.'); }
+            
           );
         });
       },

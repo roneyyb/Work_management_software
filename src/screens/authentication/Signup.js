@@ -78,7 +78,7 @@ class Signup extends React.Component {
                 navigation.navigate('settingupdatabase', { signup: true });
             })
             .catch(error => {
-                console.log('error =>', error);
+                console.log('Error in Signup', error);
                 this.handleError(error);
             });
     };

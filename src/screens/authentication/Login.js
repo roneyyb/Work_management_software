@@ -135,7 +135,6 @@ class Login extends Component {
             .post(`${Server}/login`, data)
             .then(response => {
                 let responseJson = response.data;
-                console.log(responseJson);
                 this.setState({ isLoading: false });
                 setupUserOnStart(responseJson);
                 navigation.navigate('settingupdatabase');

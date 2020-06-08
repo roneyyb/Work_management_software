@@ -25,7 +25,6 @@ const initialState = {
 };
 
 const idReducer = produce((draft, action) => {
-	console.log(action.type);
 	switch (action.type) {
 		case ADD_TASK:
 			const item = action.payload;
@@ -33,12 +32,9 @@ const idReducer = produce((draft, action) => {
 			break;
 		case LOADING_ALL_TASK:
 			draft = {};
-			console.log(draft);
 			action.payload.message.forEach(item => {
-				console.log("item",item);
 				draft[item.taskid] = item;
 			});
-			console.log(draft);
 			break;
 		case DELETE_TASKS:
 			const deleteids = action.payload.deleteids;
