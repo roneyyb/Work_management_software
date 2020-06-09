@@ -39,10 +39,15 @@ export const giveAllWork = () => {
     };
 };
 
-export const giveAllTask = (workid) => {
-
+export const giveAllTask = (workid, filter1=0, filter2=0) => {
     return async (dispatch, getState) => {
-        const { completed, sortBy } = getState().task.data;
+        let completed = filter1;
+        let sortBy = filter2
+        if (filter1 == 0 && filter2 == 0) {
+            const { completed:c, sortBy:S } = getState().task.data;
+            completed = c;
+            sortBy = S;
+        }
         let task_completed = 0;
         if (completed) { task_completed = 1; }
         console.log('giveAlltask',completed,sortBy);

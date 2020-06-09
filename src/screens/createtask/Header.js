@@ -6,33 +6,11 @@ import {
     TouchableHighlight
 } from 'react-native';
 import FlipCard from 'react-native-flip-card';
-import { connect } from 'react-redux';
-import { undoType } from '../../actions/taskshowaction';
 import WrappedButton from './components/WrappedButton';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
 
 class FrontView extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { value: '', completed: 'Icom' };
-        this.active = false;
-    }
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.searchvaluereset && this.active) {
-            this.active = false;
-            this.setState({ value: '' });
-        }
-    }
-
-    componentWillUnmount() {
-        this.setState({ vlaue: '' });
-    }
-    barref = null;
-
-    handleref = ref => {
-        this.barref = ref;
-    };
 
     render() {
         return (
@@ -53,6 +31,7 @@ class FrontView extends Component {
                 <WrappedButton
                     iconTitle={'search'}
                     onPress={() => {
+                        this.active = false;
                         this.props.settaskSearch(true);
                     }}
                 />
@@ -69,19 +48,25 @@ class BackView extends Component {
                 style={FrontViewstyles.Containerstyle}
             >
                 {props.deletecount !== 0 ? (
-                    <View style={styles.Container2style}>
-                        <Text
-                            style={{
-                                marginLeft: upadding * 0.8,
-                                color: '#2B65EC',
-                                fontWeight: '500',
-                                fontSize: upadding * 1.2
-                            }}
-                        >{`${props.deletecount} TASK SELECTED`}</Text>
-                    </View>
+                    <WrappedButton
+                        onPress={() => { props.onPressReturn(); }}
+                        iconTitle={'clear'}
+                    />
+                  
                 ) : (
                         <View />
                     )}
+                <View style={[styles.Container2style]}>
+
+                    <Text
+                        style={{
+                            marginLeft: upadding * 0.8,
+                            color: '#2B65EC',
+                            fontWeight: '500',
+                            fontSize: upadding * 1.2
+                        }}
+                    >{`${props.deletecount} TASK SELECTED`}</Text>
+                </View>
                 <WrappedButton
                     onPress={() => { props.onPressButton(false); }}
                     iconTitle={'done-all'}
@@ -105,14 +90,13 @@ class Header extends Component {
         this.changeflip = this.changeflip.bind(this);
         this.onPressreturn = this.onPressreturn.bind(this);
         this.onPressButton = this.onPressButton.bind(this);
-        this.onSearchreset = this.onSearchreset.bind(this);
-        this.Deletetaskcountnumber = this.Deletetaskcountnumber.bind(this);
+       // this.onSearchreset = this.onSearchreset.bind(this);
+        this.deleteTaskCountNumber = this.deleteTaskCountNumber.bind(this);
     }
 
 
     // eslint-disable-next-line react/sort-comp
-    changeflip = count => {
-        this.searchvaluereset = true;
+    changeflip(count) {
         if (this.state.isFlipped) {
             this.props.setpointer(false);
         } else {
@@ -127,17 +111,12 @@ class Header extends Component {
     }
 
     onPressButton(deleted) {
-        const { completed } = this.props;
-        this.props.undoType(this.props.deleteid, deleted ? 'Deleted' : !completed ? 'Completed' : 'Incompleted');
-        this.props.deleteMultipletask(this.props.deleteid, deleted ? 'delete' : !completed ? 'complete' : 'incomplete');
+        this.props.headerAction(deleted);
         this.changeflip(0);
     }
 
-    onSearchreset() {
-        this.searchvaluereset = false;
-    }
 
-    Deletetaskcountnumber(count) {
+    deleteTaskCountNumber(count) {
         this.setState({ deletecount: count });
     }
     render() {
@@ -159,7 +138,7 @@ class Header extends Component {
                     />
                     {/* Back Side */}
                     <BackView
-                        onPressreturn={this.onPressreturn}
+                        onPressReturn={this.onPressreturn}
                         onPressButton={this.onPressButton}
                         deletecount={this.state.deletecount}
                     />
@@ -169,15 +148,9 @@ class Header extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        workid:state.worklist.state.selectedwork.workid,
-        title: state.worklist.state.selectedwork.work_title,
-        completed: state.task.data.completed,
-    };
-}
 
-export default connect(mapStateToProps, { undoType })(Header);
+
+export default Header;
 
 const styles = {
     Container2style: {

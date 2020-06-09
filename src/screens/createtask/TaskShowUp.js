@@ -25,6 +25,7 @@ import { giveAllTask } from '../../database/select';
 import Datetimemodal from './components/datetimemodal';
 import SearchTask from './SearchTask';
 import {
+    undoType,
     Refreshing,
     updateTaskInRedux,
 } from '../../actions/taskshowaction';
@@ -64,7 +65,8 @@ class Taskshowup extends Component {
     constructor(props) {
         // PushNotification.cancelAllLocalNotifications(
         super(props);
-        this.child = createRef();
+        this.headerRef = createRef();
+        console.log(this.headerRef);
         this.setcolornormal = false;
         this.deleteid = [];
         this.undoinuse = 0;
@@ -114,11 +116,6 @@ class Taskshowup extends Component {
     };
 
     handleRefresh = () => {
-        // this.props.navigation.setParams({
-        //     onNavigateBack: this.handleRefresh.bind(this),
-        // });
-        //this.props.navigation.setParams({ title: this.props.title });
-
         this.props.giveAllTask(this.props.selectedwork.workid);
     };
 
@@ -159,9 +156,10 @@ class Taskshowup extends Component {
 
     deleted = () => {
         const { sortBy, complete } = this.props.data;
-        this.deleteid = [];
+        this.deleteids = [];
         this.props.giveAllTask(this.props.workid);
     };
+
     setColordefault = () => {
         this.setcolornormal = true;
         this.deleteid = [];
@@ -177,11 +175,6 @@ class Taskshowup extends Component {
         this.setState({ visibleWorkModal: state });
     };
 
-    ClearAllState() {
-        this.props.cleareverything();
-    }
-
-    a = '';
 
     waitUndo = (deleteids, type) => {
         const workid = {
@@ -215,7 +208,7 @@ class Taskshowup extends Component {
             workidbackend: this.props.selectedwork.workid_backend,
         };
         this.resetUndo(this.state.deleteid, type, workid);
-        this.setState({ deleteid: deleteids });
+        this.setState({ deleteids: deleteids });
         Animated.timing(this.state.opacity, {
             toValue: 1,
             duration: 500,
@@ -228,13 +221,21 @@ class Taskshowup extends Component {
                 toValue: 1,
                 duration: 500,
             }).start(this.waitUndo(deleteids, type));
-            this.setState({ deleteid: deleteids});
+            this.setState({ deleteids: deleteids});
             this.undoinuse++;
         } else {
             this.undoalreadyinuse(deleteids, type);
             this.undoinuse++;
         }
     };
+
+    headerAction = (deleted) => {
+        const { completed } = this.props.data;
+        console.log('deleteids =>',this.deleteid);
+        this.props.undoType(this.deleteid, deleted ? 'Deleted' : !completed ? 'Completed' : 'Incompleted');
+        this.deleteMultipletask(this.deleteid, deleted ? 'delete' : !completed ? 'complete' : 'incomplete');
+        
+    }
 
     deletingWorkconfirmation = () => {
         const { workid, workidbackend } = this.props.selectedwork;
@@ -368,8 +369,10 @@ class Taskshowup extends Component {
                             items={item}
                             setColordefault={this.setColordefault.bind(this)}
                             handleRefresh={this.handleRefresh.bind(this)}
-                            changeflip={this.child.changeflip}
-                            Deletetaskcountnumber={this.child.Deletetaskcountnumber}
+                            changeflip={(count) => {
+                                this.headerRef.current.changeflip(count);
+                            }}
+                            Deletetaskcountnumber={(count) => { this.headerRef.current.deleteTaskCountNumber(count); }}
                             changescroll={this.changescroll}
                         />
                     )}
@@ -394,21 +397,13 @@ class Taskshowup extends Component {
                     onBackdropPress={this.onBackdropPress}
                 />
                 <Header
-                    ref={childe => {
-                        this.child = childe;
-                    }}
+                    ref={this.headerRef}
+                    title={this.props.selectedwork.work_title}
+                    headerAction={this.headerAction.bind(this)}
                     setpointer={this.setfootertouch}
-                    callUndo={this.callUndo}
                     settaskSearch={this.settaskSearch}
-                    Makeremoterequest={this.props.giveAllTask}
-                    settingNotificationmodal={this.settingNotificationmodal}
                     navigation={navigation}
-                    handleRefresh={this.handleRefresh.bind(this)}
-                    deleteid={this.deleteid}
-                    deleteMultipletask={this.deleteMultipletask}
-                    deleted={this.deleted.bind(this)}
                     setColordefault={this.setColordefault}
-                    cleareverything={this.ClearAllState.bind(this)}
                 />
                 {this.state.task_search_enable ? (
                     <SearchTask
@@ -497,7 +492,6 @@ class Taskshowup extends Component {
                 >
                     <Modal1
                         onCancelPressDeleteModal={this.onCancelPressDeleteModal}
-                        Makeremoterequest={this.props.giveAllTask}
                         navigation={this.props.navigation}
                         onBackdropPress={this.onBackdropPress}
                     />
@@ -523,6 +517,7 @@ const mapStatetoprops = state => {
 export default connect(
     mapStatetoprops,
     {
+        undoType,
         resetRedux,
         deleteWorkInRedux,
         deleteWorkInDatabase,

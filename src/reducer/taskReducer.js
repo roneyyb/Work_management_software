@@ -59,9 +59,9 @@ const dataReducer = produce((draft, action) => {
 		case ADD_TASK:
 			const item = action.payload;
 			if (draft.sortBy == "myOrder") {
-				draft.data.unshift(item.taskid);
-			} else {
 				draft.data.push(item.taskid);
+			} else {
+				draft.data.unshift(item.taskid);
 			}
 			break;
 		case LOADING_ALL_TASK:

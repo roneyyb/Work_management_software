@@ -333,7 +333,7 @@ class Taskeach extends Component {
                                         size={upadding * 1.25}
                                         width={5}
                                         color={`${
-                                            colorArray[this.props.index % colorArray.length()]
+                                            colorArray[this.props.index % colorArray.length]
                                             }99`}
                                     />
                                 </View>
@@ -408,15 +408,22 @@ class Taskeach extends Component {
     shouldComponentUpdate(nextProps) {
         if (this.props.items != nextProps.items) {
             this.state.position.setValue({ x: 0, y: 0 });
+            this.setState({
+                isFlipped: false,
+                bgcolor: 'white',
+                paddingright: 0,
+                borderradius: 0,
+            });
         }
         return true;
     }
 
-    changecolor = () => {
+    changecolor = (taskid) => {
         if (this.front === 0) {
             this.front = 1;
+            console.log(taskid);
             this.props.deleteid.push({
-                taskid: this.props.items.taskid
+                taskid
             });
             if (this.props.deleteid.length === 1) {
                 this.props.changeflip(1);
@@ -435,7 +442,7 @@ class Taskeach extends Component {
         this.front = 0;
 
         var index = this.props.deleteid.findIndex(
-            obj => obj.taskid === this.props.items.taskid,
+            obj => obj.taskid === taskid,
         );
         if (index > -1) {
             this.props.deleteid.splice(index, 1);
@@ -499,7 +506,7 @@ class Taskeach extends Component {
                         onPress={this.onPresstask.bind(this)}
                         onLongPress={() => {
                             if (!this.props.searchtask) {
-                                this.changecolor();
+                                this.changecolor(taskid);
                             }
                         }}
                         underlayColor={null}>
@@ -514,7 +521,7 @@ class Taskeach extends Component {
                                     style={{ flex: 1 }}
                                     onPress={() => {
                                         if (!this.props.Searchtask) {
-                                            this.changecolor();
+                                            this.changecolor(taskid);
                                         }
                                     }}>
                                     <FlipCard
@@ -577,7 +584,7 @@ class Taskeach extends Component {
                                         {this.showtitleornot(task_title)}
                                         {this.showdescriptionornot(task_description)}
                                     </View>
-                                    {/* <View style={{ flex: 1, paddingTop: upadding }}>
+                                    <View style={{ flex: 1, paddingTop: upadding }}>
                                         <Text
                                             style={{
                                                 fontSize: upadding,
@@ -586,7 +593,7 @@ class Taskeach extends Component {
                                             }}>
                                             {this.returndatabaseDate(task_createdAt)}
                                         </Text>
-                                    </View> */}
+                                    </View>
                                 </View>
                                 {this.returnDeadlineorCompleted(task_deadline, task_completedAt)}
                             </View>

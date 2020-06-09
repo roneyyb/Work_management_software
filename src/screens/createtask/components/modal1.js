@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { giveAllTask } from '../../../database/select';
 import { connect } from 'react-redux';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
@@ -25,9 +26,9 @@ class Modal1 extends Component {
 					<TouchableOpacity
 						onPress={() => {
 							if (this.props.completed === false) {
-								this.props.Makeremoterequest(
-									true,
+								this.props.giveAllTask(
 									this.props.workid,
+									true,
 									this.props.sortBy
 								);
 							}
@@ -48,9 +49,9 @@ class Modal1 extends Component {
 					<TouchableOpacity
 						onPress={() => {
 							if (this.props.completed === true) {
-								this.props.Makeremoterequest(
-									false,
+								this.props.giveAllTask(
 									this.props.workid,
+									false,
 									this.props.sortBy
 								);
 							}
@@ -80,9 +81,9 @@ class Modal1 extends Component {
 					<TouchableOpacity
 						onPress={() => {
 							if (this.props.sortBy === 'myOrder') {
-								this.props.Makeremoterequest(
-									this.props.completed,
+								this.props.giveAllTask(
 									this.props.workid,
+									this.props.completed,
 									'desc'
 								);
 							}
@@ -103,9 +104,9 @@ class Modal1 extends Component {
 					<TouchableOpacity
 						onPress={() => {
 							if (this.props.sortBy === 'desc') {
-								this.props.Makeremoterequest(
-									this.props.completed,
+								this.props.giveAllTask(
 									this.props.workid,
+									this.props.completed,
 									'myOrder'
 								);
 							}
@@ -195,10 +196,12 @@ const mapStateToProps = (state) => {
 		userid: state.user._id,
 		defaultworkid: state.user.user.work._id,
 		sortBy: state.task.data.sortBy,
-		completed: state.task.state.completed,
+		completed: state.task.data.completed,
 	}
 }
-export default connect(mapStateToProps, {})(Modal1);
+export default connect(mapStateToProps, {
+	giveAllTask
+})(Modal1);
 
 const styles = StyleSheet.create({
 	containerStyle: {
