@@ -121,113 +121,52 @@ class Createtask extends Component {
 
 	onPressdelete() {
 		const { navigation } = this.props;
-
 		const { Searchtask } = navigation.state.params;
 		if (Searchtask) {
-			const { callUndo, settaskSearch } = navigation.state.params;
-			this.props.undoType(
-				[
-					{
-						taskid: this.state.taskid,
-						taskid_backend: this.state.taskid_backend,
-					},
-				],
-				'Deleted',
-			);
-			this.deletepress = true;
+			const { settaskSearch } = navigation.state.params;
 			settaskSearch(false);
-			this.props.navigation.navigate('task');
-			callUndo(
-				[
-					{
-						taskid: this.props.taskid,
-						taskid_backend: this.props.taskid_backend,
-					},
-				],
-				'delete',
-			);
 		} else {
 			const {
 				deleteid,
 				changeflip,
 				Deletetaskcountnumber,
-				callUndo,
 			} = navigation.state.params;
-
 			const index = deleteid.findIndex(obj => {
 				return obj.taskid === this.props.taskid;
 			});
 			if (index > -1) {
-				this.deletepress = true;
-
 				deleteid.splice(index, 1);
 				if (deleteid.length === 0) {
-					this.props.undoType(
-						[
-							{
-								taskid: this.state.taskid,
-								taskid_backend: this.state.taskid_backend,
-							},
-						],
-						'Deleted',
-					);
 					changeflip(0);
-					this.props.navigation.navigate('task');
-					callUndo(
-						[
-							{
-								taskid: this.props.taskid,
-								taskid_backend: this.props.taskid_backend,
-							},
-						],
-						'delete',
-					);
 					return;
 				}
-				Deletetaskcountnumber(deleteid.length);
-				this.props.undoType(
-					[
-						{
-							taskid: this.state.taskid,
-							taskid_backend: this.state.taskid_backend,
-						},
-					],
-					'Deleted',
-				);
-				this.props.navigation.navigate('task');
-				callUndo(
-					[
-						{
-							taskid: this.state.taskid,
-							taskid_backend: this.state.taskid_backend,
-						},
-					],
-					'delete',
-				);
-				return;
+				else {
+					Deletetaskcountnumber(deleteid.length);
+				}
 			}
-
-			this.props.undoType(
-				[
-					{
-						taskid: this.state.taskid,
-						taskid_backend: this.state.taskid_backend,
-					},
-				],
-				'Deleted',
-			);
-			this.deletepress = true;
-			this.props.navigation.navigate('task');
-			callUndo(
-				[
-					{
-						taskid: this.state.taskid,
-						taskid_backend: this.state.taskid_backend,
-					},
-				],
-				'delete',
-			);
 		}
+		const {
+			callUndo
+		} = navigation.state.params;
+		this.deletepress = true;
+		this.props.undoType(
+			[
+				{
+					taskid: this.state.taskid
+				},
+			],
+			'Deleted',
+		);
+		navigation.navigate('task');
+		callUndo(
+			[
+				{
+					taskid: this.state.taskid
+				},
+			],
+			'delete',
+		);
+		return;
 	}
 
 	onChangeDeadline = (dates, time, visibledatetimeModal, notificationid) => {

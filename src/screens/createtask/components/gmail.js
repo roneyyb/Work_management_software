@@ -51,7 +51,6 @@ class Gmail extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     email: state.user.email,
     username: state.user.username

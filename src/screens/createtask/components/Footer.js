@@ -7,136 +7,135 @@ const upadding = Math.round(SCREEN_WIDTH * 0.03);
 
 class Footer extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { pointer: false};
-  }
+    constructor(props) {
+        super(props);
+        this.state = { pointer: false };
+    }
 
-  setpointer = (value) => {
-   this.setState({pointer:value});
-  }
+    setpointer = (value) => {
+        this.setState({ pointer: value });
+    }
 
-  render() {
-    return (
-      <View >
-        <View
-          style={[
-            styles.backgroundContainer,
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingRight: upadding * 1.5,
-              paddingLeft: upadding * 1.5
-            }
-          ]}
-        >
-          <TouchableHighlight
-            style={{ height: upadding * 4, width: upadding * 4, borderRadius: upadding * 2, alignItems: 'center', justifyContent: 'center' }}
-            underlayColor={'#8D8D8C66'}
-            onPress={() => {
-              this.props.onBackdropPress(1);
-            }}
-            disabled={this.state.pointer}
-          >
-            <MaterialIcons
-              name='list'
-              size={upadding *2}
-              color='grey'
-              light
-            />
-          </TouchableHighlight>
-          <TouchableHighlight
-           style={{ height: upadding * 4, width: upadding * 4, borderRadius: upadding * 2, alignItems: 'center', justifyContent: 'center' }}
-           underlayColor={'#8D8D8C33'}
-            onPress={() => {
-              this.props.onBackdropPress(2);
-            }}
-            disabled={this.state.pointer}
-          >
-            <MaterialIcons
-              name='more-vert'
-              size={upadding *2}
-              color='grey'
-              light
-            />
-          </TouchableHighlight>
-        </View>
-        {this.props.completed ? <View/>:
-        (<View>
-        <View style={styles.curve}>
-          <TouchableHighlight
-          underlayColor={null}
-            style={{ flex: 1 }}
-            onPress={() => {
-              this.props.navigation.navigate('createtask', {
-                callUndo: this.props.callUndo,
-                onNavigateBack: this.props.navigation.getParam('onNavigateBack')
-              })
-            }
-            }
-            
-            disabled={this.state.pointer}
-          >
-            <View
-              style={{
-                backgroundColor: 'white',
-                elevation: 1,
-                height: upadding * 5,
-                width: upadding * 5,
-                flex: 1,
-                borderRadius:upadding * 2.5,
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <MaterialIcons
-                name='add'
-                size={upadding * 3.5}
-                color='#8D8D8C'
-              />
+    render() {
+        return (
+            <View >
+                <View
+                    style={[
+                        styles.backgroundContainer,
+                        {
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            paddingRight: upadding * 1.5,
+                            paddingLeft: upadding * 1.5
+                        }
+                    ]}
+                >
+                    <TouchableHighlight
+                        style={{ height: upadding * 4, width: upadding * 4, borderRadius: upadding * 2, alignItems: 'center', justifyContent: 'center' }}
+                        underlayColor={'#8D8D8C66'}
+                        onPress={() => {
+                            this.props.onBackdropPress(1);
+                        }}
+                        disabled={this.state.pointer}
+                    >
+                        <MaterialIcons
+                            name='list'
+                            size={upadding * 2}
+                            color='grey'
+                            light
+                        />
+                    </TouchableHighlight>
+                    <TouchableHighlight
+                        style={{ height: upadding * 4, width: upadding * 4, borderRadius: upadding * 2, alignItems: 'center', justifyContent: 'center' }}
+                        underlayColor={'#8D8D8C33'}
+                        onPress={() => {
+                            this.props.onBackdropPress(2);
+                        }}
+                        disabled={this.state.pointer}
+                    >
+                        <MaterialIcons
+                            name='more-vert'
+                            size={upadding * 2}
+                            color='grey'
+                            light
+                        />
+                    </TouchableHighlight>
+                </View>
+                {this.props.completed ? <View /> :
+                    (<View>
+                        <View style={styles.curve}>
+                            <TouchableHighlight
+                                underlayColor={null}
+                                style={{ flex: 1 }}
+                                onPress={() => {
+                                    this.props.navigation.navigate('createtask', {
+                                        callUndo: this.props.callUndo,
+                                        onNavigateBack: this.props.navigation.getParam('onNavigateBack')
+                                    })
+                                }
+                                }
+
+                                disabled={this.state.pointer}
+                            >
+                                <View
+                                    style={{
+                                        backgroundColor: 'white',
+                                        elevation: 1,
+                                        height: upadding * 5,
+                                        width: upadding * 5,
+                                        flex: 1,
+                                        borderRadius: upadding * 2.5,
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                >
+                                    <MaterialIcons
+                                        name='add'
+                                        size={upadding * 3.5}
+                                        color='#8D8D8C'
+                                    />
+                                </View>
+                            </TouchableHighlight>
+                        </View>
+                    </View>)}
             </View>
-          </TouchableHighlight>
-        </View>
-        </View>)}
-        </View>
-    );
-  }
+        );
+    }
 }
 
 const styles = StyleSheet.create({
-  backgroundContainer: {
-    position: 'absolute',
-    height: upadding * 5,
-    //width: SCREEN_WIDTH,
-    left:0,
-    right:0,
-    elevation: 10,
-    bottom: 0,
-    backgroundColor: 'white'
-  },
+    backgroundContainer: {
+        position: 'relative',
+        height: upadding * 5,
+        left: 0,
+        right: 0,
+        elevation: 5,
+        bottom: 0,
+        backgroundColor: 'white'
+    },
 
-  appMenu: {
-    backgroundColor: '#8D8D8C66',
-    height: upadding * 5,
-    width: upadding * 5,
-    elevation: 10,
-    borderRadius:upadding * 2.5,
-    position: 'absolute',
-    bottom: upadding * 2,
-    marginLeft: SCREEN_WIDTH / 2 - upadding *2
-  },
+    appMenu: {
+        backgroundColor: '#8D8D8C66',
+        height: upadding * 5,
+        width: upadding * 5,
+        elevation: 10,
+        borderRadius: upadding * 2.5,
+        position: 'absolute',
+        bottom: upadding * 2,
+        marginLeft: SCREEN_WIDTH / 2 - upadding * 2
+    },
 
-  curve: {
-    position: 'absolute',
-    height: upadding * 5,
-    width: upadding * 5,
-    elevation:15 ,
-    borderRadius: upadding * 2.5,
-    backgroundColor: 'white',
-    bottom: upadding * 2.5,
-    alignSelf:'center'
-  }
+    curve: {
+        position: 'absolute',
+        height: upadding * 5,
+        width: upadding * 5,
+        elevation: 15,
+        borderRadius: upadding * 2.5,
+        backgroundColor: 'white',
+        bottom: upadding * 2.5,
+        alignSelf: 'center'
+    }
 });
 
 export default Footer;

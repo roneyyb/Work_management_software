@@ -247,9 +247,11 @@ class Taskeach extends Component {
     onSwipeAction = (deletetask, complete) => {
         const { byIds } = this.props;
         const data = byIds[this.props.items];
-        const { taskid, workid, taskid_backend } = data;
-        if (this.props.Searchtask) {
-            this.props.deleteTask(taskid, workid);
+        console.log(data);
+        const { taskid } = data;
+        if (this.props.searchTask) {
+            console.log('deleting task in search');
+            this.props.deleteTask(taskid);
         }
         this.props.undoType(
             [{ taskid }],
@@ -263,14 +265,14 @@ class Taskeach extends Component {
     };
 
     onPresstask() {
-        if (this.props.Searchtask) {
+        if (this.props.searchTask) {
             this.props.settaskSearch(false);
         }
         const { byIds, items } = this.props;
         this.props.navigation.navigate('createtask', {
             update: true,
             items: byIds[items],
-            Searchtask: this.props.Searchtask,
+            searchTask: this.props.searchTask,
             settaskSearch: this.props.settaskSearch,
             callUndo: this.props.callUndo,
             deleteid: this.props.deleteid,
@@ -474,7 +476,7 @@ class Taskeach extends Component {
                     <AnimateTouchablehightlight
                         onPress={this.onPresstask.bind(this)}
                         onLongPress={() => {
-                            if (!this.props.searchtask) {
+                            if (!this.props.searchTask) {
                                 this.changecolor(taskid);
                             }
                         }}
@@ -489,7 +491,7 @@ class Taskeach extends Component {
                                     underlayColor={null}
                                     style={{ flex: 1 }}
                                     onPress={() => {
-                                        if (!this.props.Searchtask) {
+                                        if (!this.props.searchTask) {
                                             this.changecolor(taskid);
                                         }
                                     }}>
@@ -517,7 +519,7 @@ class Taskeach extends Component {
                                                     fontSize: upadding * 1.6,
                                                 }}>{`${
                                                     task_title.length > 0
-                                                        ? task_title[0]
+                                                        ? task_title.trim()[0]
                                                         : ''
                                                     }`}</Text>
                                         </View>

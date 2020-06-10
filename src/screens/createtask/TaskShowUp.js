@@ -137,7 +137,7 @@ class Taskshowup extends Component {
 
     setColordefault = () => {
         this.setcolornormal = true;
-        this.deleteid = [];
+        this.deleteid.splice(0, this.deleteid.length);
         this.forceRerender();
     };
 
@@ -172,7 +172,7 @@ class Taskshowup extends Component {
     };
 
     deleteMultipletask = (deleteids, type) => {
-        this.deleteid = [];
+        this.deleteid.splice(0,this.deleteid.length);
         this.callUndo(deleteids, type);
     };
 
@@ -288,9 +288,8 @@ class Taskshowup extends Component {
     };
 
     undoaction = async () => {
-        if (this.state.task_search_enable) {
-            this.searchtask.undoaction();
-        }
+        console.log("Undo Pressed");
+       
         await clearTimeout(this.a);
         await Animated.timing(this.state.opacity, {
             toValue: 0,
@@ -301,6 +300,9 @@ class Taskshowup extends Component {
         await this.props.giveAllTask(
             this.props.selectedwork.workid
         );
+        if (this.state.task_search_enable) {
+            this.searchtask.undoaction();
+        }
     };
     setfootertouch = value => {
         this.footer.setpointer(value);
@@ -330,32 +332,35 @@ class Taskshowup extends Component {
                 accessible
             >
                 {
-                    data.data.length == 0 ?
+                    data.data.length === 0 ?
                     <View style={[styles.flatList,{flex:1,alignItems:'center', justifyContent:'center', marginBottom:30}]}>
                             <Text style={{ color: 'grey', fontSize: 16 }}>{'No Task Here'}</Text>
-                            <Text style={{ color: 'grey', fontSize: 16 }}>{"Look's like it is a fresh start all the best!!"}</Text>
+                            {this.props.data.completed?<Text/>:<Text style={{ color: 'grey', fontSize: 16 }}>{"Look's like it is a fresh start all the best!!"}</Text>}
                     </View> :
                     <AnimatedFlatList
                         data={this.returnflatlistdata()}
-                        renderItem={({ item, index }) => (
-                            <Taskeach
-                                callUndo={this.callUndo}
-                                settingNotificationmodal={this.settingNotificationmodal}
-                                setcolornormal={this.setcolornormal}
-                                index={index}
-                                Searchtask={false}
-                                navigation={navigation}
-                                deleteid={this.deleteid}
-                                items={item}
-                                setColordefault={this.setColordefault.bind(this)}
-                                handleRefresh={this.handleRefresh.bind(this)}
-                                changeflip={(count) => {
-                                    this.headerRef.current.changeflip(count);
-                                }}
-                                Deletetaskcountnumber={(count) => { this.headerRef.current.deleteTaskCountNumber(count); }}
-                                changescroll={this.changescroll}
-                            />
-                        )}
+                            renderItem={({ item, index }) => {
+                                console.log(item, index);
+                                return (
+                                    <Taskeach
+                                        callUndo={this.callUndo}
+                                        settingNotificationmodal={this.settingNotificationmodal}
+                                        setcolornormal={this.setcolornormal}
+                                        index={index}
+                                        Searchtask={false}
+                                        navigation={navigation}
+                                        deleteid={this.deleteid}
+                                        items={item}
+                                        setColordefault={this.setColordefault.bind(this)}
+                                        handleRefresh={this.handleRefresh.bind(this)}
+                                        changeflip={(count) => {
+                                            this.headerRef.current.changeflip(count);
+                                        }}
+                                        Deletetaskcountnumber={(count) => { this.headerRef.current.deleteTaskCountNumber(count); }}
+                                        changescroll={this.changescroll}
+                                    />
+                                )
+                            }}
                         ref={component => (this._eachtask = component)}
                         contentContainerStyle={styles.flatList}
                         scrollEnabled
@@ -391,10 +396,11 @@ class Taskshowup extends Component {
                         ref={searchtask => {
                             this.searchtask = searchtask;
                         }}
+                        tasklist={this.props.data.data}
+                        byIds={this.props.byIds}
                         callUndo={this.callUndo}
                         settaskSearch={this.settaskSearch}
                         settingNotificationmodal={this.settingNotificationmodal}
-                        Makeremoterequest={this.props.giveAllTask}
                         navigation={navigation}
                         deleteid={this.deleteid}
                         handleRefresh={this.handleRefresh.bind(this)}
@@ -482,9 +488,9 @@ class Taskshowup extends Component {
 }
 
 const mapStatetoprops = state => {
-    console.log(state.task.data.data.length);
-    console.log(Object.keys(state.task.byIds).length);
+    console.log(state);
     return {
+        byIds: state.task.byIds,
         data: state.task.data,
         state: state.task.state,
         selectedwork:state.worklist.state.selectedwork,

@@ -7,11 +7,9 @@ import {
     StyleSheet,
     FlatList,
     Text,
-    Animated,
-    TouchableHighlight
+    Animated
 } from 'react-native';
-import { connect } from 'react-redux';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import WrappedButton from './components/WrappedButton';
 import Taskeach from './EachTask';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -24,8 +22,9 @@ const upadding = Math.round(SCREEN_WIDTH * 0.03);
 class SearchTask extends Component {
     constructor(props) {
         super(props);
-        this.state = { searchActive: false, searchValue: '', searchresult: [] };
-        this.totaldata = this.props.tasklist;
+        this.totaldata = [...this.props.tasklist];
+        this.state = { searchActive: false, searchValue: '', searchresult: []};
+       
         this.deleteelement = '';
     }
 
@@ -57,20 +56,29 @@ class SearchTask extends Component {
 
 
     undoaction = () => {
+        console.log('undo action called');
         var arr = this.state.searchresult;
         arr.splice(this.deleteelement.index, 0, this.deleteelement.element);
-        this.setState({ searchresult: arr });
         this.totaldata.push(this.deleteelement.element);
+        setTimeout(() => {
+            this.setState({ searchresult: arr });
+        },500);
+        console.log("this totaldata", this.totaldata);
     }
 
     deleteTask = (taskid) => {
-        const arr = this.state.searchresult;
+        console.log('deleting');
+        var arr = this.state.searchresult;
         var index = arr.indexOf(taskid);
         this.deleteelement = { index, element: arr[index] };
         arr.splice(index, 1);
-        index = this.totaldata.indexOf(taskid);
-        this.totaldata.splice(index,1);
-        this.setState({ searchresult: arr });
+        var index1 = this.totaldata.indexOf(taskid);
+        console.log(index1, this.totaldata);
+        this.setState((prevState) => {
+                searchresult = arr
+        });
+        this.totaldata.splice(index1, 1);
+        console.log('deleted from task');
     }
 
     render() {
@@ -78,17 +86,12 @@ class SearchTask extends Component {
             <View style={styles.containerstyle}>
                 <View style={styles.searchBar}>
                     <View style={styles.searchBaritem1}>
-                        <TouchableHighlight
-                            style={styles.touchablehighlightstyle}
-                            onPress={() => { this.props.settaskSearch(false); }}
-                            underlayColor={'#8D8D8C33'}
-                        >
-                            <MaterialIcons
-                                size={upadding * 1.6}
-                                name={'arrow-back'}
-                                color={'grey'}
-                            />
-                        </TouchableHighlight>
+                        <WrappedButton
+                            iconTitle={'arrow-back'}
+                            onPress={() => {
+                                this.props.settaskSearch(false);
+                            }}
+                        />
                     </View>
                     <View style={styles.searchBaritem2}>
                         <TextInput
@@ -119,19 +122,12 @@ class SearchTask extends Component {
                     </View>
                     {this.state.searchActive ? (
                         <View style={styles.searchBaritem1}>
-                            <TouchableHighlight
-                                style={styles.touchablehighlightstyle}
+                            <WrappedButton
                                 onPress={() => {
                                     this.setState({ searchValue: '', searchresult: [], searchActive: false });
                                 }}
-                                underlayColor={'#8D8D8C33'}
-                            >
-                                <MaterialIcons
-                                    size={upadding * 1.6}
-                                    name={'clear'}
-                                    color={'grey'}
+                                    iconTitle={'clear'}
                                 />
-                            </TouchableHighlight>
                         </View>) : <View style={styles.searchBaritem1} />}
                 </View>
                 {this.state.searchresult.length === 0 ?
@@ -146,14 +142,12 @@ class SearchTask extends Component {
                                     callUndo={this.props.callUndo}
                                     settingNotificationmodal={this.props.settingNotificationmodal}
                                     settaskSearch={this.props.settaskSearch}
-                                    Makeremoterequest={this.props.Give_all_task}
                                     index={index}
-                                    Searchtask={true}
+                                    searchTask={true}
                                     navigation={this.props.navigation}
                                     deleteid={this.props.deleteid}
                                     items={item}
                                     deleteTask={this.deleteTask}
-                                    handleRefresh={this.props.handleRefresh}
                                     changescroll={this.changescroll}
                                 />
                             )}
@@ -171,14 +165,8 @@ class SearchTask extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        tasklist: state.task.data.data,
-        byIds: state.task.byIds
-    }
-}
 
-export default connect(mapStateToProps,{})(SearchTask);
+export default SearchTask;
 const styles = StyleSheet.create({
     containerstyle: {
         flex: 1,

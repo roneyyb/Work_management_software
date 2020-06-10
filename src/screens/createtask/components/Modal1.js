@@ -194,7 +194,7 @@ const mapStateToProps = (state) => {
 		title: state.worklist.state.selectedwork.work_title,
 		workidbackend: state.worklist.state.selectedwork.workid_backend,
 		userid: state.user._id,
-		defaultworkid: state.user.user.work._id,
+		defaultworkid: state.user.work._id,
 		sortBy: state.task.data.sortBy,
 		completed: state.task.data.completed,
 	}
