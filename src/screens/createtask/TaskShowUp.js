@@ -14,29 +14,28 @@ import {
     TouchableHighlight,
     Dimensions,
 } from 'react-native';
-import Modal1 from './components/modal1';
-import Modal2 from './components/modal2';
+import Modal1 from './components/Modal1';
+import Modal2 from './components/Modal2';
 import DeleteModal from './components/generalmodalcomponent';
-import Footer from './components/footer';
+import Footer from './components/Footer';
 import Header from './Header';
 import Taskeach from './EachTask';
-import Logout from '../../database/droptable';
-import { giveAllTask } from '../../database/select';
+import Logout from '../../database/dropTable';
+import { giveAllTask } from '../../database/giveAllItem';
 import Datetimemodal from './components/datetimemodal';
 import SearchTask from './SearchTask';
 import {
     undoType,
     Refreshing,
     updateTaskInRedux,
-} from '../../actions/taskshowaction';
+} from '../../actions/taskShowActions';
 import { resetRedux } from '../../actions/UserActions';
-import { updateTaskInDatabase } from '../../database/updatequeries';
-import { cleareverything } from '../../actions/cleareverythingaction';
-import { deleteWorkInDatabase } from '../../database/deletequeries';
-import { updateWorkListAfterCloud, deleteWorkInRedux } from '../../actions/worklistaction';
+import { updateTaskInDatabase } from '../../database/updateItem';
+import { deleteWorkInDatabase } from '../../database/deleteItem';
+import { updateWorkListAfterCloud, deleteWorkInRedux } from '../../actions/workListActions';
 import UpdateCloudData from '../../syncronusupdate/UpdateCloudData';
-import { actionAfterNotUndoOnDatabase } from '../DatabaseSetting/updatingdatabase';
-import { FileProtectionKeys } from 'react-native-fs';
+import { actionAfterNotUndoOnDatabase } from '../DatabaseSetting/UpdatingDatabase';
+import AppConstant from '../../constants/AppConstant';
 const whichday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'];
 const monthNames = [
     'Jan',
@@ -92,23 +91,6 @@ class Taskshowup extends Component {
         this.props.navigation.setParams({ title: this.props.title });
     }
 
-    shouldComponentUpdate(nextProps) {
-
-        // if (nextProps.updatetaskdata) {
-        //     nextProps.setloginfalse();
-        //     nextProps.giveAllTask(
-        //         nextProps.completed,
-        //         nextProps.workid,
-        //         nextProps.sortBy,
-        //     );
-        // }
-
-        return true;
-    }
-    // componentWillUnmount() {
-    //     this.props.clearAll();
-    // }
-
     updatinglocalworklist = worklistbackend => {
         this.props.updateWorkListAfterCloud(
             worklistbackend
@@ -143,7 +125,6 @@ class Taskshowup extends Component {
 
     returnflatlistdata() {
         if (!this.firsttime) {
-            console.log('tasklist to render',this.props.data.data.length);
             return this.props.data.data;
         }
         this.firsttime = false;
@@ -152,12 +133,6 @@ class Taskshowup extends Component {
 
     forceRerender = () => {
         this.setState({ state: this.state });
-    };
-
-    deleted = () => {
-        const { sortBy, complete } = this.props.data;
-        this.deleteids = [];
-        this.props.giveAllTask(this.props.workid);
     };
 
     setColordefault = () => {
@@ -231,7 +206,6 @@ class Taskshowup extends Component {
 
     headerAction = (deleted) => {
         const { completed } = this.props.data;
-        console.log('deleteids =>',this.deleteid);
         this.props.undoType(this.deleteid, deleted ? 'Deleted' : !completed ? 'Completed' : 'Incompleted');
         this.deleteMultipletask(this.deleteid, deleted ? 'delete' : !completed ? 'complete' : 'incomplete');
         
@@ -341,7 +315,7 @@ class Taskshowup extends Component {
     };
 
     render() {
-        const { navigation } = this.props;
+        const { navigation, data } = this.props;
         const undosize = this.state.opacity.interpolate({
             inputRange: [0, 1],
             outputRange: [0, 1],
@@ -353,39 +327,46 @@ class Taskshowup extends Component {
                     flex: 1,
                     backgroundColor: 'white',
                 }}
-                accessible>
-                <AnimatedFlatList
-                    data={this.returnflatlistdata()}
-                    renderItem={({ item, index }) => (
-                        <Taskeach
-                            callUndo={this.callUndo}
-                            settingNotificationmodal={this.settingNotificationmodal}
-                            setcolornormal={this.setcolornormal}
-                            Makeremoterequest={this.props.giveAllTask}
-                            index={index}
-                            Searchtask={false}
-                            navigation={navigation}
-                            deleteid={this.deleteid}
-                            items={item}
-                            setColordefault={this.setColordefault.bind(this)}
-                            handleRefresh={this.handleRefresh.bind(this)}
-                            changeflip={(count) => {
-                                this.headerRef.current.changeflip(count);
-                            }}
-                            Deletetaskcountnumber={(count) => { this.headerRef.current.deleteTaskCountNumber(count); }}
-                            changescroll={this.changescroll}
-                        />
-                    )}
-                    ref={component => (this._eachtask = component)}
-                    contentContainerStyle={styles.flatList}
-                    scrollEnabled
-                    keyExtractor={item => item.taskid}
-                    ListFooterComponent={this.renderFooter}
-                    onRefresh={this.handleRefresh.bind(this)}
-                    refreshing={this.props.state.refreshing}
-                    onEndReached={this.handleLoadMore}
-                    onEndReachedThreshold={6}
-                />
+                accessible
+            >
+                {
+                    data.data.length == 0 ?
+                    <View style={[styles.flatList,{flex:1,alignItems:'center', justifyContent:'center', marginBottom:30}]}>
+                            <Text style={{ color: 'grey', fontSize: 16 }}>{'No Task Here'}</Text>
+                            <Text style={{ color: 'grey', fontSize: 16 }}>{"Look's like it is a fresh start all the best!!"}</Text>
+                    </View> :
+                    <AnimatedFlatList
+                        data={this.returnflatlistdata()}
+                        renderItem={({ item, index }) => (
+                            <Taskeach
+                                callUndo={this.callUndo}
+                                settingNotificationmodal={this.settingNotificationmodal}
+                                setcolornormal={this.setcolornormal}
+                                index={index}
+                                Searchtask={false}
+                                navigation={navigation}
+                                deleteid={this.deleteid}
+                                items={item}
+                                setColordefault={this.setColordefault.bind(this)}
+                                handleRefresh={this.handleRefresh.bind(this)}
+                                changeflip={(count) => {
+                                    this.headerRef.current.changeflip(count);
+                                }}
+                                Deletetaskcountnumber={(count) => { this.headerRef.current.deleteTaskCountNumber(count); }}
+                                changescroll={this.changescroll}
+                            />
+                        )}
+                        ref={component => (this._eachtask = component)}
+                        contentContainerStyle={styles.flatList}
+                        scrollEnabled
+                        keyExtractor={item => item.taskid}
+                        ListFooterComponent={this.renderFooter}
+                        onRefresh={this.handleRefresh.bind(this)}
+                        refreshing={this.props.state.refreshing}
+                        onEndReached={this.handleLoadMore}
+                        onEndReachedThreshold={6}
+                    />
+                }
 
                 <Footer
                     ref={refer => {
@@ -452,7 +433,6 @@ class Taskshowup extends Component {
                     }}
                     style={styles.Modal2}>
                     <Modal2
-                        cleareverything={this.props.cleareverything}
                         navigation={this.props.navigation}
                         email={this.props.email}
                         Logout={this.loggingout}
@@ -526,13 +506,11 @@ export default connect(
         updateTaskInDatabase,
         updateWorkListAfterCloud,
         Refreshing,
-        cleareverything,
     },
 )(Taskshowup);
 
 const styles = StyleSheet.create({
     flatList: {
-        paddingTop: upadding / 2,
         paddingTop: upadding * 4.5,
     },
     Modal2: {

@@ -6,6 +6,7 @@ import {
     TextInput,
     StyleSheet,
     FlatList,
+    Text,
     Animated,
     TouchableHighlight
 } from 'react-native';
@@ -35,7 +36,7 @@ class SearchTask extends Component {
         const arr = total ? this.totaldata : this.state.searchresult;
         const byIds = this.props.byIds;
         const items = arr.filter(item => {
-            const task = byIds[item.taskid];
+            const task = byIds[item];
             const data = `${task.task_title.toLowerCase()} ${task.task_description.toLowerCase()}`;
             const textData = text.toLowerCase();
             const index = data.indexOf(textData);
@@ -133,34 +134,38 @@ class SearchTask extends Component {
                             </TouchableHighlight>
                         </View>) : <View style={styles.searchBaritem1} />}
                 </View>
-                <View>
-                    <AnimatedFlatList
-                        data={this.state.searchresult}
-                        renderItem={({ item, index }) => (
-                            <Taskeach
-                                callUndo={this.props.callUndo}
-                                settingNotificationmodal={this.props.settingNotificationmodal}
-                                settaskSearch={this.props.settaskSearch}
-                                Makeremoterequest={this.props.Give_all_task}
-                                index={index}
-                                Searchtask={true}
-                                navigation={this.props.navigation}
-                                deleteid={this.props.deleteid}
-                                items={item}
-                                deleteTask={this.deleteTask}
-                                handleRefresh={this.props.handleRefresh}
-                                changescroll={this.changescroll}
-                            />
-                        )}
-                        ListFooterComponent={this.renderFooter}
-                        ref={component => this._eachtask = component}
-                        contentContainerStyle={{ paddingTop: 5 }}
-                        scrollEnabled
-                        renderF
-                        keyExtractor={item => item.taskid}
-                        onEndReachedThreshold={6}
-                    />
-                </View>
+                {this.state.searchresult.length === 0 ?
+                    <View style={[styles.flatList, { flex: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 30 }]}>
+                        <Text style={{ color: 'grey', fontSize: 16 }}>{'No Task Found'}</Text>
+                    </View> :
+                    <View>
+                        <AnimatedFlatList
+                            data={this.state.searchresult}
+                            renderItem={({ item, index }) => (
+                                <Taskeach
+                                    callUndo={this.props.callUndo}
+                                    settingNotificationmodal={this.props.settingNotificationmodal}
+                                    settaskSearch={this.props.settaskSearch}
+                                    Makeremoterequest={this.props.Give_all_task}
+                                    index={index}
+                                    Searchtask={true}
+                                    navigation={this.props.navigation}
+                                    deleteid={this.props.deleteid}
+                                    items={item}
+                                    deleteTask={this.deleteTask}
+                                    handleRefresh={this.props.handleRefresh}
+                                    changescroll={this.changescroll}
+                                />
+                            )}
+                            ListFooterComponent={this.renderFooter}
+                            ref={component => this._eachtask = component}
+                            contentContainerStyle={{ paddingTop: 5 }}
+                            scrollEnabled
+                            renderF
+                            keyExtractor={item => item.taskid}
+                            onEndReachedThreshold={6}
+                        />
+                    </View>}
             </View>
         );
     }

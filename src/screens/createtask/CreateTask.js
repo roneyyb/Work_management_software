@@ -16,10 +16,9 @@ import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Datetimemodal from './components/datetimemodal';
-import { addTaskInDatabase } from '../../database/createqueries';
-import { addTaskInRedux, updateTaskInRedux } from '../../actions/taskshowaction';
-import { updateTaskInDatabase } from '../../database/updatequeries';
-import { undoType } from '../../actions/taskshowaction';
+import { addTaskInDatabase } from '../../database/addItem';
+import { addTaskInRedux, updateTaskInRedux, undoType } from '../../actions/taskShowActions';
+import { updateTaskInDatabase } from '../../database/updateItem'
 import { whichday, monthNames } from '../../constants/Calender';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');

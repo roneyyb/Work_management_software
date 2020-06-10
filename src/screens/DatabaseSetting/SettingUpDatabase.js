@@ -3,9 +3,9 @@ import { View, Text, ActivityIndicator } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
-import { createDatabase } from '../../database/createtable';
-import { updatingDatabase } from './updatingdatabase';
-import { giveAllWork, giveAllTask } from '../../database/select';
+import { createDatabase } from '../../database/createTable';
+import { updatingDatabase } from './UpdatingDatabase';
+import { giveAllWork, giveAllTask } from '../../database/giveAllItem';
 import GeneralModal from '../createtask/components/generalmodalcomponent';
 
 class Settingupdatabase extends Component {
@@ -29,14 +29,14 @@ class Settingupdatabase extends Component {
             this.setState({ message: 'Updating database with the previous progress', notificationmodal: 1 });
         }
         else {
-            await AsyncStorage.setItem('userToken', this.props.userid);
+            await AsyncStorage.setItem('userToken', this.props.user._id);
             //this.props.Give_all_work();
             this.props.navigation.navigate('App');
         }
     }
 
     componentDidMount() {
-       this.props.createDatabase(this.props.work, this.actionwhensetdatabasecom, this.state.signup);
+       this.props.createDatabase(this.props.user.work, this.actionwhensetdatabasecom, this.state.signup);
     }
 
     cancelFunction = (value) => {
@@ -45,14 +45,15 @@ class Settingupdatabase extends Component {
     }
 
     afterdatabaseupdatedcom = async () => {
-        await AsyncStorage.setItem('userToken', this.props.userid);
+        const { user } = this.props;
+        await AsyncStorage.setItem('userToken', user._id);
         this.props.giveAllWork();
-        this.props.giveAllTask(this.props.work.workid);
+        this.props.giveAllTask(user.work.workid);
         this.props.navigation.navigate('App');
     }
 
     updatingdatabase = () => {
-        updatingDatabase(this.props.userid, this.afterdatabaseupdatedcom);
+        updatingDatabase(this.props.user._id, this.afterdatabaseupdatedcom);
     }
 
     render() {
@@ -76,8 +77,7 @@ class Settingupdatabase extends Component {
 
 const mapStateToProps = state => {
     return {
-        userid: state.user.user._id,
-        work: state.user.user.work
+        user: state.user
     };
 };
 

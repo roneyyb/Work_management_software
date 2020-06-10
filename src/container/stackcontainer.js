@@ -10,7 +10,7 @@ import TaskShowUp from '../screens/createtask/TaskShowUp';
 import CreateTask from '../screens/createtask/CreateTask';
 import CreateWork from '../screens/creatework/CreateWork';
 import StatusChange from '../screens/creatework/Work';
-import SettingUpDatabase from '../screens/DatabaseSetting/settingupdatabase';
+import SettingUpDatabase from '../screens/DatabaseSetting/SettingUpDatabase';
 import Splash from '../onLoad/splash';
 
 const authNavigator = createStackNavigator(

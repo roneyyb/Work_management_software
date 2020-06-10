@@ -11,15 +11,15 @@ import uuidv1 from 'uuid/v1';
 import {
     addWorkInRedux,
     updateWorkInRedux
-} from '../../actions/worklistaction';
+} from '../../actions/workListActions';
 import {
     addWorkInDatabase
-} from '../../database/createqueries';
+} from '../../database/addItem';
 import {
     updateWorkInDatabase
-} from '../../database/updatequeries';
+} from '../../database/updateItem';
 
-import { giveAllTask } from '../../database/select';
+import { giveAllTask } from '../../database/giveAllItem';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const upadding = Math.round(SCREEN_WIDTH * 0.03);

@@ -15,7 +15,7 @@ export default class extends Component {
                     <MaterialIcons
                         name={iconTitle}
                         size={24}
-                        color='#2B65EC'
+                        color='#8D8D8C'
                     />
                 </TouchableHighlight>
             </View>

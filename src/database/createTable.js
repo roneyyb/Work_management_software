@@ -4,7 +4,7 @@ import uuidv1 from 'uuid/v1';
 import {
     CREATING_DATABASE,
 } from '../actions/types';
-import Logout from './droptable';
+import Logout from './dropTable';
 const db = SQLite.openDatabase('multiutilityapp.db');
 
 export const createDatabase = (work, actionaftercom, signup) => {

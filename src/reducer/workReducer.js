@@ -31,7 +31,11 @@ const idReducer = produce((draft, action) => {
             draft[action.payload.workid] = action.payload;
             break;
         case UPDATE_WORK_LIST:
-            draft = {};
+            var i,
+                keys = Object.keys(draft);
+            for (i = 0; i < keys.length; i++) {
+                delete draft[keys[i]];
+            }
             action.payload.forEach((item) => {
                 draft[item.workid] = item;
             })

@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import FlipCard from 'react-native-flip-card';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { colorArray } from '../../constants/Color';
-import { undoType } from '../../actions/taskshowaction';
+import { undoType } from '../../actions/taskShowActions';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
 const SWIPE_OUT_DURATION = 100;
@@ -25,7 +25,20 @@ const AnimateTouchablehightlight = Animated.createAnimatedComponent(
     TouchableHighlight,
 );
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
-
+const monthNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+];
 class Return_background extends Component {
     state = { name: 'done', paddingLeft: 0, paddingLeft: 0 };
 
@@ -124,54 +137,10 @@ class Taskeach extends Component {
         };
     }
 
-    returnDate = date => {
-        const monthNames = [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-        ];
-        var createdate = new Date(Date.parse('2011-09-29 14:58:12'));
-        const currentdate = new Date();
-        const currentday = currentdate.getDay();
-        const currentmonth = currentdate.getMonth();
-        const currentyear = currentdate.getFullYear();
-        const day = createdate.getDate();
-        const month = createdate.getMonth();
-        const year = createdate.getFullYear();
-        if (year === currentyear && month === currentmonth && day === currentday) {
-            return `${createdate.getHours()}:${createdate.getMinutes()}`;
-        } else if (year === currentyear) {
-            return `${monthNames[month]} ${day}`;
-        }
-        return `${year}${day}`;
-    };
-
     returndatabaseDate = date => {
         const created = date.split(' ');
         const time = created[5].split(':');
-        const monthNames = [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-        ];
+       
         const currentdate = new Date();
         const currentday = currentdate.getDay();
         const currentmonth = currentdate.getMonth();
@@ -414,6 +383,7 @@ class Taskeach extends Component {
                 paddingright: 0,
                 borderradius: 0,
             });
+            this.setToInitialState();
         }
         return true;
     }
@@ -421,7 +391,6 @@ class Taskeach extends Component {
     changecolor = (taskid) => {
         if (this.front === 0) {
             this.front = 1;
-            console.log(taskid);
             this.props.deleteid.push({
                 taskid
             });

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Text, View, Dimensions, TouchableOpacity, StyleSheet } from 'react-native';
-import { changeSelectedWork } from '../../actions/worklistaction';
-import { giveAllTask } from '../../database/select';
+import { changeSelectedWork } from '../../actions/workListActions';
+import { giveAllTask } from '../../database/giveAllItem';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
