@@ -12,48 +12,6 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const paddingE = Math.round(SCREEN_WIDTH * 0.05);
 const fontSizeE = Math.round(SCREEN_WIDTH * 0.035);
 
-LocaleConfig.locales['fr'] = {
-    monthNames: [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ],
-    monthNamesShort: [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'June',
-      'July',
-      'Aug',
-      'Sept',
-      'Oct',
-      'Nov',
-      'Dec'
-    ],
-    dayNames: [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday'
-    ],
-    dayNamesShort: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-  };
-  LocaleConfig.defaultLocale = 'fr';
-  
 export default class Deadlinescreen extends Component {
   constructor(props) {
     super(props);

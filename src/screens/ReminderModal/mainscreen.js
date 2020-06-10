@@ -18,9 +18,6 @@ import Alldayview from './alldayview';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const paddingE = Math.round(SCREEN_WIDTH * 0.05);
 const fontSizeE = Math.round(SCREEN_WIDTH * 0.035);
-const MODAL_MARGIN_VERTICAL = Math.round(SCREEN_HEIGHT * 0.25);
-const MODAL_MARGIN_HORIZONTAL = Math.round(SCREEN_WIDTH * 0.06);
-
 
 export default class reminderModal extends Component {
   state = { setReminder: 'minute', every: '' };

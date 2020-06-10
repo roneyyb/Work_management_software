@@ -86,6 +86,8 @@ export default class Datetimemodal extends Component {
         } else {
             newid = id;
         }
+
+        console.log('Push notification time',time);
         if (time > d.getTime()) {
             PushNotification.localNotificationSchedule({
                 title: this.props.title,
