@@ -67,7 +67,6 @@ export const addTaskInDatabase = ({
                     ],
                     () => {
                         console.log("Task created successfully");
-                        callback(1);
                         tx.executeSql(
                             "Insert into TASK_DATA_UPDATE(update_type, workid, taskid) values(?,?,?)",
                             ["POST", workid, taskid],
@@ -83,6 +82,7 @@ export const addTaskInDatabase = ({
                                 );
                             }
                         );
+                        callback(1);
                     },
                     (_, error) => {
                         console.error("Insertion error in task table.",error);
@@ -93,7 +93,7 @@ export const addTaskInDatabase = ({
                 console.error("Create task transaction error", error);
             },
             error => {
-                console.log(error);
+                console.log("Task added to database.");
             }
         );
 };

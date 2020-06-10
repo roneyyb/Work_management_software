@@ -32,6 +32,7 @@ class Tasklist extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log("worklist",state.worklist.state.data);
   return {
     data: state.worklist.state.data,
   };

@@ -6,11 +6,11 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 import Login from '../screens/authentication/Login';
 import SignUp from '../screens/authentication/Signup';
-import TaskShowUp from '../screens/createtask/TaskShowUp';
-import CreateTask from '../screens/createtask/CreateTask';
-import CreateWork from '../screens/creatework/CreateWork';
-import StatusChange from '../screens/creatework/Work';
-import SettingUpDatabase from '../screens/DatabaseSetting/SettingUpDatabase';
+import TaskShowUp from '../screens/task/TaskShowUp';
+import CreateTask from '../screens/task/CreateTask';
+import CreateWork from '../screens/work/CreateWork';
+import StatusChange from '../screens/work/Work';
+import SettingUpDatabase from '../screens/settingup/SettingUpDatabase';
 import Splash from '../onLoad/splash';
 
 const authNavigator = createStackNavigator(

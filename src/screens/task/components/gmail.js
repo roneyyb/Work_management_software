@@ -52,8 +52,8 @@ class Gmail extends Component {
 
 const mapStateToProps = state => {
   return {
-    email: state.user.email,
-    username: state.user.username
+    email: state.user.user.email,
+    username: state.user.user.username
   };
 };
 

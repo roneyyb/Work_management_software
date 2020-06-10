@@ -124,7 +124,7 @@ export function updatingDatabase(userid, callback) {
       if (!response.data.error) {
         db.transaction(
           tx => {
-            response.data.worklist.forEach(work => {
+            response.data.worklist.forEach((work,index) => {
               tx.executeSql(
                 'Insert into USER_WORKS(workid,workid_backend,work_selected,work_created,work_deadline,work_title) values(?,?,?,?,?,?)',
                 [
@@ -136,8 +136,10 @@ export function updatingDatabase(userid, callback) {
                   work.work_title
                 ],
                 () => {
+                  console.log("row",index,"inserted");
                 },
                 (_, error) => {
+                  console.log("Error: while inserting works in database");
                 }
               );
             });
@@ -145,13 +147,15 @@ export function updatingDatabase(userid, callback) {
           error => {
           },
           () => {
+            console.log("Work table updated!!");
             Updatetaskindatabase(userid, callback);
           }
         );
       } else {
-       
+        console.log("Error: database update unsuccessfull", error);
       }
     })
     .catch(error => {
+      console.log("Error: database update unsuccessfull",error);
     });
 }

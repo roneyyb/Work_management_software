@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import FlipCard from 'react-native-flip-card';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { colorArray } from '../../constants/Color';
-import { undoType } from '../../actions/taskShowActions';
+import { undoType } from '../../actions/taskActions';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
 const SWIPE_OUT_DURATION = 100;
@@ -66,7 +66,6 @@ class Return_background extends Component {
 class Taskeach extends Component {
     constructor(props) {
         super(props);
-        console.log('constructor',this.props.items);
         this.front = 0;
         this.touched1 = true;
         this.touched2 = true;
@@ -247,7 +246,6 @@ class Taskeach extends Component {
     onSwipeAction = (deletetask, complete) => {
         const { byIds } = this.props;
         const data = byIds[this.props.items];
-        console.log(data);
         const { taskid } = data;
         if (this.props.searchTask) {
             console.log('deleting task in search');
@@ -431,15 +429,11 @@ class Taskeach extends Component {
         return;
     };
 
-    componentWillUnmount() {
-        console.log('component unmounted');
-    }
 
     render() {
         // return (
         //     <View/>
         // );
-        console.log('rerender', this.props.items);
         const { byIds } = this.props;
         const data = byIds[this.props.items];
         const { taskid, task_title, task_description, task_deadline, task_completedAt, task_createdAt } = data;

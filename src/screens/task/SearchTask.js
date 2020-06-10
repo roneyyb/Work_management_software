@@ -56,24 +56,20 @@ class SearchTask extends Component {
 
 
     undoaction = () => {
-        console.log('undo action called');
         var arr = this.state.searchresult;
         arr.splice(this.deleteelement.index, 0, this.deleteelement.element);
         this.totaldata.push(this.deleteelement.element);
         setTimeout(() => {
             this.setState({ searchresult: arr });
         },500);
-        console.log("this totaldata", this.totaldata);
     }
 
     deleteTask = (taskid) => {
-        console.log('deleting');
         var arr = this.state.searchresult;
         var index = arr.indexOf(taskid);
         this.deleteelement = { index, element: arr[index] };
         arr.splice(index, 1);
         var index1 = this.totaldata.indexOf(taskid);
-        console.log(index1, this.totaldata);
         this.setState((prevState) => {
                 searchresult = arr
         });
@@ -132,7 +128,7 @@ class SearchTask extends Component {
                 </View>
                 {this.state.searchresult.length === 0 ?
                     <View style={[styles.flatList, { flex: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 30 }]}>
-                        <Text style={{ color: 'grey', fontSize: 16 }}>{'No Task Found'}</Text>
+                        <Text style={{ color: '#8D8D8C66', fontSize: 16 }}>{'No Task Found'}</Text>
                     </View> :
                     <View>
                         <AnimatedFlatList

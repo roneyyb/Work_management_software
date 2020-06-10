@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Datetimemodal from './components/datetimemodal';
 import { addTaskInDatabase } from '../../database/addItem';
-import { addTaskInRedux, updateTaskInRedux, undoType } from '../../actions/taskShowActions';
+import { addTaskInRedux, updateTaskInRedux, undoType } from '../../actions/taskActions';
 import { updateTaskInDatabase } from '../../database/updateItem'
 import { whichday, monthNames } from '../../constants/Calender';
 

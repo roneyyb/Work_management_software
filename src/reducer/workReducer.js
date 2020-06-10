@@ -66,9 +66,10 @@ const stateReducer = produce((draft, action) => {
             draft.selectedwork = action.payload;
             break;
         case UPDATE_WORK_LIST:
+            console.log("UPDATE WORKLIST",action.payload);
             draft.data = [];
             action.payload.forEach((item) => {
-                draft.push(item.workid);
+                draft.data.push(item.workid);
             });
             break;
         case DELETE_WORK:

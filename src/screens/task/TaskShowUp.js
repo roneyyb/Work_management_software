@@ -28,14 +28,13 @@ import {
     undoType,
     Refreshing,
     updateTaskInRedux,
-} from '../../actions/taskShowActions';
+} from '../../actions/taskActions';
 import { resetRedux } from '../../actions/UserActions';
 import { updateTaskInDatabase } from '../../database/updateItem';
 import { deleteWorkInDatabase } from '../../database/deleteItem';
 import { updateWorkListAfterCloud, deleteWorkInRedux } from '../../actions/workListActions';
 import UpdateCloudData from '../../syncronusupdate/UpdateCloudData';
-import { actionAfterNotUndoOnDatabase } from '../DatabaseSetting/UpdatingDatabase';
-import AppConstant from '../../constants/AppConstant';
+import { actionAfterNotUndoOnDatabase } from '../settingup/UpdatingDatabase';
 const whichday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'];
 const monthNames = [
     'Jan',
@@ -62,15 +61,11 @@ const Animatedtouchablehighlight = Animated.createAnimatedComponent(
 
 class Taskshowup extends Component {
     constructor(props) {
-        // PushNotification.cancelAllLocalNotifications(
         super(props);
         this.headerRef = createRef();
-        console.log(this.headerRef);
         this.setcolornormal = false;
         this.deleteid = [];
         this.undoinuse = 0;
-        this.firsttime = true;
-        this.returnflatlistdata = this.returnflatlistdata.bind(this);
         this.state = {
             visibleModal: null,
             visibleWorkModal: false,
@@ -84,12 +79,16 @@ class Taskshowup extends Component {
     }
 
     componentDidMount() {
-        this.props.navigation.setParams({
-            onNavigateBack: this.handleRefresh.bind(this),
-        });
-        // UpdateCloudData(this.props.userid,this.updatinglocalworklist,this.handleRefresh);
-        this.props.navigation.setParams({ title: this.props.title });
+        UpdateCloudData(this.props.userid,this.updatinglocalworklist,this.handleRefresh);
     }
+
+    loggingout = () => {
+        UpdateCloudData(this.props.userid);
+        this.props.resetRedux();
+        setTimeout(() => {
+            Logout();
+        }, 5000);
+    };
 
     updatinglocalworklist = worklistbackend => {
         this.props.updateWorkListAfterCloud(
@@ -122,14 +121,6 @@ class Taskshowup extends Component {
             </View>
         </View>
     );
-
-    returnflatlistdata() {
-        if (!this.firsttime) {
-            return this.props.data.data;
-        }
-        this.firsttime = false;
-        return [];
-    }
 
     forceRerender = () => {
         this.setState({ state: this.state });
@@ -308,13 +299,6 @@ class Taskshowup extends Component {
         this.footer.setpointer(value);
     };
 
-    loggingout = () => {
-        //UpdateCloudData(this.props.userid);
-        this.props.resetRedux();
-        setTimeout(() => {
-            Logout();
-        }, 5000);
-    };
 
     render() {
         const { navigation, data } = this.props;
@@ -334,13 +318,12 @@ class Taskshowup extends Component {
                 {
                     data.data.length === 0 ?
                     <View style={[styles.flatList,{flex:1,alignItems:'center', justifyContent:'center', marginBottom:30}]}>
-                            <Text style={{ color: 'grey', fontSize: 16 }}>{'No Task Here'}</Text>
-                            {this.props.data.completed?<Text/>:<Text style={{ color: 'grey', fontSize: 16 }}>{"Look's like it is a fresh start all the best!!"}</Text>}
+                            <Text style={{ color: '#8D8D8C66', fontSize: 16 }}>{'No Task Here'}</Text>
+                            {this.props.data.completed?<Text/>:<Text style={{ color: '#8D8D8C66', fontSize: 16 }}>{"Look's like it is a fresh start all the best!!"}</Text>}
                     </View> :
                     <AnimatedFlatList
-                        data={this.returnflatlistdata()}
+                        data={this.props.data.data}
                             renderItem={({ item, index }) => {
-                                console.log(item, index);
                                 return (
                                     <Taskeach
                                         callUndo={this.callUndo}
@@ -495,8 +478,8 @@ const mapStatetoprops = state => {
         state: state.task.state,
         selectedwork:state.worklist.state.selectedwork,
         email: state.user.email,
-        userid: state.user._id,
-        defaultwork: state.user.work
+        userid: state.user.user._id,
+        defaultwork: state.user.user.work
     };
 };
 

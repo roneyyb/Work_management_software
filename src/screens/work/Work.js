@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Dimensions } from 'react-native';
-import WrappedButton from '../createtask/components/WrappedButton';
+import WrappedButton from '../task/components/WrappedButton';
 import Worklist from './WorkList';
 
 

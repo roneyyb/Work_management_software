@@ -7,12 +7,10 @@ export const giveAllWork = () => {
     console.log('giveAllWork');
     return dispatch => {
         db.transaction(tx => {
-            console.log('inside database')
             tx.executeSql(
                 'Select * from USER_WORKS;',
                 null,
                 (td, results) => {
-                    console.log('inside give_all_work action array=>', results.rows);
                     const rows = results.rows;
                     let works = [];
 

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { createDatabase } from '../../database/createTable';
 import { updatingDatabase } from './UpdatingDatabase';
 import { giveAllWork, giveAllTask } from '../../database/giveAllItem';
-import GeneralModal from '../createtask/components/generalmodalcomponent';
+import GeneralModal from '../task/components/generalmodalcomponent';
 
 class Settingupdatabase extends Component {
 
@@ -30,7 +30,7 @@ class Settingupdatabase extends Component {
         }
         else {
             await AsyncStorage.setItem('userToken', this.props.user._id);
-            //this.props.Give_all_work();
+            this.props.Give_all_work();
             this.props.navigation.navigate('App');
         }
     }
@@ -45,11 +45,12 @@ class Settingupdatabase extends Component {
     }
 
     afterdatabaseupdatedcom = async () => {
+        console.log("database update completed");
         const { user } = this.props;
         await AsyncStorage.setItem('userToken', user._id);
         this.props.giveAllWork();
         this.props.giveAllTask(user.work.workid);
-        this.props.navigation.navigate('App');
+        setTimeout(() => { this.props.navigation.navigate('App') }, 1000);
     }
 
     updatingdatabase = () => {
@@ -77,7 +78,7 @@ class Settingupdatabase extends Component {
 
 const mapStateToProps = state => {
     return {
-        user: state.user
+        user: state.user.user
     };
 };
 
