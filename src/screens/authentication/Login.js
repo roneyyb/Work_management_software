@@ -77,8 +77,10 @@ class Login extends Component {
                 passwordError:
                     'Should contain atleast one capital, one small letter and one digit',
             });
+            return true;
         } else {
             this.setState({ passwordError: false });
+            return false;
         }
     }
 
@@ -121,6 +123,11 @@ class Login extends Component {
             this.showAlert(emailEror);
             return;
         }
+        if (this.checkPassword()) {
+            this.showAlert("Check your password");
+            return;
+        }
+
         if (typeof passwordError === 'string') {
             this.showAlert(passwordError);
             return;
@@ -163,7 +170,7 @@ class Login extends Component {
                 {insets => (
                     <View
                         style={{ flex: 1, paddingTop: insets.top, backgroundColor: 'white' }}>
-                        <Spinner visible={this.state.isLoading} />
+                        <Spinner visible={this.state.isLoading} color={AppConstant.appColor} />
 
                         <View style={{ paddingHorizontal: '8%', flex: 1 }}>
                             <View
@@ -212,18 +219,20 @@ class Login extends Component {
                                         />
                                     </View>
 
-                                    <View>
+                                    <View style={{marginTop:20}}>
                                         <TouchableOpacity
-                                            style={{ alignSelf: 'flex-end', marginRight: 10 }}
-                                            onPress={this.onNext.bind(this)}>
+                                            style={{ alignSelf: 'center', alignItems:'center', justifyContent:'center',height:40, width:'70%', borderRadius:5,elevation:2, backgroundColor:AppConstant.appColor, marginRight: 10 }}
+                                            onPress={() => {
+                                                    this.onNext();
+                                            }}
+                                            activeOpacity={0.8}
+                                        >
                                             <Text
                                                 style={{
-                                                    color: AppConstant.appColor,
-                                                    fontSize: 30,
-                                                    fontWeight: 'bold',
-                                                    fontFamily: 'cursive',
+                                                    color: "#ffffff",
+                                                    fontSize: 15
                                                 }}>
-                                                {'Next '}
+                                                {'Sign in '}
                                             </Text>
                                         </TouchableOpacity>
                                     </View>

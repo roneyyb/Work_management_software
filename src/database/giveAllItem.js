@@ -39,16 +39,18 @@ export const giveAllWork = () => {
 
 export const giveAllTask = (workid, filter1=0, filter2=0) => {
     return async (dispatch, getState) => {
-        let completed = filter1;
-        let sortBy = filter2
-        if (filter1 == 0 && filter2 == 0) {
+        var completed = filter1;
+        var sortBy = filter2
+        console.log("giveAllTask",completed, sortBy);
+        if (filter1 === 0 && filter2 === 0) {
             const { completed:c, sortBy:S } = getState().task.data;
             completed = c;
             sortBy = S;
         }
-        let task_completed = 0;
+        console.log("giveAlltask", completed, sortBy);
+        var task_completed = 0;
         if (completed) { task_completed = 1; }
-        console.log('giveAlltask',completed,sortBy);
+        console.log("giveAllTask",task_completed);
         db.transaction(tx => {
             tx.executeSql(`Select * from WORK_TASKS where task_completed=? and workid=? ORDER BY task_createdAt ${sortBy === 'myOrder' ? 'ASC' : 'DESC'}`, [task_completed, workid], (_, results) => {
                 const rows = results.rows;

@@ -19,7 +19,7 @@ const initialState = {
 	state: {
 		loading: false,
 		count: 0,
-		undotype: '',
+		undoType: '',
 		refreshing: false
 	}
 };
@@ -41,6 +41,7 @@ const idReducer = produce((draft, action) => {
 			});
 			break;
 		case DELETE_TASKS:
+			console.log("Delete tasks", action.payload);
 			const deleteids = action.payload.deleteids;
 			deleteids.forEach((item) => {
 				delete draft[item.taskid];

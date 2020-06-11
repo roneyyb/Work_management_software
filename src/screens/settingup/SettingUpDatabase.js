@@ -7,6 +7,7 @@ import { createDatabase } from '../../database/createTable';
 import { updatingDatabase } from './UpdatingDatabase';
 import { giveAllWork, giveAllTask } from '../../database/giveAllItem';
 import GeneralModal from '../task/components/generalmodalcomponent';
+import AppConstant from '../../constants/AppConstant';
 
 class Settingupdatabase extends Component {
 
@@ -36,7 +37,7 @@ class Settingupdatabase extends Component {
     }
 
     componentDidMount() {
-       this.props.createDatabase(this.props.user.work, this.actionwhensetdatabasecom, this.state.signup);
+        this.props.createDatabase(this.props.user.work, this.actionwhensetdatabasecom, this.state.signup);
     }
 
     cancelFunction = (value) => {
@@ -50,7 +51,7 @@ class Settingupdatabase extends Component {
         await AsyncStorage.setItem('userToken', user._id);
         this.props.giveAllWork();
         this.props.giveAllTask(user.work.workid);
-        setTimeout(() => { this.props.navigation.navigate('App') }, 1000);
+        setTimeout(() => { this.props.navigation.navigate('App') }, 500);
     }
 
     updatingdatabase = () => {
@@ -61,7 +62,7 @@ class Settingupdatabase extends Component {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Text>{this.state.message}</Text>
-                <ActivityIndicator size='large' color='black' />
+                <ActivityIndicator size='large' color={AppConstant.appColor} />
                 <GeneralModal
                     title={'Set notification'}
                     message={'Do you want to set previous deadline and reminder for all task and work'}
@@ -77,12 +78,13 @@ class Settingupdatabase extends Component {
 }
 
 const mapStateToProps = state => {
+    console.log(state);
     return {
-        user: state.user.user
+        user: state.user
     };
 };
 
 export default connect(
     mapStateToProps,
-    { createDatabase, giveAllWork, giveAllTask}
+    { createDatabase, giveAllWork, giveAllTask }
 )(Settingupdatabase);

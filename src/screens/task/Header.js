@@ -106,6 +106,7 @@ class Header extends Component {
     };
 
     onPressreturn() {
+        //console.log('onPressreturn',this.props.deleteid);
         this.props.setColordefault();
         this.changeflip(0);
     }

@@ -77,11 +77,6 @@ class Createtask extends Component {
 			date_modal_opacity: 1,
 			reminder_modal_opacity: 1,
 		};
-		PushNotification.localNotification({
-      title: 'My Notification Title', // (optional)
-      message: 'My Notification Message', // (required)
-      playSound: true,
-    });
 	}
 
 	componentDidMount() {

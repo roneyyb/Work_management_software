@@ -31,7 +31,7 @@ export default class WrappedTextInput extends Component {
             return (
                 <FeatherIcon
                     name={'clear'}
-                    color={AppConstant.appColor}
+                    color={'red'}
                     size={25}
                 />
             );
@@ -64,7 +64,6 @@ export default class WrappedTextInput extends Component {
                         secureTextEntry={this.props.secureTextEntry}
                         clearButtonMode={'always'}
                         keyboardAppearance={'dark'}
-                        secureTextEntry={false}
                         maxLength={this.props.maxLength}
                         onBlur={this.props.onBlur}
                         onChangeText={text => {

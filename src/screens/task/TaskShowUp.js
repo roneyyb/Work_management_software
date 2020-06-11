@@ -128,7 +128,9 @@ class Taskshowup extends Component {
 
     setColordefault = () => {
         this.setcolornormal = true;
+        console.log("setColordefault",this.deleteid);
         this.deleteid.splice(0, this.deleteid.length);
+        console.log(this.deleteid);
         this.forceRerender();
     };
 
@@ -141,17 +143,6 @@ class Taskshowup extends Component {
         this.setState({ visibleWorkModal: state });
     };
 
-
-    waitUndo = (deleteids, type) => {
-        const workid = {
-            workid: this.props.selectedwork.workid,
-            workidbackend: this.props.selectedwork.workidbackend,
-        };
-        this.a = setTimeout(() => {
-            this.resetUndo(deleteids, type, workid);
-        }, 4000);
-    };
-
     resetUndo = (deleteids, undotype, workid) => {
         Animated.timing(this.state.opacity, {
             toValue: 0,
@@ -161,19 +152,23 @@ class Taskshowup extends Component {
         const s = 'sdf';
        actionAfterNotUndoOnDatabase(deleteids,undotype,workid)
     };
-
-    deleteMultipletask = (deleteids, type) => {
-        this.deleteid.splice(0,this.deleteid.length);
-        this.callUndo(deleteids, type);
+    
+    waitUndo = (deleteids, type) => {
+        const workid = {
+            workid: this.props.selectedwork.workid,
+            workidbackend: this.props.selectedwork.workidbackend,
+        };
+        this.a = setTimeout(() => {
+            this.resetUndo(deleteids, type, workid);
+        }, 4000);
     };
-
     undoalreadyinuse = async (deleteids, type) => {
         await clearTimeout(this.a);
         const workid = {
             workid: this.props.selectedwork.workid,
             workidbackend: this.props.selectedwork.workid_backend,
         };
-        this.resetUndo(this.state.deleteid, type, workid);
+        this.resetUndo(this.state.deleteids, type, workid);
         this.setState({ deleteids: deleteids });
         Animated.timing(this.state.opacity, {
             toValue: 1,
@@ -182,6 +177,7 @@ class Taskshowup extends Component {
     };
 
     callUndo = (deleteids, type) => {
+        console.log("callUndo",deleteids);
         if (this.undoinuse === 0) {
             Animated.timing(this.state.opacity, {
                 toValue: 1,
@@ -195,12 +191,18 @@ class Taskshowup extends Component {
         }
     };
 
+
     headerAction = (deleted) => {
         const { completed } = this.props.data;
-        this.props.undoType(this.deleteid, deleted ? 'Deleted' : !completed ? 'Completed' : 'Incompleted');
-        this.deleteMultipletask(this.deleteid, deleted ? 'delete' : !completed ? 'complete' : 'incomplete');
-        
-    }
+        this.props.undoType([...this.deleteid], deleted ? 'Deleted' : !completed ? 'Completed' : 'Incompleted');
+        this.callUndo(
+          [...this.deleteid],
+          deleted ? 'delete' : !completed ? 'complete' : 'incomplete',
+        );
+        console.log(this.deleteid);
+        this.deleteid.splice(0, this.deleteid.length);
+        console.log("headerAction",this.deleteid);
+    };
 
     deletingWorkconfirmation = () => {
         const { workid, workidbackend } = this.props.selectedwork;
@@ -321,7 +323,7 @@ class Taskshowup extends Component {
                             <Text style={{ color: '#8D8D8C66', fontSize: 16 }}>{'No Task Here'}</Text>
                             {this.props.data.completed?<Text/>:<Text style={{ color: '#8D8D8C66', fontSize: 16 }}>{"Look's like it is a fresh start all the best!!"}</Text>}
                     </View> :
-                    <AnimatedFlatList
+                    <FlatList
                         data={this.props.data.data}
                             renderItem={({ item, index }) => {
                                 return (
@@ -347,7 +349,9 @@ class Taskshowup extends Component {
                         ref={component => (this._eachtask = component)}
                         contentContainerStyle={styles.flatList}
                         scrollEnabled
-                        keyExtractor={item => item.taskid}
+                            keyExtractor={item => {
+                                return (toString(item));
+                            }}
                         ListFooterComponent={this.renderFooter}
                         onRefresh={this.handleRefresh.bind(this)}
                         refreshing={this.props.state.refreshing}
@@ -471,15 +475,14 @@ class Taskshowup extends Component {
 }
 
 const mapStatetoprops = state => {
-    console.log(state);
-    return {
+    console.log("taskshowup state",state.task);
+   return {
         byIds: state.task.byIds,
         data: state.task.data,
         state: state.task.state,
         selectedwork:state.worklist.state.selectedwork,
-        email: state.user.email,
-        userid: state.user.user._id,
-        defaultwork: state.user.user.work
+        userid: state.user._id,
+        defaultwork: state.user.work
     };
 };
 

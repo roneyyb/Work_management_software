@@ -9,6 +9,7 @@ const upadding = Math.round(SCREEN_WIDTH * 0.03);
 class Modal1 extends Component {
 	constructor(props) {
 		super(props);
+		console.disableYellowBox = true;
 	}
 	render() {
 		return (
@@ -25,7 +26,7 @@ class Modal1 extends Component {
 					</View>
 					<TouchableOpacity
 						onPress={() => {
-							if (this.props.completed === false) {
+							if (!this.props.completed) {
 								this.props.giveAllTask(
 									this.props.workid,
 									true,
@@ -48,7 +49,7 @@ class Modal1 extends Component {
 					</TouchableOpacity>
 					<TouchableOpacity
 						onPress={() => {
-							if (this.props.completed === true) {
+							if (this.props.completed) {
 								this.props.giveAllTask(
 									this.props.workid,
 									false,
@@ -189,6 +190,9 @@ class Modal1 extends Component {
 }
 
 const mapStateToProps = (state) => {
+	console.log(state.task);
+	console.log(state.worklist);
+	console.log(state.user);
 	return {
 		workid: state.worklist.state.selectedwork.workid,
 		title: state.worklist.state.selectedwork.work_title,

@@ -18,8 +18,6 @@ const initialState = {
         selectedwork: {}
     }
 };
-//         case SET_WORKLIST_AFTER_CLOUD_DATA_UPDATION:
-//             return { ...state, data: action.payload.data, selectedwork: action.payload.selectedwork };
 
 const idReducer = produce((draft, action) => {
     switch (action.type) {

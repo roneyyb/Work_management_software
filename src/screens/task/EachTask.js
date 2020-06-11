@@ -139,14 +139,14 @@ class Taskeach extends Component {
     returndatabaseDate = date => {
         const created = date.split(' ');
         const time = created[5].split(':');
-       
+
         const currentdate = new Date();
         const currentday = currentdate.getDay();
         const currentmonth = currentdate.getMonth();
         const currentyear = currentdate.getFullYear();
         const day = created[2];
         const year = created[3];
-        const month = monthNames.indexOf(created[1])+1;
+        const month = monthNames.indexOf(created[1]) + 1;
         if (year === currentyear && month === currentmonth && day === currentday) {
             return `${time[0]}:${time[1]}`;
         } else if (year == currentyear) {
@@ -174,7 +174,6 @@ class Taskeach extends Component {
         } else {
             this.onSwipeAction(true, false);
         }
-
     }
 
     getCardStyle() {
@@ -185,6 +184,7 @@ class Taskeach extends Component {
     }
 
     setToInitialState = () => {
+        console.log('settoinitialstate');
         this.animated_card.setNativeProps({ elevation: 0, borderRadius: 0 });
         this.view_change.setNativeProps({ backgroundColor: 'white' });
     };
@@ -202,6 +202,25 @@ class Taskeach extends Component {
         this.touched1 = true;
         this.touched2 = true;
     }
+
+    onSwipeAction = (deletetask, complete) => {
+        const { byIds } = this.props;
+        const data = byIds[this.props.items];
+        const { taskid } = data;
+        if (this.props.searchTask) {
+            console.log('deleting task in search');
+            this.props.deleteTask(taskid);
+        }
+        this.props.undoType(
+            [{ taskid }],
+            deletetask ? 'Deleted' : complete ? 'Completed' : 'Incompleted',
+        );
+
+        this.props.callUndo(
+            [{ taskid }],
+            deletetask ? 'delete' : complete ? 'complete' : 'incomplete',
+        );
+    };
 
     UNSAFE_componentWillUpdate() {
         UIManager.setLayoutAnimationEnabledExperimental &&
@@ -241,25 +260,6 @@ class Taskeach extends Component {
         } else {
             return `${newdate[0]}, ${newdate[1]} ${newdate[2]}, ${newdate[3]}`;
         }
-    };
-
-    onSwipeAction = (deletetask, complete) => {
-        const { byIds } = this.props;
-        const data = byIds[this.props.items];
-        const { taskid } = data;
-        if (this.props.searchTask) {
-            console.log('deleting task in search');
-            this.props.deleteTask(taskid);
-        }
-        this.props.undoType(
-            [{ taskid }],
-            deletetask ? 'Deleted' : (complete ? 'Completed' : 'Incompleted'),
-        );
-
-        this.props.callUndo(
-            [{ taskid }],
-            deletetask ? 'delete' : complete ? 'complete' : 'incomplete',
-        );
     };
 
     onPresstask() {
@@ -340,7 +340,7 @@ class Taskeach extends Component {
         );
     };
 
-    showtitleornot = (task_title) => {
+    showtitleornot = task_title => {
         if (task_title.length > 0) {
             if (task_title.length > 100) {
                 return (
@@ -349,15 +349,11 @@ class Taskeach extends Component {
                     </Text>
                 );
             }
-            return (
-                <Text style={styles.titlestyle}>
-                    {`${task_title}`}
-                </Text>
-            );
+            return <Text style={styles.titlestyle}>{`${task_title}`}</Text>;
         }
     };
 
-    showdescriptionornot = (task_description) => {
+    showdescriptionornot = task_description => {
         if (task_description.length > 0) {
             if (task_description.length > 180) {
                 return (
@@ -367,33 +363,44 @@ class Taskeach extends Component {
                 );
             }
             return (
-                <Text style={styles.descriptionstyle}>
-                    {`${task_description}`}
-                </Text>
+                <Text style={styles.descriptionstyle}>{`${task_description}`}</Text>
             );
         }
     };
 
     shouldComponentUpdate(nextProps) {
-        if (this.props.items != nextProps.items) {
-            this.state.position.setValue({ x: 0, y: 0 });
-            this.setState({
-                isFlipped: false,
-                bgcolor: 'white',
-                paddingright: 0,
-                borderradius: 0,
-            });
-            this.setToInitialState();
+        console.log("component update", nextProps.items, this.props.items, this.front);
+        if (this.props.items !== nextProps.items) {
+            if (this.front === 1) {
+                this.front = 0;
+                this.setState({
+                    isFlipped: false,
+                    bgcolor: 'white',
+                    paddingright: 0,
+                    borderradius: 0,
+                });
+                return false;
+            }
+            else {
+                this.state.position.setValue({ x: 0, y: 0 });
+                this.setToInitialState();
+                this.touched = true;
+                this.touched1 = true;
+                this.touched2 = true;
+                return true;
+            }
+        } else {
+            return true;
         }
-        return true;
     }
 
-    changecolor = (taskid) => {
+    changecolor = taskid => {
         if (this.front === 0) {
             this.front = 1;
             this.props.deleteid.push({
-                taskid
+                taskid,
             });
+            console.log("deleteid array", this.props.deleteid);
             if (this.props.deleteid.length === 1) {
                 this.props.changeflip(1);
             } else if (this.props.deleteid.length > 1) {
@@ -410,9 +417,7 @@ class Taskeach extends Component {
         }
         this.front = 0;
 
-        var index = this.props.deleteid.findIndex(
-            obj => obj.taskid === taskid,
-        );
+        var index = this.props.deleteid.findIndex(obj => obj.taskid === taskid);
         if (index > -1) {
             this.props.deleteid.splice(index, 1);
             this.props.Deletetaskcountnumber(this.props.deleteid.length);
@@ -429,14 +434,20 @@ class Taskeach extends Component {
         return;
     };
 
-
     render() {
         // return (
         //     <View/>
         // );
-        const { byIds } = this.props;
+        const { byIds, completed, searchTask } = this.props;
         const data = byIds[this.props.items];
-        const { taskid, task_title, task_description, task_deadline, task_completedAt, task_createdAt } = data;
+        const {
+            taskid,
+            task_title,
+            task_description,
+            task_deadline,
+            task_completedAt,
+            task_createdAt,
+        } = data;
         return (
             <View
                 ref={child => {
@@ -468,24 +479,33 @@ class Taskeach extends Component {
                     key={taskid}
                     {...this.state.panResponder.panHandlers}>
                     <AnimateTouchablehightlight
-                        onPress={this.onPresstask.bind(this)}
+                        onPress={() => {
+                            if (!completed) {
+                                this.onPresstask.bind(this);
+                            }
+                        }}
                         onLongPress={() => {
-                            if (!this.props.searchTask) {
+                            if (!completed && !searchTask) {
                                 this.changecolor(taskid);
                             }
                         }}
                         underlayColor={null}>
                         <View style={{ flexDirection: 'row' }}>
                             <View
-                                style={[styles.cardStyle, {
-                                    paddingLeft:
-                                        upadding / 1.5 + upadding / 1.5 - this.state.paddingright,
-                                }]}>
+                                style={[
+                                    styles.cardStyle,
+                                    {
+                                        paddingLeft:
+                                            upadding / 1.5 +
+                                            upadding / 1.5 -
+                                            this.state.paddingright,
+                                    },
+                                ]}>
                                 <TouchableHighlight
                                     underlayColor={null}
                                     style={{ flex: 1 }}
                                     onPress={() => {
-                                        if (!this.props.searchTask) {
+                                        if (!searchTask) {
                                             this.changecolor(taskid);
                                         }
                                     }}>
@@ -512,9 +532,7 @@ class Taskeach extends Component {
                                                     fontFamily: 'cursive',
                                                     fontSize: upadding * 1.6,
                                                 }}>{`${
-                                                    task_title.length > 0
-                                                        ? task_title.trim()[0]
-                                                        : ''
+                                                    task_title.length > 0 ? task_title.trim()[0] : ''
                                                     }`}</Text>
                                         </View>
                                         {/* BackSide */}
@@ -540,7 +558,10 @@ class Taskeach extends Component {
                             </View>
                             <View style={styles.titledescontainer}>
                                 <View
-                                    style={{ flexDirection: 'row', marginBottom: upadding / 2 }}>
+                                    style={{
+                                        flexDirection: 'row',
+                                        marginBottom: upadding / 2,
+                                    }}>
                                     <View
                                         style={{
                                             flex: 6,
@@ -560,7 +581,10 @@ class Taskeach extends Component {
                                         </Text>
                                     </View>
                                 </View>
-                                {this.returnDeadlineorCompleted(task_deadline, task_completedAt)}
+                                {this.returnDeadlineorCompleted(
+                                    task_deadline,
+                                    task_completedAt,
+                                )}
                             </View>
                         </View>
                         {/* </View> */}
@@ -578,7 +602,7 @@ const mapStateToProps = (state) => {
         workid: state.worklist.state.selectedwork.workid,
         title: state.worklist.state.selectedwork.work_title,
         completed: state.task.data.completed,
-        sortBy:state.task.data.sortBy
+        sortBy: state.task.data.sortBy
     }
 }
 
