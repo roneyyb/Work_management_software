@@ -190,15 +190,12 @@ class Modal1 extends Component {
 }
 
 const mapStateToProps = (state) => {
-	console.log(state.task);
-	console.log(state.worklist);
-	console.log(state.user);
 	return {
 		workid: state.worklist.state.selectedwork.workid,
 		title: state.worklist.state.selectedwork.work_title,
 		workidbackend: state.worklist.state.selectedwork.workid_backend,
-		userid: state.user.user._id,
-		defaultworkid: state.user.user.work._id,
+		userid: state.user._id,
+		defaultworkid: state.user.work._id,
 		sortBy: state.task.data.sortBy,
 		completed: state.task.data.completed,
 	}

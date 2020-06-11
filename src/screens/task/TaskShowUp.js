@@ -267,8 +267,8 @@ class Taskshowup extends Component {
                 workid_backend,
                 notificationid,
                 deadline,
-        });
-        this.props.updateTaskInRedux({ ...this.state.selected_task, task_deadline: deadline });
+		});
+        this.props.updateTaskInRedux({ ...this.state.selected_task, task_deadline: deadline,task_notificationid:notificationid });
         this.setState({ visibledatetimeModal, selected_task: '' });
     }
 
@@ -304,178 +304,211 @@ class Taskshowup extends Component {
 
     render() {
         const { navigation, data } = this.props;
+        const tasklistlength = data.data.length;
         const undosize = this.state.opacity.interpolate({
             inputRange: [0, 1],
             outputRange: [0, 1],
         });
 
         return (
-            <View
-                style={{
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'white',
+            }}
+            accessible>
+            {tasklistlength === 0 ? (
+              <View
+                style={[
+                  styles.fSlatList,
+                  {
                     flex: 1,
-                    backgroundColor: 'white',
-                }}
-                accessible
-            >
-                {
-                    data.data.length === 0 ?
-                    <View style={[styles.flatList,{flex:1,alignItems:'center', justifyContent:'center', marginBottom:30}]}>
-                            <Text style={{ color: '#8D8D8C66', fontSize: 16 }}>{'No Task Here'}</Text>
-                            {this.props.data.completed?<Text/>:<Text style={{ color: '#8D8D8C66', fontSize: 16 }}>{"Look's like it is a fresh start all the best!!"}</Text>}
-                    </View> :
-                    <FlatList
-                        data={this.props.data.data}
-                            renderItem={({ item, index }) => {
-                                return (
-                                    <Taskeach
-                                        callUndo={this.callUndo}
-                                        settingNotificationmodal={this.settingNotificationmodal}
-                                        setcolornormal={this.setcolornormal}
-                                        index={index}
-                                        Searchtask={false}
-                                        navigation={navigation}
-                                        deleteid={this.deleteid}
-                                        items={item}
-                                        setColordefault={this.setColordefault.bind(this)}
-                                        handleRefresh={this.handleRefresh.bind(this)}
-                                        changeflip={(count) => {
-                                            this.headerRef.current.changeflip(count);
-                                        }}
-                                        Deletetaskcountnumber={(count) => { this.headerRef.current.deleteTaskCountNumber(count); }}
-                                        changescroll={this.changescroll}
-                                    />
-                                )
-                            }}
-                        ref={component => (this._eachtask = component)}
-                        contentContainerStyle={styles.flatList}
-                        scrollEnabled
-                            keyExtractor={item => {
-                                return (toString(item));
-                            }}
-                        ListFooterComponent={this.renderFooter}
-                        onRefresh={this.handleRefresh.bind(this)}
-                        refreshing={this.props.state.refreshing}
-                        onEndReached={this.handleLoadMore}
-                        onEndReachedThreshold={6}
-                    />
-                }
-
-                <Footer
-                    ref={refer => {
-                        this.footer = refer;
-                    }}
-                    navigation={this.props.navigation}
-                    callUndo={this.props.callUndo}
-                    completed={this.props.data.completed}
-                    onBackdropPress={this.onBackdropPress}
-                />
-                <Header
-                    ref={this.headerRef}
-                    title={this.props.selectedwork.work_title}
-                    headerAction={this.headerAction.bind(this)}
-                    setpointer={this.setfootertouch}
-                    settaskSearch={this.settaskSearch}
-                    navigation={navigation}
-                    setColordefault={this.setColordefault}
-                />
-                {this.state.task_search_enable ? (
-                    <SearchTask
-                        ref={searchtask => {
-                            this.searchtask = searchtask;
-                        }}
-                        tasklist={this.props.data.data}
-                        byIds={this.props.byIds}
-                        callUndo={this.callUndo}
-                        settaskSearch={this.settaskSearch}
-                        settingNotificationmodal={this.settingNotificationmodal}
-                        navigation={navigation}
-                        deleteid={this.deleteid}
-                        handleRefresh={this.handleRefresh.bind(this)}
-                        changescroll={this.changescroll}
-                    />
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 30,
+                  },
+                ]}>
+                <Text style={{color: '#8D8D8C66', fontSize: 16}}>
+                  {'No Task Here'}
+                </Text>
+                {this.props.data.completed ? (
+                  <Text />
                 ) : (
-                        <View />
-                    )}
-                <Animated.View
-                    style={[{opacity:this.state.opacity},styles.undoContainer]}>
-                    <Animated.Text
-                        style={[styles.undoCountText, { opacity:undosize}]}>
-                        {`${this.props.state.count} ${this.props.state.undoType} `}
-                    </Animated.Text>
-                    <Animatedtouchablehighlight
-                        style={styles.undoButton}
-                        underlayColor={'#87cefa33'}
-                        onPress={() => {
-                            this.undoaction();
-                        }}>
-                        <Animated.Text
-                            style={{
-                                fontSize: upadding * 1.3,
-                                opacity: undosize,
-                                fontWeight: 'bold',
-                                color: '#FFA500',}}>
-                            {'Undo'}
-                        </Animated.Text>
-                    </Animatedtouchablehighlight>
-                </Animated.View>
-                <Modal
-                    isVisible={this.state.visibleModal === 1}
-                    useNativeDriver
-                    onBackdropPress={() => {
-                        this.onBackdropPress(null);
-                    }}
-                    style={styles.Modal2}>
-                    <Modal2
-                        navigation={this.props.navigation}
-                        email={this.props.email}
-                        Logout={this.loggingout}
-                        onBackdropPress={this.onBackdropPress}
+                  <Text style={{color: '#8D8D8C66', fontSize: 16}}>
+                    {"Look's like it is a fresh start all the best!!"}
+                  </Text>
+                )}
+              </View>
+            ) : (
+              <FlatList
+                data={this.props.data.data}
+                renderItem={({item, index}) => {
+                  return (
+                    <Taskeach
+                      callUndo={this.callUndo}
+                      settingNotificationmodal={
+                        this.settingNotificationmodal
+                      }
+                      setcolornormal={this.setcolornormal}
+                      index={index}
+                      Searchtask={false}
+                      navigation={navigation}
+                      deleteid={this.deleteid}
+                      items={item}
+                      byIds={this.props.byIds}
+                      last={tasklistlength}
+                      setColordefault={this.setColordefault.bind(
+                        this,
+                      )}
+                      handleRefresh={this.handleRefresh.bind(
+                        this,
+                      )}
+                      changeflip={count => {
+                        this.headerRef.current.changeflip(
+                          count,
+                        );
+                      }}
+                      Deletetaskcountnumber={count => {
+                        this.headerRef.current.deleteTaskCountNumber(
+                          count,
+                        );
+                      }}
+                      changescroll={this.changescroll}
                     />
-                </Modal>
-                <DeleteModal
-                    visibleornot={this.state.visibleWorkModal}
-                    cancelFunction={this.onCancelPressDeleteModal}
-                    actiononbuttonpress={this.deletingWorkconfirmation}
-                    title={'Deleting the work'}
-                    message={
-                        'This action cannot be undo. If you delete the work all your related task will be deleted.'
-                    }
-                    Rightbuttontitle={'Cancel'}
-                    Leftbuttontitle={'Delete'}
-                />
-                <Modal
-                    isVisible={this.state.visibledatetimeModal === 1}
-                    useNativeDriver
-                >
-                    <Datetimemodal
-                        onChangeDeadline={this.onChangeDeadline}
-                        setOpacity={this.setOpacity}
-                        onDate={this.ondate}
-                        title={this.state.selected_task.task_title}
-                        description={this.state.selected_task.task_description}
-                    />
-                </Modal>
-                <Modal
-                    isVisible={this.state.visibleModal === 2}
-                    useNativeDriver
-                    onBackdropPress={() => {
-                        this.onBackdropPress(null);
-                    }}
-                    style={{ justifyContent: 'flex-end', margin: 0 }}
-                >
-                    <Modal1
-                        onCancelPressDeleteModal={this.onCancelPressDeleteModal}
-                        navigation={this.props.navigation}
-                        onBackdropPress={this.onBackdropPress}
-                    />
-                </Modal>
-            </View>
+                  );
+                }}
+                ref={component => (this._eachtask = component)}
+                contentContainerStyle={styles.flatList}
+                scrollEnabled
+                keyExtractor={(item, index) => index.toString()}
+                ListFooterComponent={this.renderFooter}
+                onRefresh={this.handleRefresh.bind(this)}
+                refreshing={this.props.state.refreshing}
+                onEndReached={this.handleLoadMore}
+                onEndReachedThreshold={6}
+              />
+            )}
+
+            <Footer
+              ref={refer => {
+                this.footer = refer;
+              }}
+              navigation={this.props.navigation}
+              callUndo={this.props.callUndo}
+              completed={this.props.data.completed}
+              onBackdropPress={this.onBackdropPress}
+            />
+            <Header
+              ref={this.headerRef}
+              title={this.props.selectedwork.work_title}
+              headerAction={this.headerAction.bind(this)}
+              setpointer={this.setfootertouch}
+              settaskSearch={this.settaskSearch}
+              navigation={navigation}
+              setColordefault={this.setColordefault}
+            />
+            {this.state.task_search_enable ? (
+              <SearchTask
+                ref={searchtask => {
+                  this.searchtask = searchtask;
+                }}
+                tasklist={this.props.data.data}
+                byIds={this.props.byIds}
+                callUndo={this.callUndo}
+                settaskSearch={this.settaskSearch}
+                settingNotificationmodal={this.settingNotificationmodal}
+                navigation={navigation}
+                deleteid={this.deleteid}
+                handleRefresh={this.handleRefresh.bind(this)}
+                changescroll={this.changescroll}
+              />
+            ) : (
+              <View />
+            )}
+            <Animated.View
+              style={[
+                {opacity: this.state.opacity},
+                styles.undoContainer,
+              ]}>
+              <Animated.Text
+                style={[styles.undoCountText, {opacity: undosize}]}>
+                {`${this.props.state.count} ${
+                  this.props.state.undoType
+                } `}
+              </Animated.Text>
+              <Animatedtouchablehighlight
+                style={styles.undoButton}
+                underlayColor={'#87cefa33'}
+                onPress={() => {
+                  this.undoaction();
+                }}>
+                <Animated.Text
+                  style={{
+                    fontSize: upadding * 1.3,
+                    opacity: undosize,
+                    fontWeight: 'bold',
+                    color: '#FFA500',
+                  }}>
+                  {'Undo'}
+                </Animated.Text>
+              </Animatedtouchablehighlight>
+            </Animated.View>
+            <Modal
+              isVisible={this.state.visibleModal === 1}
+              useNativeDriver
+              onBackdropPress={() => {
+                this.onBackdropPress(null);
+              }}
+              style={styles.Modal2}>
+              <Modal2
+                navigation={this.props.navigation}
+                email={this.props.email}
+                Logout={this.loggingout}
+                onBackdropPress={this.onBackdropPress}
+              />
+            </Modal>
+			
+            <DeleteModal
+              visibleornot={this.state.visibleWorkModal}
+              cancelFunction={this.onCancelPressDeleteModal}
+              actiononbuttonpress={this.deletingWorkconfirmation}
+              title={'Deleting the work'}
+              message={
+                'This action cannot be undo. If you delete the work all your related task will be deleted.'
+              }
+              Rightbuttontitle={'Cancel'}
+              Leftbuttontitle={'Delete'}
+            />
+            <Modal
+              isVisible={this.state.visibledatetimeModal === 1}
+              useNativeDriver>
+              <Datetimemodal
+                onChangeDeadline={this.onChangeDeadline}
+                setOpacity={this.setOpacity}
+                onDate={this.ondate}
+                title={this.state.selected_task.task_title}
+                description={this.state.selected_task.task_description}
+              />
+            </Modal>
+            <Modal
+              isVisible={this.state.visibleModal === 2}
+              useNativeDriver
+              onBackdropPress={() => {
+                this.onBackdropPress(null);
+              }}
+              style={{justifyContent: 'flex-end', margin: 0}}>
+              <Modal1
+                onCancelPressDeleteModal={this.onCancelPressDeleteModal}
+                navigation={this.props.navigation}
+                onBackdropPress={this.onBackdropPress}
+              />
+            </Modal>
+          </View>
         );
     }
 }
 
 const mapStatetoprops = state => {
-    console.log("taskshowup state",state.task);
    return {
         byIds: state.task.byIds,
         data: state.task.data,

@@ -139,6 +139,7 @@ class SearchTask extends Component {
                                     settingNotificationmodal={this.props.settingNotificationmodal}
                                     settaskSearch={this.props.settaskSearch}
                                     index={index}
+                                    byIds={this.props.byIds}
                                     searchTask={true}
                                     navigation={this.props.navigation}
                                     deleteid={this.props.deleteid}

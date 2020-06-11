@@ -188,10 +188,9 @@ class Createtask extends Component {
 			}
 		}
 		this.setState({ visibledatetimeModal });
-
 		if (this.state.task_notificationid !== 0) {
 			this.cancelNotification(
-				this.state.notificationid,
+				this.state.task_notificationid,
 				notificationid,
 				deadline,
 			);
@@ -255,7 +254,6 @@ class Createtask extends Component {
 					data.notificationid !== notificationid
 				) {
 					data['taskid'] = items.taskid;
-					console.log('updating task in database',data);
 					updateTaskInDatabase(data);
 					this.props.updateTaskInRedux({ task_deadline, task_description, task_notificationid, task_reminder, task_title, taskid:this.state.taskid, workid: data.workid, workid_backend: data.workid_backend, taskid_backend: this.state.taskid_backend,task_createdAt:items.task_createdAt });
 				}

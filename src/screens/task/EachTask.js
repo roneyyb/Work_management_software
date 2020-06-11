@@ -16,6 +16,7 @@ import FlipCard from 'react-native-flip-card';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { colorArray } from '../../constants/Color';
 import { undoType } from '../../actions/taskActions';
+import PushNotification from 'react-native-push-notification';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
 const SWIPE_OUT_DURATION = 100;
@@ -204,7 +205,7 @@ class Taskeach extends Component {
     }
 
     onSwipeAction = (deletetask, complete) => {
-        const { byIds } = this.props;
+        const { byIds,index,last } = this.props;
         const data = byIds[this.props.items];
         const { taskid } = data;
         if (this.props.searchTask) {
@@ -220,6 +221,13 @@ class Taskeach extends Component {
             [{ taskid }],
             deletetask ? 'delete' : complete ? 'complete' : 'incomplete',
         );
+        if ((last - 1) !== index) {
+            this.state.position.setValue({ x: 0, y: 0 });
+            this.setToInitialState();
+            this.touched = true;
+            this.touched1 = true;
+            this.touched2 = true;
+        }
     };
 
     UNSAFE_componentWillUpdate() {
@@ -292,7 +300,7 @@ class Taskeach extends Component {
                         }}>
                         <TouchableHighlight
                             onPress={() => {
-                                this.props.settingNotificationmodal(1, this.props.items);
+                                this.props.settingNotificationmodal(1, this.props.byIds[this.props.items]);
                             }}
                             underlayColor={'#2B65EC1A'}>
                             <View style={styles.dedlineContainderstyle}>
@@ -369,9 +377,9 @@ class Taskeach extends Component {
     };
 
     shouldComponentUpdate(nextProps) {
-        console.log("component update", nextProps.items, this.props.items, this.front);
         if (this.props.items !== nextProps.items) {
             if (this.front === 1) {
+                console.log('setting state');
                 this.front = 0;
                 this.setState({
                     isFlipped: false,
@@ -381,17 +389,10 @@ class Taskeach extends Component {
                 });
                 return false;
             }
-            else {
-                this.state.position.setValue({ x: 0, y: 0 });
-                this.setToInitialState();
-                this.touched = true;
-                this.touched1 = true;
-                this.touched2 = true;
-                return true;
-            }
         } else {
             return true;
         }
+        return true;
     }
 
     changecolor = taskid => {
@@ -400,7 +401,6 @@ class Taskeach extends Component {
             this.props.deleteid.push({
                 taskid,
             });
-            console.log("deleteid array", this.props.deleteid);
             if (this.props.deleteid.length === 1) {
                 this.props.changeflip(1);
             } else if (this.props.deleteid.length > 1) {
@@ -481,7 +481,7 @@ class Taskeach extends Component {
                     <AnimateTouchablehightlight
                         onPress={() => {
                             if (!completed) {
-                                this.onPresstask.bind(this);
+                                this.onPresstask();
                             }
                         }}
                         onLongPress={() => {
@@ -598,7 +598,6 @@ class Taskeach extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        byIds: state.task.byIds,
         workid: state.worklist.state.selectedwork.workid,
         title: state.worklist.state.selectedwork.work_title,
         completed: state.task.data.completed,

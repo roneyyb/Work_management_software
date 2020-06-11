@@ -18,55 +18,6 @@ export const deleteWorkInDatabase = (workid, workidbackend) => {
                         }, (_, error) => {
                             conole.log('User works data update post request error.', error);
                         });
-                        // var indexd = 0;
-                        // data.forEach((element, index) => {
-                        //     if (element.workid === workid) {
-                        //         indexd = index;
-                        //     }
-                        //     if (element.workid_backend === defaultworkid) {
-                        //         work = element;
-                        //         element.work_selected = 1;
-                        //         return;
-                        //     }
-                        //     element.work_selected = 0;
-                        // });
-                        // data.splice(indexd, 1);
-                        // tx.executeSql(
-                        //     `select * from work_tasks where workid=? and task_completed = ? ORDER BY task_createdAt ${
-                        //     sortBy === 'myOrder' ? 'ASC' : 'DESC'
-                        //     }`,
-                        //     [work.workid, completed === true ? 1 : 0],
-                        //     (td, results) => {
-                        //         console.log('inside give_all_work action array=>', results.rows);
-                        //         const rows = results.rows;
-                        //         let users = [];
-
-                        //         for (let i = 0; i <= rows.length; i++) {
-                        //             if (i === rows.length) {
-                        //                 console.log('users =>', users, data);
-                        //                 dispatch({
-                        //                     type: SET_SELECTEDWORK_DATA,
-                        //                     payload: { work, worklist: data }
-                        //                 });
-                        //                 return dispatch({
-                        //                     type: DELETE_WORK_SUCCESS,
-                        //                     payload: { tasklist: users }
-                        //                 });
-                        //             } else {
-                        //                 users.push({
-                        //                     ...rows.item(i),
-                        //                 });
-                        //             }
-                        //         }
-
-                        //     },
-                        //     error => {
-                        //         return dispatch({
-                        //             type: DELETE_WORK_FAIL,
-                        //             payload: error
-                        //         });
-                        //     }
-                        // );
                     },
                     (_, error) => {
                         console.log('delete work failed error is =>', error);
@@ -74,7 +25,7 @@ export const deleteWorkInDatabase = (workid, workidbackend) => {
                 );
             },
             error => {
-                console.error('Error of transaction deleteWork is =>', error);
+                console.log('Error of transaction deleteWork is =>', error);
             },
             () => {
                 console.log('transaction successful');
@@ -92,16 +43,16 @@ export const deleteTask = (taskids) => {
                     tx.executeSql('Insert into TASK_DATA_UPDATE(update_type, workid, taskid) values(?,?,?)', ['DELETE', workid, taskid], () => {
                         console.log('Data update succesfully inserted');
                     }, (_, error) => {
-                        console.error('Task data update delete request error', error);
+                        console.log('Task data update delete request error', error);
                     });
                 }, (_, error) => {
-                    console.error("Error while deleting task", error);
+                    console.log("Error while deleting task", error);
             });
             });
         }, (error) => {
-                console.error("Error while deleting task", error);
+                console.log("Error while deleting task", error);
         }, () => {
-                console.error("Error while deleting task", error);
+                console.log("Error while deleting task", error);
         });
     };
 };

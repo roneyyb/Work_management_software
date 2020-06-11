@@ -87,19 +87,20 @@ export default class Datetimemodal extends Component {
             newid = id;
         }
 
-        console.log('Push notification time',time);
+        console.log('Push notification time',time,d.getTime(),date,times);
         if (time > d.getTime()) {
+            console.log('setting up push notification');
             PushNotification.localNotificationSchedule({
-                title: this.props.title,
-                id: newid,
-                message: this.props.description,
-                date: new Date(time),
-                playSound: true,
-                vibrate: true,
+              title: this.props.title,
+              id: newid,
+              message: this.props.description,
+              date: new Date(time),
+              playSound: true,
+              vibrate: true
             });
             this.props.onChangeDeadline(date, times, false, newid);
         } else {
-            this.props.onChangeDeadline(date, times, false, -1);
+            this.props.onChangeDeadline(date, times, false, 0);
         }
     };
 
