@@ -20,7 +20,7 @@ import {
 } from '../../database/updateItem';
 
 import { giveAllTask } from '../../database/giveAllItem';
-
+import { updateDefaultWork } from '../../actions/UserActions';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
 
@@ -76,6 +76,9 @@ class Creatework extends React.Component {
     }
 
     onUpdate() {
+        if (this.props.defaultwork.workid === this.props.selectedwork.workid) {
+            this.props.updateDefaultWork({ ...this.props.selectedwork, work_title: this.state.work });
+        }
         const data = { ...this.props.selectedwork, work_title: this.state.work };
         this.props.updateWorkInRedux(data);
         updateWorkInDatabase(this.props.selectedwork.workid, this.state.work);
@@ -139,11 +142,13 @@ class Creatework extends React.Component {
 const mapStateToProps = state => {
     return {
         selectedwork: state.worklist.state.selectedwork,
+        defaultwork: state.user.user.work
     };
 };
 export default connect(
     mapStateToProps,
     {
+        updateDefaultWork,
         giveAllTask,
         updateWorkInRedux,
         addWorkInRedux

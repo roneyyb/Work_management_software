@@ -78,6 +78,7 @@ class SearchTask extends Component {
     }
 
     render() {
+        const search_result_length = this.state.searchresult.length;
         return (
             <View style={styles.containerstyle}>
                 <View style={styles.searchBar}>
@@ -141,6 +142,7 @@ class SearchTask extends Component {
                                     index={index}
                                     byIds={this.props.byIds}
                                     searchTask={true}
+                                    last={search_result_length}
                                     navigation={this.props.navigation}
                                     deleteid={this.props.deleteid}
                                     items={item}

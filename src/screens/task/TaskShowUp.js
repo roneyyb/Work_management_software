@@ -205,9 +205,9 @@ class Taskshowup extends Component {
     };
 
     deletingWorkconfirmation = () => {
-        const { workid, workidbackend } = this.props.selectedwork;
+        const { workid, workid_backend } = this.props.selectedwork;
       
-        this.props.deleteWorkInDatabase(workid,workidbackend);
+        this.props.deleteWorkInDatabase(workid,workid_backend);
         this.props.deleteWorkInRedux(workid,this.props.defaultwork);
         this.props.giveAllTask(this.props.defaultwork.workid);
     };
@@ -514,8 +514,8 @@ const mapStatetoprops = state => {
         data: state.task.data,
         state: state.task.state,
         selectedwork:state.worklist.state.selectedwork,
-        userid: state.user._id,
-        defaultwork: state.user.work
+        userid: state.user.user._id,
+        defaultwork: state.user.user.work
     };
 };
 

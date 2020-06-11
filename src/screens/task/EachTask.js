@@ -480,7 +480,7 @@ class Taskeach extends Component {
                     {...this.state.panResponder.panHandlers}>
                     <AnimateTouchablehightlight
                         onPress={() => {
-                            if (!completed) {
+                            if (!completed && this.front===02) {
                                 this.onPresstask();
                             }
                         }}

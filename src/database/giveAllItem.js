@@ -57,7 +57,6 @@ export const giveAllTask = (workid, filter1=0, filter2=0) => {
                 var tasks = [];
                 for (let i = 0; i <= rows.length; i++) {
                     if (i === rows.length) {
-                        console.log(tasks);
                         dispatch({
                             type: LOADING_ALL_TASK,
                             payload: { message: tasks, completed, sortBy }

@@ -1,5 +1,6 @@
 //signup
 export const SET_UP_USER_ON_START = 'set_up_user_on_start';
+export const UPDATE_DEFAULT_WORK = 'update_default_work';
 
 //Work action
 export const ADD_WORK = 'add_work';
