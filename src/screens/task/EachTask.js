@@ -78,7 +78,7 @@ class Taskeach extends Component {
                 if (
                     (gestureState.dx > upadding * 1.25 ||
                         gestureState.dx < -upadding * 1.25) &&
-                    this.front === 0
+                    this.front === 0 && !this.props.taskTouchDisable
                 ) {
                     this.props.changescroll(false);
                     return true;
@@ -280,10 +280,7 @@ class Taskeach extends Component {
             items: byIds[items],
             searchTask: this.props.searchTask,
             settaskSearch: this.props.settaskSearch,
-            callUndo: this.props.callUndo,
-            deleteid: this.props.deleteid,
-            Deletetaskcountnumber: this.props.Deletetaskcountnumber,
-            changeflip: this.props.changeflip,
+            callUndo: this.props.callUndo
         });
     }
 
@@ -396,16 +393,9 @@ class Taskeach extends Component {
     }
 
     changecolor = taskid => {
+        this.props.onSelectingTask(taskid, this.front);
         if (this.front === 0) {
             this.front = 1;
-            this.props.deleteid.push({
-                taskid,
-            });
-            if (this.props.deleteid.length === 1) {
-                this.props.changeflip(1);
-            } else if (this.props.deleteid.length > 1) {
-                this.props.Deletetaskcountnumber(this.props.deleteid.length);
-            }
             this.setState({
                 isFlipped: true,
                 bgcolor: `#2B65EC1A`,
@@ -416,15 +406,6 @@ class Taskeach extends Component {
             return;
         }
         this.front = 0;
-
-        var index = this.props.deleteid.findIndex(obj => obj.taskid === taskid);
-        if (index > -1) {
-            this.props.deleteid.splice(index, 1);
-            this.props.Deletetaskcountnumber(this.props.deleteid.length);
-        }
-        if (this.props.deleteid.length === 0) {
-            this.props.changeflip(0);
-        }
         this.setState({
             isFlipped: false,
             bgcolor: 'white',
@@ -476,11 +457,11 @@ class Taskeach extends Component {
                             borderRadius: this.state.borderradius,
                         },
                     ]}
-                    key={taskid}
+                    key={toString(taskid)}
                     {...this.state.panResponder.panHandlers}>
                     <AnimateTouchablehightlight
                         onPress={() => {
-                            if (!completed && this.front===02) {
+                            if (!completed && !this.props.taskTouchDisable) {
                                 this.onPresstask();
                             }
                         }}

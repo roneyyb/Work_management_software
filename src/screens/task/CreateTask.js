@@ -125,26 +125,27 @@ class Createtask extends Component {
 		if (Searchtask) {
 			const { settaskSearch } = navigation.state.params;
 			settaskSearch(false);
-		} else {
-			const {
-				deleteid,
-				changeflip,
-				Deletetaskcountnumber,
-			} = navigation.state.params;
-			const index = deleteid.findIndex(obj => {
-				return obj.taskid === this.props.taskid;
-			});
-			if (index > -1) {
-				deleteid.splice(index, 1);
-				if (deleteid.length === 0) {
-					changeflip(0);
-					return;
-				}
-				else {
-					Deletetaskcountnumber(deleteid.length);
-				}
-			}
 		}
+		// else {
+		// 	const {
+		// 		deleteid,
+		// 		changeflip,
+		// 		Deletetaskcountnumber,
+		// 	} = navigation.state.params;
+		// 	const index = deleteid.findIndex(obj => {
+		// 		return obj.taskid === this.props.taskid;
+		// 	});
+		// 	if (index > -1) {
+		// 		deleteid.splice(index, 1);
+		// 		if (deleteid.length === 0) {
+		// 			changeflip(0);
+		// 			return;
+		// 		}
+		// 		else {
+		// 			Deletetaskcountnumber(deleteid.length);
+		// 		}
+		// 	}
+		// }
 		const {
 			callUndo
 		} = navigation.state.params;
