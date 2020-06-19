@@ -48,16 +48,12 @@ class BackView extends Component {
             <View
                 style={FrontViewstyles.Containerstyle}
             >
-                {props.deletecount !== 0 ? (
                     <WrappedButton
                         onPress={() => { props.onPressReturn(); }}
                         iconTitle={'clear'}
                         iconColor={AppConstant.appColor}
                     />
                   
-                ) : (
-                        <View />
-                    )}
                 <View style={[styles.Container2style]}>
 
                     <Text
@@ -106,7 +102,13 @@ class Header extends Component {
         } else {
             this.props.setpointer(true);
         }
-        this.setState({ isFlipped: !this.state.isFlipped, deletecount: count });
+        
+        if (count === 0) {
+            this.setState({ isFlipped: !this.state.isFlipped });
+            setTimeout(() => { this.setState({ deletecount: 0 }) }, 500);
+        } else {
+            this.setState({ isFlipped: !this.state.isFlipped,deletecount:count });
+        }
     };
 
     onPressreturn() {
@@ -124,6 +126,7 @@ class Header extends Component {
     deleteTaskCountNumber(count) {
         this.setState({ deletecount: count });
     }
+
     render() {
         return (
             <View style={{ position: 'absolute', paddingTop: upadding * 0.5, left: upadding / 2, right: upadding / 2 }}>

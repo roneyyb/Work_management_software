@@ -29,7 +29,7 @@ export default class App extends Component {
       <SafeAreaProvider>
         <Provider store={store}>
           <PersistGate loading={<LoadScreen />} persistor={persistor}>
-            <StatusBar backgroundColor={'white'} barStyle={'dark-content'} />
+            <StatusBar backgroundColor={'#ffffff'} barStyle={'dark-content'} />
             <Container />
           </PersistGate>
         </Provider>

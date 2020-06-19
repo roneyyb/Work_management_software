@@ -40,7 +40,12 @@ const taskNavigator = createStackNavigator(
         header: () => null
       }
     },
-    createtask: CreateTask,
+    createtask: {
+      screen: CreateTask,
+      // navigationOptions: {
+      //   headerLeft:() => null
+      // }
+    },
     worklist: StatusChange,
     creatework: CreateWork
   },

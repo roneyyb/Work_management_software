@@ -4,17 +4,20 @@ import { StyleSheet, TouchableHighlight, View} from 'react-native';
 
 export default class extends Component {
     render() {
-        const { iconTitle, onPress, iconColor } = this.props;
+        const { iconTitle, onPress, iconColor, disabled, iconSize, touchSize } = this.props;
         return (
             <View style={styles.Container1style}>
                 <TouchableHighlight
-                    style={styles.touchstyle}
+                    style={[styles.touchstyle, { height: touchSize || 36, width: touchSize || 36, borderRadius: touchSize/2 || 18}]}
                     underlayColor={'#8D8D8C33'}
-                    onPress={() => { onPress() }}
+                    onPress={() => {
+                        onPress();
+                    }}
+                    disabled={disabled || false}
                 >
                     <MaterialIcons
                         name={iconTitle}
-                        size={24}
+                        size={iconSize || 24}
                         color={iconColor || '#8D8D8C'}
                     />
                 </TouchableHighlight>
@@ -30,9 +33,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     touchstyle: {
-        height: 36,
-        width: 36,
-        borderRadius: 18,
         alignItems: 'center',
         justifyContent: 'center'
     },

@@ -203,9 +203,6 @@ class Taskshowup extends Component {
 		this.props.giveAllTask(this.props.defaultwork.workid);
 	};
 
-	renderFooter = () => {
-		return <View style={{ height: 70, width: SCREEN_WIDTH }} />;
-	};
 
 	changescroll = change => {
 		this._eachtask.setNativeProps({ scrollEnabled: change });
@@ -306,7 +303,7 @@ class Taskshowup extends Component {
 	onSelectingTask = (taskid,flipped) => {
 		if (flipped) {
 			this.deleteid.push({
-				taskid,
+				taskid
 			});
 			if (this.deleteid.length === 1) {
 				this.headerRef.current.changeflip(1);
@@ -316,16 +313,24 @@ class Taskshowup extends Component {
 			}
 		} else {
 			var index = this.deleteid.findIndex(obj => obj.taskid === taskid);
+			if (this.deleteid.length === 1) {
+				this.deleteid.splice(index, 1);
+				this.setTaskTouch(false);
+				this.headerRef.current.changeflip(0);
+				return;
+			}
 			if (index > -1) {
 				this.deleteid.splice(index, 1);
 				this.headerRef.current.deleteTaskCountNumber(this.deleteid.length);
 			}
-			if (this.deleteid.length === 0) {
-				this.setTaskTouch(false);
-				this.headerRef.current.changeflip(0);
-			}
+		
 		}
 	}
+
+	renderFooter = () => {
+		return <View style={{ height: 40, width: SCREEN_WIDTH }} />;
+	};
+
 
 	render() {
 		const { navigation, data } = this.props;
@@ -350,7 +355,6 @@ class Taskshowup extends Component {
 								flex: 1,
 								alignItems: 'center',
 								justifyContent: 'center',
-								marginBottom: 30,
 							},
 						]}>
 						<Text style={{ color: '#8D8D8C66', fontSize: 16 }}>

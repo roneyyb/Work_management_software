@@ -7,11 +7,12 @@ import {
 	StyleSheet,
 	TouchableOpacity,
 	TouchableHighlight,
+	Keyboard,
 } from 'react-native';
 import uuidv1 from "uuid/v1";
 import PushNotification from 'react-native-push-notification';
 import WrappedTextInput from './components/WrappedTextInput';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import WrappedButton from './components/WrappedButton';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -52,6 +53,16 @@ class Createtask extends Component {
 					)}
 			</View>
 		),
+		headerLeft: () => (
+			<View style={{ marginLeft: upadding*1.2 }}>
+				<TouchableOpacity
+					onPress={navigation.getParam('onBack')}
+					//style={{ marginRight: upadding }}
+				>
+					<MaterialIcons name="arrow-back" size={upadding * 2} color="#8D8D8C" />
+				</TouchableOpacity>
+			</View>
+		),
 		headerTintColor: '#8D8D8C',
 	});
 
@@ -81,7 +92,8 @@ class Createtask extends Component {
 
 	componentDidMount() {
 		this.props.navigation.setParams({
-			deleting: this.onPressdelete.bind(this),
+			deleting: this.onPressDelete.bind(this),
+			onBack: this.onPressBack.bind(this)
 		});
 	}
 
@@ -119,33 +131,13 @@ class Createtask extends Component {
 		this.setState({ reminder_modal_opacity: value });
 	};
 
-	onPressdelete() {
+	onPressDelete() {
 		const { navigation } = this.props;
 		const { Searchtask } = navigation.state.params;
 		if (Searchtask) {
 			const { settaskSearch } = navigation.state.params;
 			settaskSearch(false);
 		}
-		// else {
-		// 	const {
-		// 		deleteid,
-		// 		changeflip,
-		// 		Deletetaskcountnumber,
-		// 	} = navigation.state.params;
-		// 	const index = deleteid.findIndex(obj => {
-		// 		return obj.taskid === this.props.taskid;
-		// 	});
-		// 	if (index > -1) {
-		// 		deleteid.splice(index, 1);
-		// 		if (deleteid.length === 0) {
-		// 			changeflip(0);
-		// 			return;
-		// 		}
-		// 		else {
-		// 			Deletetaskcountnumber(deleteid.length);
-		// 		}
-		// 	}
-		// }
 		const {
 			callUndo
 		} = navigation.state.params;
@@ -168,6 +160,12 @@ class Createtask extends Component {
 			'delete',
 		);
 		return;
+	}
+
+	onPressBack() {
+		console.log('back pressed');
+		Keyboard.dismiss();
+		this.props.navigation.navigate('task');
 	}
 
 	onChangeDeadline = (dates, time, visibledatetimeModal, notificationid) => {
@@ -256,7 +254,7 @@ class Createtask extends Component {
 				) {
 					data['taskid'] = items.taskid;
 					updateTaskInDatabase(data);
-					this.props.updateTaskInRedux({ task_deadline, task_description, task_notificationid, task_reminder, task_title, taskid:this.state.taskid, workid: data.workid, workid_backend: data.workid_backend, taskid_backend: this.state.taskid_backend,task_createdAt:items.task_createdAt });
+					this.props.updateTaskInRedux({ task_deadline, task_description, task_notificationid, task_reminder, task_title, taskid: this.state.taskid, workid: data.workid, workid_backend: data.workid_backend, taskid_backend: this.state.taskid_backend, task_createdAt: items.task_createdAt });
 				}
 			} else {
 				if (
@@ -266,7 +264,7 @@ class Createtask extends Component {
 
 					data['taskid'] = uuid;
 					addTaskInDatabase(data);
-					this.props.addTaskInRedux({ task_deadline, task_description, task_notificationid, task_reminder, task_title, taskid: uuid, workid: data.workid, workid_backend: data.workid_backend, taskid_backend: '', task_createdAt: (new Date()).toString()});
+					this.props.addTaskInRedux({ task_deadline, task_description, task_notificationid, task_reminder, task_title, taskid: uuid, workid: data.workid, workid_backend: data.workid_backend, taskid_backend: '', task_createdAt: (new Date()).toString() });
 				}
 			}
 		} else {
@@ -288,31 +286,27 @@ class Createtask extends Component {
 							{this.props.work_title.toUpperCase()}
 						</Text>
 					</View>
+					<WrappedTextInput
+						placeholder={'Add Task'}
+						value={task_title}
+						onChangeText={title => {
+							this.setState({ task_title: title });
+						}}
+						iconTitle={'title'}
+						autoCorrect={false}
+						autoFocus={true}
 
-					<KeyboardAwareScrollView>
-						<WrappedTextInput
-							placeholder={'Add Task'}
-							value={task_title}
-							onChangeText={title => {
-								this.setState({ task_title: title });
-							}}
-							iconTitle={'title'}
-							autoCorrect={false}
-							autoFocus={true}
-							ref={() => {}}
-						/>
-						<WrappedTextInput
-							placeholder={'Add Description'}
-							value={task_description}
-							onChangeText={description => {
-								this.setState({ task_description: description });
-							}}
-							iconTitle={'description'}
-							autoCorrect={false}
-							autoFocus={false}
-							ref={() => { }}
-						/>
-					</KeyboardAwareScrollView>
+					/>
+					<WrappedTextInput
+						placeholder={'Add Description'}
+						value={task_description}
+						onChangeText={description => {
+							this.setState({ task_description: description });
+						}}
+						iconTitle={'description'}
+						autoCorrect={false}
+						autoFocus={false}
+					/>
 					<TouchableHighlight
 						onPress={() => {
 							this.ondate(1);
@@ -357,6 +351,7 @@ class Createtask extends Component {
 							</View>
 						</View>
 					</TouchableHighlight>
+
 					<View style={{ height: upadding * 4 }} />
 				</ScrollView>
 				<Modal

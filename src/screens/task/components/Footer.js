@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, TouchableHighlight, Dimensions, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import WrappedButton from './WrappedButton';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
@@ -18,123 +19,71 @@ class Footer extends Component {
 
     render() {
         return (
-            <View >
                 <View
-                    style={[
-                        styles.backgroundContainer,
-                        {
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            paddingRight: upadding * 1.5,
-                            paddingLeft: upadding * 1.5
-                        }
-                    ]}
+                    style={styles.backgroundContainer}
                 >
-                    <TouchableHighlight
-                        style={{ height: upadding * 4, width: upadding * 4, borderRadius: upadding * 2, alignItems: 'center', justifyContent: 'center' }}
-                        underlayColor={'#8D8D8C66'}
-                        onPress={() => {
-                            this.props.onBackdropPress(1);
-                        }}
-                        disabled={this.state.pointer}
-                    >
-                        <MaterialIcons
-                            name='list'
-                            size={upadding * 2}
-                            color='grey'
-                            light
+                    <View>
+                        <WrappedButton
+                            iconTitle={'list'}
+                            onPress={() => {
+                                this.props.onBackdropPress(1);
+                            }}
+                            disabled={this.state.pointer}
                         />
-                    </TouchableHighlight>
-                    <TouchableHighlight
-                        style={{ height: upadding * 4, width: upadding * 4, borderRadius: upadding * 2, alignItems: 'center', justifyContent: 'center' }}
-                        underlayColor={'#8D8D8C33'}
-                        onPress={() => {
-                            this.props.onBackdropPress(2);
-                        }}
-                        disabled={this.state.pointer}
-                    >
-                        <MaterialIcons
-                            name='more-vert'
-                            size={upadding * 2}
-                            color='grey'
-                            light
+                    </View>
+                    <View>
+                        <WrappedButton
+                            iconTitle={'more-vert'}
+                            onPress={() => {
+                                this.props.onBackdropPress(2);
+                            }}
+                            disabled={this.state.pointer}
                         />
-                    </TouchableHighlight>
+                    </View>
+                {this.props.completed ? <View style={{position:'absolute'}}/> :
+                        (
+                            <View style={styles.curve}>
+                                <WrappedButton
+                                    onPress={() => {
+                                        this.props.navigation.navigate('createtask', {
+                                            callUndo: this.props.callUndo,
+                                            onNavigateBack: this.props.navigation.getParam('onNavigateBack')
+                                        })
+                                    }
+                                    }
+                                    touchSize={upadding*5}
+                                    iconSize={upadding*3.5}
+                                    disabled={this.state.pointer}
+                                    iconTitle={'add'}
+                                />
+                            </View>
+                        )}
                 </View>
-                {this.props.completed ? <View /> :
-                    (<View>
-                        <View style={styles.curve}>
-                            <TouchableHighlight
-                                underlayColor={null}
-                                style={{ flex: 1 }}
-                                onPress={() => {
-                                    this.props.navigation.navigate('createtask', {
-                                        callUndo: this.props.callUndo,
-                                        onNavigateBack: this.props.navigation.getParam('onNavigateBack')
-                                    })
-                                }
-                                }
-
-                                disabled={this.state.pointer}
-                            >
-                                <View
-                                    style={{
-                                        backgroundColor: 'white',
-                                        elevation: 1,
-                                        height: upadding * 5,
-                                        width: upadding * 5,
-                                        flex: 1,
-                                        borderRadius: upadding * 2.5,
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}
-                                >
-                                    <MaterialIcons
-                                        name='add'
-                                        size={upadding * 3.5}
-                                        color='#8D8D8C'
-                                    />
-                                </View>
-                            </TouchableHighlight>
-                        </View>
-                    </View>)}
-            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
     backgroundContainer: {
-        position: 'relative',
         height: upadding * 5,
-        left: 0,
-        right: 0,
         elevation: 5,
-        bottom: 0,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingRight: upadding * 1.5,
+        paddingLeft: upadding * 1.5
     },
-
-    appMenu: {
-        backgroundColor: '#8D8D8C66',
-        height: upadding * 5,
-        width: upadding * 5,
-        elevation: 10,
-        borderRadius: upadding * 2.5,
-        position: 'absolute',
-        bottom: upadding * 2,
-        marginLeft: SCREEN_WIDTH / 2 - upadding * 2
-    },
-
     curve: {
         position: 'absolute',
         height: upadding * 5,
         width: upadding * 5,
-        elevation: 15,
+        elevation: 5,
         borderRadius: upadding * 2.5,
         backgroundColor: 'white',
         bottom: upadding * 2.5,
-        alignSelf: 'center'
+        left:'45%',
+        alignItems: 'center',
+        justifyContent:'center'
     }
 });
 

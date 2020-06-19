@@ -5,6 +5,7 @@ import {
     View,
     Text,
     Dimensions,
+    Keyboard
 } from 'react-native';
 import { connect } from 'react-redux';
 import uuidv1 from 'uuid/v1';
@@ -41,8 +42,12 @@ class Creatework extends React.Component {
                 }}
                 onPress={
                     navigation.getParam('update', false)
-                        ? navigation.getParam('updating', () => { })
-                        : navigation.getParam('creating', () => { })
+                        ? navigation.getParam('updating', () => {
+                            Keyboard.dismiss();
+                     })
+                        : navigation.getParam('creating', () => {
+                            Keyboard.dismiss();
+                     })
                 }
             >
                 <Text style={{ fontSize: upadding, color: '#2B65EC', fontWeight: 'bold' }}>
@@ -76,6 +81,8 @@ class Creatework extends React.Component {
     }
 
     onUpdate() {
+        Keyboard.dismiss();
+
         if (this.props.defaultwork.workid === this.props.selectedwork.workid) {
             this.props.updateDefaultWork({ ...this.props.selectedwork, work_title: this.state.work });
         }
@@ -86,6 +93,8 @@ class Creatework extends React.Component {
     }
 
     onCreate() {
+        Keyboard.dismiss();
+
         const uuid = uuidv1();
         const data = {
             work_title: this.state.work,
