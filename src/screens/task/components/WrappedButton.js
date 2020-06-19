@@ -4,7 +4,7 @@ import { StyleSheet, TouchableHighlight, View} from 'react-native';
 
 export default class extends Component {
     render() {
-        const { iconTitle, onPress } = this.props;
+        const { iconTitle, onPress, iconColor } = this.props;
         return (
             <View style={styles.Container1style}>
                 <TouchableHighlight
@@ -15,7 +15,7 @@ export default class extends Component {
                     <MaterialIcons
                         name={iconTitle}
                         size={24}
-                        color='#8D8D8C'
+                        color={iconColor || '#8D8D8C'}
                     />
                 </TouchableHighlight>
             </View>

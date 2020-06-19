@@ -16,7 +16,6 @@ import FlipCard from 'react-native-flip-card';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { colorArray } from '../../constants/Color';
 import { undoType } from '../../actions/taskActions';
-import PushNotification from 'react-native-push-notification';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
 const SWIPE_OUT_DURATION = 100;
@@ -67,7 +66,6 @@ class Return_background extends Component {
 class Taskeach extends Component {
     constructor(props) {
         super(props);
-        this.front = 0;
         this.touched1 = true;
         this.touched2 = true;
         this.touched = true;
@@ -78,7 +76,7 @@ class Taskeach extends Component {
                 if (
                     (gestureState.dx > upadding * 1.25 ||
                         gestureState.dx < -upadding * 1.25) &&
-                    this.front === 0 && !this.props.taskTouchDisable
+                    !this.state.isFlipped && !this.props.taskTouchDisable
                 ) {
                     this.props.changescroll(false);
                     return true;
@@ -89,7 +87,7 @@ class Taskeach extends Component {
                 return false;
             },
             onPanResponderMove: (event, gesture) => {
-                if (gesture.dx > 0 || (gesture.dx < 0 && this.front === 0)) {
+                if (gesture.dx > 0 || (gesture.dx < 0 && !this.state.isFlipped)) {
                     if (this.touched) {
                         this.animated_card.setNativeProps({
                             elevation: 1,
@@ -130,8 +128,6 @@ class Taskeach extends Component {
             backcolor: 'white',
             bgcolor: '#FFFFFF',
             position,
-            flag: 0,
-            zIndex: 0,
             paddingright: 0,
             borderradius: 0,
         };
@@ -221,13 +217,6 @@ class Taskeach extends Component {
             [{ taskid }],
             deletetask ? 'delete' : complete ? 'complete' : 'incomplete',
         );
-        if ((last - 1) !== index) {
-            this.state.position.setValue({ x: 0, y: 0 });
-            this.setToInitialState();
-            this.touched = true;
-            this.touched1 = true;
-            this.touched2 = true;
-        }
     };
 
     UNSAFE_componentWillUpdate() {
@@ -237,17 +226,15 @@ class Taskeach extends Component {
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.setcolornormal) {
-            nextProps.setcolornormal = false;
-            this.front = 0;
+        if (!nextProps.taskTouchDisable && this.state.isFlipped) {
             this.setState({
-                flag: 0,
                 isFlipped: false,
                 bgcolor: 'white',
                 paddingright: 0,
             });
         }
     }
+
     returntime = time => {
         var hours = time[0];
         var minutes = time[1];
@@ -373,52 +360,27 @@ class Taskeach extends Component {
         }
     };
 
-    shouldComponentUpdate(nextProps) {
-        if (this.props.items !== nextProps.items) {
-            if (this.front === 1) {
-                console.log('setting state');
-                this.front = 0;
-                this.setState({
-                    isFlipped: false,
-                    bgcolor: 'white',
-                    paddingright: 0,
-                    borderradius: 0,
-                });
-                return false;
-            }
-        } else {
-            return true;
-        }
-        return true;
+    setComponentState(isFlipped, bgcolor, paddingright, borderradius, backcolor) {
+        this.setState({
+            isFlipped,
+            bgcolor,
+            paddingright,
+            borderradius,
+            backcolor,
+        });
     }
 
-    changecolor = taskid => {
-        this.props.onSelectingTask(taskid, this.front);
-        if (this.front === 0) {
-            this.front = 1;
-            this.setState({
-                isFlipped: true,
-                bgcolor: `#2B65EC1A`,
-                paddingright: upadding,
-                borderradius: upadding / 2,
-                backcolor: 'white',
-            });
+    changecolor = (taskid,flipped) => {
+        this.props.onSelectingTask(taskid, flipped);
+        if (flipped) {
+            this.setComponentState(flipped, `#2B65EC1A`, upadding, upadding / 2, 'white');
             return;
         }
-        this.front = 0;
-        this.setState({
-            isFlipped: false,
-            bgcolor: 'white',
-            paddingright: 0,
-            borderradius: 0,
-        });
+        this.setComponentState(flipped, 'white', 0, 0, 'white');
         return;
     };
 
     render() {
-        // return (
-        //     <View/>
-        // );
         const { byIds, completed, searchTask } = this.props;
         const data = byIds[this.props.items];
         const {
@@ -487,14 +449,15 @@ class Taskeach extends Component {
                                     style={{ flex: 1 }}
                                     onPress={() => {
                                         if (!searchTask) {
-                                            this.changecolor(taskid);
+                                            this.changecolor(taskid,!this.state.isFlipped);
                                         }
-                                    }}>
+                                    }}
+                                >
                                     <FlipCard
                                         flip={this.state.isFlipped}
                                         clickable={false}
                                         friction={100}
-                                        perspective={5000}
+                                        perspective={1000}
                                         flipHorizontal={true}
                                         flipVertical={false}>
                                         {/* Face Side */}
@@ -551,7 +514,7 @@ class Taskeach extends Component {
                                         {this.showtitleornot(task_title)}
                                         {this.showdescriptionornot(task_description)}
                                     </View>
-                                    <View style={{ flex: 1, paddingTop: upadding }}>
+                                    <View style={{ paddingTop: upadding, paddingRight:upadding }}>
                                         <Text
                                             style={{
                                                 fontSize: upadding,

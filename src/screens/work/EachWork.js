@@ -14,7 +14,6 @@ class Item extends Component {
         const { selectedwork } = this.props;
         if (work.workid !== selectedwork.workid) {
             this.props.changeSelectedWork(work);
-            console.log('Eachwork =>','giveAllWork',work);
             this.props.giveAllTask(work.workid);
         }
         this.props.navigation.navigate('task');
@@ -24,49 +23,62 @@ class Item extends Component {
         // );
     }
 
+    componentDidMount() {
+        const work = this.props.byIds[this.props.item];
+        const { selectedwork,index } = this.props;
+        if (work.workid === selectedwork.workid) {
+            const no_of_task = ((SCREEN_HEIGHT) / (upadding * 4))-3;
+            const task_scroll = index > no_of_task;
+            console.log(no_of_task, index,task_scroll);
+            if (task_scroll) {
+                this.props.scrollToIndex(index);
+            }
+        }
+    }
+
     render() {
+        console.log(this.props.item);
         const work = this.props.byIds[this.props.item];
         const { selectedwork } = this.props;
         return (
-            <View style={styles.container}>
-                <View style={[{
-                    backgroundColor: work.workid===selectedwork.workid
-                        ? `${this.props.color}66`
-                        : 'white'
-                }, styles.containerInside]}
-                >
-                    <View style={styles.identity}>
-                        <View style={[ styles.identityInside , {
-                            backgroundColor: `${this.props.color}CC`}]}>
-                            {
-                                work.work_title.length !== 0 ?
+            <View style={[styles.container, {
+                backgroundColor: work.workid === selectedwork.workid
+                    ? `${this.props.color}66`
+                    : 'white'
+            }]}
+            >
+                <View style={styles.identity}>
+                    <View style={[styles.identityInside, {
+                        backgroundColor: `${this.props.color}CC`
+                    }]}>
+                        {
+                            work.work_title.length !== 0 ?
                                 <Text style={{ color: 'white', fontSize: upadding * 1.5 }}>
                                     {`${work.work_title[0]}`}
                                 </Text>
                                 :
-                                <View />    
-                            }
-                        </View>
+                                <View />
+                        }
                     </View>
-                    <View style={{ flex: 8, justifyContent: 'center' }}>
-                        <TouchableOpacity
-                            onPress={() => { this.onPressWork(work); }}
+                </View>
+                <View style={{ flex: 8, justifyContent: 'center' }}>
+                    <TouchableOpacity
+                        onPress={() => { this.onPressWork(work); }}
+                        style={{
+                            height: 30,
+                            marginLeft: 8
+                        }}
+                    >
+                        <Text
                             style={{
-                                height: 30,
-                                marginLeft: 8
+                                fontSize: upadding * 1.2,
+                                fontWeight: 'bold',
+                                color: selectedwork.workid === work.workid
+                                    ? `${this.props.color}`
+                                    : '#8D8D8C'
                             }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: upadding * 1.2,
-                                    fontWeight: 'bold',
-                                    color: selectedwork.workid === work.workid
-                                        ? `${this.props.color}`
-                                        : '#8D8D8C'
-                                }}
-                            >{`${work.work_title}`}</Text>
-                        </TouchableOpacity>
-                    </View>
+                        >{`${work.work_title}`}</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -84,7 +96,12 @@ export default connect(mapStateToProps, { changeSelectedWork, giveAllTask })(Ite
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
+        resizeMode: 'contain',
+        alignItems: 'center',
         height: upadding * 4,
+        borderTopRightRadius: upadding * 2,
+        borderBottomRightRadius: upadding * 2,
+        paddingLeft: upadding,
         marginTop: upadding / 2,
         paddingRight: upadding * 5
     },

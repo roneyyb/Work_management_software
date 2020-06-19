@@ -64,7 +64,6 @@ class Taskshowup extends Component {
 		super(props);
 		this.headerRef = createRef();
 		this.deleteid = [];
-		this.setcolornormal = false;
 		this.undoinuse = 0;
 		this.state = {
 			visibleModal: null,
@@ -126,13 +125,6 @@ class Taskshowup extends Component {
 		this.setState({ state: this.state });
 	};
 
-	setColordefault = () => {
-		this.setcolornormal = true;
-		console.log("setColorDefault", this.deleteid);
-		this.deleteid.splice(0, this.deleteid.length);
-		console.log("setColorDefault",this.deleteid);
-		this.setState({ taskTouchDisable: false });
-	};
 
 	handleViewRef = ref => (this.position = ref);
 
@@ -304,8 +296,15 @@ class Taskshowup extends Component {
 		this.setState({ taskTouchDisable: value });
 	}
 
-	onSelectingTask = (taskid,front) => {
-		if (front === 0) {
+	setColordefault = () => {
+		console.log("setColorDefault", this.deleteid);
+		this.deleteid.splice(0, this.deleteid.length);
+		console.log("setColorDefault", this.deleteid);
+		this.setTaskTouch(false);
+	};
+
+	onSelectingTask = (taskid,flipped) => {
+		if (flipped) {
 			this.deleteid.push({
 				taskid,
 			});
@@ -316,7 +315,7 @@ class Taskshowup extends Component {
 				this.headerRef.current.deleteTaskCountNumber(this.deleteid.length);
 			}
 		} else {
-			var index = this.props.deleteid.findIndex(obj => obj.taskid === taskid);
+			var index = this.deleteid.findIndex(obj => obj.taskid === taskid);
 			if (index > -1) {
 				this.deleteid.splice(index, 1);
 				this.headerRef.current.deleteTaskCountNumber(this.deleteid.length);
@@ -375,7 +374,6 @@ class Taskshowup extends Component {
 										settingNotificationmodal={
 											this.settingNotificationmodal
 										}
-										setcolornormal={this.setcolornormal}
 										index={index}
 										Searchtask={false}
 										navigation={navigation}
@@ -391,7 +389,7 @@ class Taskshowup extends Component {
 							ref={component => (this._eachtask = component)}
 							contentContainerStyle={styles.flatList}
 							scrollEnabled
-							keyExtractor={(item, index) => index.toString()}
+							keyExtractor={(item, index) => item.toString()}
 							ListFooterComponent={this.renderFooter}
 							onRefresh={this.handleRefresh.bind(this)}
 							refreshing={this.props.state.refreshing}

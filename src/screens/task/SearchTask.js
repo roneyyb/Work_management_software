@@ -65,16 +65,15 @@ class SearchTask extends Component {
     }
 
     deleteTask = (taskid) => {
-        var arr = this.state.searchresult;
+        var arr = [...this.state.searchresult];
         var index = arr.indexOf(taskid);
         this.deleteelement = { index, element: arr[index] };
         arr.splice(index, 1);
         var index1 = this.totaldata.indexOf(taskid);
-        this.setState((prevState) => {
-                searchresult = arr
+        this.setState({
+                searchresult:arr
         });
         this.totaldata.splice(index1, 1);
-        console.log('deleted from task');
     }
 
     render() {
@@ -127,7 +126,7 @@ class SearchTask extends Component {
                                 />
                         </View>) : <View style={styles.searchBaritem1} />}
                 </View>
-                {this.state.searchresult.length === 0 ?
+                {search_result_length === 0 ?
                     <View style={[styles.flatList, { flex: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 30 }]}>
                         <Text style={{ color: '#8D8D8C66', fontSize: 16 }}>{'No Task Found'}</Text>
                     </View> :
@@ -155,7 +154,7 @@ class SearchTask extends Component {
                             contentContainerStyle={{ paddingTop: 5 }}
                             scrollEnabled
                             renderF
-                            keyExtractor={item => item.taskid}
+                            keyExtractor={(item,index) => item.toString()}
                             onEndReachedThreshold={6}
                         />
                     </View>}

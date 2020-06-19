@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import FlipCard from 'react-native-flip-card';
 import WrappedButton from './components/WrappedButton';
+import AppConstant from '../../constants/AppConstant';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
 
@@ -51,6 +52,7 @@ class BackView extends Component {
                     <WrappedButton
                         onPress={() => { props.onPressReturn(); }}
                         iconTitle={'clear'}
+                        iconColor={AppConstant.appColor}
                     />
                   
                 ) : (
@@ -70,10 +72,12 @@ class BackView extends Component {
                 <WrappedButton
                     onPress={() => { props.onPressButton(false); }}
                     iconTitle={'done-all'}
+                    iconColor={AppConstant.appColor}
                 />
                 <WrappedButton
                     onPress={() => { props.onPressButton(true) }}
                     iconTitle={'delete'}
+                    iconColor={AppConstant.appColor}
                 />
 
 
