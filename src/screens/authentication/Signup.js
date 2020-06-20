@@ -59,7 +59,6 @@ class Signup extends React.Component {
     }
 
     onSubmit = data => {
-        console.log(data, `${server}/signup`);
         this.setState({ isLoading: true });
         const uuid = uuidv1();
         let config = {

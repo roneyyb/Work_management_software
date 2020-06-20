@@ -9,8 +9,8 @@ import {
 import  AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icons from 'react-native-vector-icons/FontAwesome';
-import { sendEmail } from './sendmail';
-import Gmail from './gmail';
+import { sendFeedback } from './sendFeedback';
+import Gmail from './Gamil';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
@@ -38,7 +38,7 @@ class Modal2Content extends Component {
             alignItems: 'center'
           }}
           onPress={() => {
-            sendEmail(this.props.email, 'Send Feedback').then(() => {
+            sendFeedback(this.props.email, 'Send Feedback').then(() => {
               this.props.onBackdropPress(null);
             });
           }}

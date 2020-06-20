@@ -34,8 +34,8 @@ class Gmail extends Component {
                     style={{
                         height: upadding & 3.5,
                         marginLeft: upadding,
-                        paddingBottom: upadding,
-                        flexDirection: 'column'
+                        flexDirection: 'column',
+                        justifyContent:'center'
                     }}
                 >
                     <Text

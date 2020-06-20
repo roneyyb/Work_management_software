@@ -7,7 +7,8 @@ import {
     StyleSheet,
     FlatList,
     Text,
-    Animated
+    Animated,
+    Keyboard
 } from 'react-native';
 import WrappedButton from './components/WrappedButton';
 import Taskeach from './EachTask';
@@ -85,7 +86,10 @@ class SearchTask extends Component {
                         <WrappedButton
                             iconTitle={'arrow-back'}
                             onPress={() => {
-                                this.props.settaskSearch(false);
+                                Keyboard.dismiss();
+                                setTimeout(() => {
+                                    this.props.settaskSearch(false);
+                                },100)
                             }}
                         />
                     </View>

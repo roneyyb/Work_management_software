@@ -12,11 +12,10 @@ import {
 import uuidv1 from "uuid/v1";
 import PushNotification from 'react-native-push-notification';
 import WrappedTextInput from './components/WrappedTextInput';
-import WrappedButton from './components/WrappedButton';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Datetimemodal from './components/datetimemodal';
+import Datetimemodal from './components/DateTimeModal';
 import { addTaskInDatabase } from '../../database/addItem';
 import { addTaskInRedux, updateTaskInRedux, undoType } from '../../actions/taskActions';
 import { updateTaskInDatabase } from '../../database/updateItem'
@@ -54,10 +53,10 @@ class Createtask extends Component {
 			</View>
 		),
 		headerLeft: () => (
-			<View style={{ marginLeft: upadding*1.2 }}>
+			<View style={{ marginLeft: upadding * 1.2 }}>
 				<TouchableOpacity
 					onPress={navigation.getParam('onBack')}
-					//style={{ marginRight: upadding }}
+				//style={{ marginRight: upadding }}
 				>
 					<MaterialIcons name="arrow-back" size={upadding * 2} color="#8D8D8C" />
 				</TouchableOpacity>
@@ -78,7 +77,7 @@ class Createtask extends Component {
 			task_description: items.task_description || '',
 			taskid: items.taskid || '',
 			task_deadline: items.task_deadline || 'Add Task Deadline For Completion',
-			task_notificationid: items.task_notificationid || 0,
+			task_notificationid: parseInt(items.task_notificationid) || 0,
 			taskid_backend: items.taskid_backend || '',
 			task_reminder: items.task_reminder || 'Add Task Reminder For Completion',
 			update: navigation.getParam('update', false),
@@ -87,6 +86,7 @@ class Createtask extends Component {
 			visibleremindermodal: 0,
 			date_modal_opacity: 1,
 			reminder_modal_opacity: 1,
+			error: ''
 		};
 	}
 
@@ -115,9 +115,10 @@ class Createtask extends Component {
 	};
 	ondate = value => {
 		if (this.state.task_title.length === 0) {
+			this.setState({ error: 'Please enter task title for setting deadline.' });
 		} else {
-			this.setState({ visibledatetimeModal: value });
-		}
+			this.setState({ visibledatetimeModal: value, error: '' });
+		}	
 	};
 
 	visibleReminderModal = value => {
@@ -351,7 +352,13 @@ class Createtask extends Component {
 							</View>
 						</View>
 					</TouchableHighlight>
-
+					{this.state.error.length > 0 ? <View>
+						<Text style={{ color: '#ff0033', fontSize: upadding }}>
+							{this.state.error}
+						</Text>
+					</View> :
+						<View />
+					}
 					<View style={{ height: upadding * 4 }} />
 				</ScrollView>
 				<Modal

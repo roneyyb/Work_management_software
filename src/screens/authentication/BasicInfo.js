@@ -41,9 +41,13 @@ class BasicInfo extends Component {
             alert('Please enter your password.');
             return;
         } else if (typeof state.passwordError === 'string') {
-            alert('Please enter password according to requirement.');
+            alert('Please enter password as specified.');
             return;
-        } else if (state.confirmpassword.trim().length === 0) {
+        } else if (state.password !== state.confirmpassword) {
+            alert('Password do not match.');
+            return;
+        }
+        else if (state.confirmpassword.trim().length === 0) {
             alert('Please enter password again.');
             return;
         } else if (typeof confirmpasswordError === 'string') {
@@ -140,7 +144,6 @@ class BasicInfo extends Component {
 
         return (
             <View style={{ flex: 1, flexDirection: 'column' }}>
-                <KeyboardAwareScrollView style={{ flex: 1 }}>
                     <View>
                         <WrappedTextInput
                             {...textInputProps}
@@ -220,7 +223,6 @@ class BasicInfo extends Component {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                </KeyboardAwareScrollView>
             </View>
         );
     }

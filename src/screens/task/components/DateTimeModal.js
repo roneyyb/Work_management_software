@@ -1,17 +1,16 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, Dimensions} from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import PushNotification from 'react-native-push-notification';
-import {day} from '../../../constants/Calender';
-const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
+import { day } from '../../../constants/Calender';
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const paddingE = Math.round(SCREEN_WIDTH * 0.05);
 const MODAL_MARGIN_HORIZONTAL = Math.round(SCREEN_WIDTH * 0.06);
-import Deadline from '../../ReminderModal/deadlinescreen';
+import Deadline from '../../ReminderModal/deadlineScreen';
 
 export default class Datetimemodal extends Component {
     constructor(props) {
         super(props);
-        this.configure();
     }
 
     state = { Modalscreen: 0, show: false };
@@ -23,26 +22,6 @@ export default class Datetimemodal extends Component {
     convertToMiliseconds = (hour, minutes) => {
         return (hour * 60 + minutes) * 60 * 1000;
     };
-
-    configure() {
-        PushNotification.configure({
-            onRegister: token => {
-                console.log('token', token);
-            },
-            onNotification: () => {
-                console.log('notifiction set');
-            },
-            permissions: {
-                alert: true,
-                badge: true,
-                sound: true,
-            },
-
-            popInitialNotification: false,
-
-            requestPermissions: true,
-        });
-    }
 
     openAndroidTimePicker = async () => {
         console.log('android time picker');
@@ -87,16 +66,16 @@ export default class Datetimemodal extends Component {
             newid = id;
         }
 
-        console.log('Push notification time',time,d.getTime(),date,times);
+        const { description, title } = this.props;
         if (time > d.getTime()) {
             console.log('setting up push notification');
             PushNotification.localNotificationSchedule({
-              title: this.props.title,
-              id: newid,
-              message: this.props.description,
-              date: new Date(time),
-              playSound: true,
-              vibrate: true
+                title: title,
+                id: newid,
+                message: description,
+                date: new Date(time),
+                playSound: true,
+                vibrate: true
             });
             this.props.onChangeDeadline(date, times, false, newid);
         } else {

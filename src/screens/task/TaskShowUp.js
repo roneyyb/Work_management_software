@@ -16,13 +16,13 @@ import {
 } from 'react-native';
 import Modal1 from './components/Modal1';
 import Modal2 from './components/Modal2';
-import DeleteModal from './components/generalmodalcomponent';
+import DeleteModal from './components/GeneralModalComponent';
 import Footer from './components/Footer';
 import Header from './Header';
 import Taskeach from './EachTask';
 import Logout from '../../database/dropTable';
 import { giveAllTask } from '../../database/giveAllItem';
-import Datetimemodal from './components/datetimemodal';
+import Datetimemodal from './components/DateTimeModal';
 import SearchTask from './SearchTask';
 import {
 	undoType,
@@ -529,7 +529,8 @@ const mapStatetoprops = state => {
 		state: state.task.state,
 		selectedwork: state.worklist.state.selectedwork,
 		userid: state.user.user._id,
-		defaultwork: state.user.user.work
+		defaultwork: state.user.user.work,
+		email:state.user.user.email
 	};
 };
 
