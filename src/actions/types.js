@@ -27,19 +27,14 @@ export const UPDATE_TASK = 'update_task';
 export const DELETE_TASKS = 'delete_tasks';
 
 //Task show actions
-export const SEARCH_TASK = 'search_task';
 export const REFRESHING = 'refreshing';
 
 //search task actions
 export const SET_DATA_TO_TOTALTASK = 'set_data_to_totaltask';
 
-//CLEAR ALL STATE
-export const SET_LOGIN_FALSE = 'set_login_false';
-export const CLEAR_ALL_STATE = 'clear_all_state';
-
 //creating database
 export const CREATING_DATABASE = 'creating_database';
 export const DATABASE_CREATED = 'database_created';
 
-
+//resetting redux store
 export const DESTROY_STATE = 'destroy_state';

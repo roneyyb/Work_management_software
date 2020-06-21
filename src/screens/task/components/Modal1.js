@@ -1,12 +1,5 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet,
-} from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {View, Text, Dimensions, StyleSheet} from 'react-native';
 import {giveAllTask} from '../../../database/giveAllItem';
 import {connect} from 'react-redux';
 import WrappedModal1Button from './WrappedModal1Button';
@@ -98,7 +91,11 @@ class Modal1 extends Component {
             });
             onBackdropPress(false);
           }}
-          style={{fontSize: upadding*1.2, iconSize: upadding * 2, borderBottomWidth:0}}
+          style={{
+            fontSize: upadding * 1.2,
+            iconSize: upadding * 2,
+            borderBottomWidth: 0,
+          }}
           iconTitle={'edit'}
           buttonText={'Rename work'}
         />
@@ -110,12 +107,10 @@ class Modal1 extends Component {
           disabled={workidbackend === defaultworkid}
           style={{
             backgroundColor:
-              workidbackend === defaultworkid
-                ? '#8D8D8C33'
-                : 'white',
-            fontSize: upadding*1.2,
-              iconSize: upadding * 2,
-            borderBottomWidth:0
+              workidbackend === defaultworkid ? '#dddddd' : 'white',
+            fontSize: upadding * 1.2,
+            iconSize: upadding * 2,
+            borderBottomWidth: 0,
           }}
           iconTitle={'delete'}
           buttonText={'Delete work'}

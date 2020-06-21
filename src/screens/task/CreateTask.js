@@ -78,7 +78,7 @@ class Createtask extends Component {
 			task_description: items.task_description || '',
 			taskid: items.taskid || '',
 			task_deadline: items.task_deadline || 'Add Task Deadline For Completion',
-			task_notificationid: items.task_notificationid || 0,
+			task_notificationid: parseInt(items.task_notificationid) || 0,
 			taskid_backend: items.taskid_backend || '',
 			task_reminder: items.task_reminder || 'Add Task Reminder For Completion',
 			update: navigation.getParam('update', false),

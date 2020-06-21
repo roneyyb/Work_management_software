@@ -168,7 +168,7 @@ export default SearchTask;
 const styles = StyleSheet.create({
     containerstyle: {
         flex: 1,
-        elevation: 20,
+        elevation: 10,
         position: 'absolute',
         width: SCREEN_WIDTH,
         height: SCREEN_HEIGHT,

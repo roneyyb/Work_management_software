@@ -35,6 +35,7 @@ import { deleteWorkInDatabase } from '../../database/deleteItem';
 import { updateWorkListAfterCloud, deleteWorkInRedux } from '../../actions/workListActions';
 import UpdateCloudData from '../../syncronusupdate/UpdateCloudData';
 import { actionAfterNotUndoOnDatabase } from '../settingup/UpdatingDatabase';
+import AppConstant from '../../constants/AppConstant';
 const whichday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat'];
 const monthNames = [
 	'Jan',
@@ -156,16 +157,24 @@ class Taskshowup extends Component {
 	};
 	undoalreadyinuse = async (deleteids, type) => {
 		await clearTimeout(this.a);
+		Animated.timing(this.state.opacity, {
+			toValue: 0,
+			duration: 500
+		}).start(() => {
+			console.log('undo already in use');
+		});
 		const workid = {
 			workid: this.props.selectedwork.workid,
 			workidbackend: this.props.selectedwork.workid_backend,
 		};
 		this.resetUndo(this.state.deleteids, type, workid);
 		this.setState({ deleteids: deleteids });
-		Animated.timing(this.state.opacity, {
-			toValue: 1,
-			duration: 500,
-		}).start(this.waitUndo(deleteids, type));
+		setTimeout(() => {
+			Animated.timing(this.state.opacity, {
+				toValue: 1,
+				duration: 500,
+			}).start(this.waitUndo(deleteids, type));
+		},100);
 	};
 
 	callUndo = (deleteids, type) => {
@@ -269,12 +278,11 @@ class Taskshowup extends Component {
 	};
 
 	undoaction = async () => {
-		console.log("Undo Pressed");
 
 		await clearTimeout(this.a);
 		await Animated.timing(this.state.opacity, {
 			toValue: 0,
-			duration: 100,
+			duration: 500,
 		}).start();
 		this.undoinuse = 0;
 		this.setState({ deleteids: [] });
@@ -337,7 +345,7 @@ class Taskshowup extends Component {
 		const tasklistlength = data.data.length;
 		const undosize = this.state.opacity.interpolate({
 			inputRange: [0, 1],
-			outputRange: [0, 1],
+			outputRange: [0, upadding*2],
 		});
 
 		return (
@@ -445,13 +453,14 @@ class Taskshowup extends Component {
 						styles.undoContainer,
 					]}>
 					<Animated.Text
-						style={[styles.undoCountText, { opacity: undosize }]}>
+						style={[styles.undoCountText, { opacity: this.state.opacity }]}>
 						{`${this.props.state.count} ${
 							this.props.state.undoType
 							} `}
 					</Animated.Text>
 					<Animatedtouchablehighlight
-						style={styles.undoButton}
+						style={[styles.undoButton,{opacity: this.state.opacity,
+								}]}
 						underlayColor={'#87cefa33'}
 						onPress={() => {
 							this.undoaction();
@@ -459,9 +468,8 @@ class Taskshowup extends Component {
 						<Animated.Text
 							style={{
 								fontSize: upadding * 1.3,
-								opacity: undosize,
 								fontWeight: 'bold',
-								color: '#FFA500',
+								color: '#ffffff',
 							}}>
 							{'Undo'}
 						</Animated.Text>
@@ -559,7 +567,6 @@ const styles = StyleSheet.create({
 		borderRadius: upadding * 1.5,
 	},
 	undoButton: {
-		elevation: 24,
 		height: upadding * 3,
 		width: upadding * 4,
 		borderRadius: upadding / 2,
@@ -568,14 +575,14 @@ const styles = StyleSheet.create({
 	},
 	undoContainer: {
 		position: 'absolute',
-		bottom: upadding * 9,
+		bottom: upadding *7,
 		alignSelf: 'center',
 		padding: upadding * 1.5,
 		height: upadding * 4,
 		width: SCREEN_WIDTH - upadding * 1.5,
 		borderRadius: upadding / 2,
 		elevation: upadding * 2,
-		backgroundColor: 'black',
+		backgroundColor: AppConstant.appColor,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',

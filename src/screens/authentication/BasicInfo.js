@@ -25,36 +25,40 @@ class BasicInfo extends Component {
         const { state } = this;
         const alert = this.props.showAlert;
 
-        if (state.userName.trim().length === 0) {
-            alert('Username should be atleast 3 characters long.');
-            return;
-        } else if (state.userName.trim().length <= 2) {
-            alert('Username should be atleast 3 characters long.');
-            return;
-        } else if (state.email.trim().length === 0) {
-            alert('Please enter your email.');
+       if (state.userName.trim().length <= 2) {
+            this.setState({
+              userNameError:
+                'Username should be atleast 3 characters long.',
+            });
             return;
         } else if (!state.email.includes('@')) {
-            alert('Please enter valid email');
+           this.setState({emailError: 'Please enter valid email.'});
             return;
         } else if (state.password.trim().length === 0) {
-            alert('Please enter your password.');
+            this.setState({passwordError: 'Please enter password.'})
             return;
         } else if (typeof state.passwordError === 'string') {
-            alert('Please enter password according to requirement.');
+         this.setState({
+           passwordError:
+             'Should contain atleast one capital, one small letter and one digit',
+         });
             return;
         } else if (state.password !== state.confirmpassword) {
-            alert('Password does not match.');
-            return;
-        }
+           this.setState({ confirmpasswordError: 'Password does not match.' });
+           return;
+        } 
         else if (state.confirmpassword.trim().length === 0) {
-            alert('Please enter password again.');
+            this.setState({
+              confirmpasswordError: 'Please enter password again.',
+            });
             return;
         } else if (typeof confirmpasswordError === 'string') {
-            alert('Password does not match.');
+             this.setState({
+               confirmpasswordError:
+                 'Please enter password again.',
+             });
             return;
         }
-
         console.log('Seems Correct');
         return true;
     }
@@ -144,8 +148,7 @@ class BasicInfo extends Component {
 
         return (
             <View style={{ flex: 1, flexDirection: 'column' }}>
-                <KeyboardAwareScrollView style={{ flex: 1 }}>
-                    <View>
+                   <View>
                         <WrappedTextInput
                             {...textInputProps}
                             placeholder="Username"
@@ -224,7 +227,6 @@ class BasicInfo extends Component {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                </KeyboardAwareScrollView>
             </View>
         );
     }
