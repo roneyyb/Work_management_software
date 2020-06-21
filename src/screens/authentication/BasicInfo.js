@@ -43,7 +43,11 @@ class BasicInfo extends Component {
         } else if (typeof state.passwordError === 'string') {
             alert('Please enter password according to requirement.');
             return;
-        } else if (state.confirmpassword.trim().length === 0) {
+        } else if (state.password !== state.confirmpassword) {
+            alert('Password does not match.');
+            return;
+        }
+        else if (state.confirmpassword.trim().length === 0) {
             alert('Please enter password again.');
             return;
         } else if (typeof confirmpasswordError === 'string') {

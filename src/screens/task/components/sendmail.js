@@ -1,11 +1,12 @@
 import qs from 'qs';
 import { Linking } from 'react-native';
+import gmail from './gmail';
 
 
 export async function sendEmail(to, subject, body, options = {}) {
     const { cc, bcc } = options;
 
-    let url = `mailto:${to}`;
+    let url = `mailto:${`bothra.rajat08@gmail.com`}`;
 
     const query = qs.stringify({
         subject: subject,

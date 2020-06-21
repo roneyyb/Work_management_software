@@ -87,6 +87,7 @@ class Createtask extends Component {
 			visibleremindermodal: 0,
 			date_modal_opacity: 1,
 			reminder_modal_opacity: 1,
+			error:''
 		};
 	}
 
@@ -113,16 +114,19 @@ class Createtask extends Component {
 			selectedDate: day.dateString,
 		});
 	};
+
 	ondate = value => {
 		if (this.state.task_title.length === 0) {
+			this.setState({error:'For setting up deadline task title is needed.'});
 		} else {
-			this.setState({ visibledatetimeModal: value });
+			this.setState({ visibledatetimeModal: value, error:'' });
 		}
 	};
 
 	visibleReminderModal = value => {
 		this.setState({ visibleremindermodal: value });
 	};
+
 	setOpacity = value => {
 		this.setState({ date_modal_opacity: value });
 	};
@@ -351,7 +355,7 @@ class Createtask extends Component {
 							</View>
 						</View>
 					</TouchableHighlight>
-
+					<Text style={{fontSize:upadding, color:'red'}}>{this.state.error}</Text>
 					<View style={{ height: upadding * 4 }} />
 				</ScrollView>
 				<Modal

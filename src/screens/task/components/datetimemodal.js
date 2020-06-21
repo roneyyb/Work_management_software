@@ -11,7 +11,6 @@ import Deadline from '../../ReminderModal/deadlinescreen';
 export default class Datetimemodal extends Component {
     constructor(props) {
         super(props);
-        this.configure();
     }
 
     state = { Modalscreen: 0, show: false };
@@ -24,59 +23,6 @@ export default class Datetimemodal extends Component {
         return (hour * 60 + minutes) * 60 * 1000;
     };
 
-    configure() {
-        PushNotification.configure({
-            onRegister: token => {
-                console.log('token', token);
-            },
-            onNotification: () => {
-                console.log('notifiction set');
-            },
-            permissions: {
-                alert: true,
-                badge: true,
-                sound: true,
-            },
-
-            popInitialNotification: false,
-
-            requestPermissions: true,
-        });
-    }
-
-    openAndroidTimePicker = async () => {
-        console.log('android time picker');
-        const todaydate = new Date();
-        try {
-            const { action, hour, minute } = await TimePickerAndroid.open({
-                hour: todaydate.getHours(),
-                minute: todaydate.getMinutes(),
-                is24Hour: false,
-            });
-            var newformat = hour >= 12 ? 'PM' : 'AM';
-            var hours = hour % 12;
-            hours = hours ? hours : 12;
-            console.log('action datemodal', action);
-            if (action !== TimePickerAndroid.dismissedAction) {
-                console.log('Not dismissed');
-                this.setOpacity(1);
-                if (hours < 10 && minute < 10)
-                    return [`0${hours}:0${minute} ${newformat}`, hour, minute];
-                else if (hours < 10 && minute > 10)
-                    return [`0${hours}:${minute} ${newformat}`, hour, minute];
-                else if (hours > 10 && minute < 10)
-                    return [`${hours}:0${minute} ${newformat}`, hour, minute];
-                else return [`${hours}:${minute} ${newformat}`, hour, minute];
-            } else {
-                console.log('Time Picker Dismissed');
-                this.setOpacity(1);
-                return ['Dismissed'];
-            }
-        } catch ({ code, message }) {
-            console.log('Cannot open time picker', message);
-        }
-    };
-
     setNotification = (time, date, times) => {
         var d = new Date();
         const id = '' + time;
@@ -87,17 +33,17 @@ export default class Datetimemodal extends Component {
             newid = id;
         }
 
-        console.log('Push notification time',time,d.getTime(),date,times);
         if (time > d.getTime()) {
-            console.log('setting up push notification');
-            PushNotification.localNotificationSchedule({
-              title: this.props.title,
-              id: newid,
-              message: this.props.description,
-              date: new Date(time),
-              playSound: true,
-              vibrate: true
-            });
+            const {title, description} = this.props;
+                PushNotification.localNotificationSchedule({
+                    title: title,
+                    id: newid,
+                    message: description,
+                    date: new Date(time),
+                    playSound: true,
+                    vibrate: true
+                });
+            
             this.props.onChangeDeadline(date, times, false, newid);
         } else {
             this.props.onChangeDeadline(date, times, false, 0);

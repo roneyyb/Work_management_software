@@ -56,8 +56,8 @@ export default class WrappedTextInput extends Component {
                         style={[styles.textInputStyle]}
                         placeholder={this.props.placeholder}
                         autocorrect={this.props.autocorrect}
-                        //selectionColor={'#FFA50033'}
-                        selectionColor={this.props.selectionColor}
+                        selectionColor={`${AppConstant.appColor}33`}
+                        //selectionColor={this.props.selectionColor}
                         autoCompleteType={'off'}
                         returnKeyType={this.props.returnKeyType}
                         keyboardType={this.props.keyboardType}

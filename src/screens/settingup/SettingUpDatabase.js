@@ -31,7 +31,7 @@ class Settingupdatabase extends Component {
         }
         else {
             await AsyncStorage.setItem('userToken', this.props.user._id);
-            this.props.Give_all_work();
+            this.props.giveAllWork();
             this.props.navigation.navigate('App');
         }
     }
@@ -60,7 +60,7 @@ class Settingupdatabase extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor:'white' }}>
                 <Text>{this.state.message}</Text>
                 <ActivityIndicator size='large' color={AppConstant.appColor} />
                 <GeneralModal

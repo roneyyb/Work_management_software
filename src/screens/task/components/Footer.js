@@ -19,52 +19,55 @@ class Footer extends Component {
 
     render() {
         return (
-                <View
-                    style={styles.backgroundContainer}
-                >
-                    <View>
-                        <WrappedButton
-                            iconTitle={'list'}
-                            onPress={() => {
-                                this.props.onBackdropPress(1);
-                            }}
-                            disabled={this.state.pointer}
-                        />
-                    </View>
-                    <View>
-                        <WrappedButton
-                            iconTitle={'more-vert'}
-                            onPress={() => {
-                                this.props.onBackdropPress(2);
-                            }}
-                            disabled={this.state.pointer}
-                        />
-                    </View>
-                {this.props.completed ? <View style={{position:'absolute'}}/> :
-                        (
-                            <View style={styles.curve}>
-                                <WrappedButton
-                                    onPress={() => {
-                                        this.props.navigation.navigate('createtask', {
-                                            callUndo: this.props.callUndo,
-                                            onNavigateBack: this.props.navigation.getParam('onNavigateBack')
-                                        })
-                                    }
-                                    }
-                                    touchSize={upadding*5}
-                                    iconSize={upadding*3.5}
-                                    disabled={this.state.pointer}
-                                    iconTitle={'add'}
-                                />
-                            </View>
-                        )}
-                </View>
+          <View style={styles.backgroundContainer}>
+            <View>
+              <WrappedButton
+                iconTitle={'list'}
+                onPress={() => {
+                  this.props.onBackdropPress(1);
+                }}
+                disabled={this.state.pointer}
+              />
+            </View>
+            <View>
+              <WrappedButton
+                iconTitle={'more-vert'}
+                onPress={() => {
+                  this.props.onBackdropPress(2);
+                }}
+                disabled={this.state.pointer}
+              />
+            </View>
+            {this.props.completed ? (
+              <View style={{position: 'absolute'}} />
+            ) : (
+              <WrappedButton
+                style={styles.curve}
+                onPress={() => {
+                  this.props.navigation.navigate('createtask', {
+                    callUndo: this.props.callUndo,
+                    onNavigateBack: this.props.navigation.getParam(
+                      'onNavigateBack',
+                    ),
+                  });
+                }}
+                touchSize={upadding * 5}
+                iconSize={upadding * 3.5}
+                disabled={this.state.pointer}
+                iconTitle={'add'}
+              />
+            )}
+          </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
     backgroundContainer: {
+        position: 'absolute',
+        left: 0,
+        bottom: 0,
+        right:0,
         height: upadding * 5,
         elevation: 5,
         backgroundColor: 'white',
@@ -80,7 +83,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         borderRadius: upadding * 2.5,
         backgroundColor: 'white',
-        bottom: upadding * 2.5,
+        bottom: upadding * 1.5,
         left:'45%',
         alignItems: 'center',
         justifyContent:'center'

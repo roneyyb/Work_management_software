@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
-
+import AppConstant from '../../../constants/AppConstant';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
 
@@ -23,7 +23,7 @@ class Gmail extends Component {
                         height: upadding * 3,
                         width: upadding * 3,
                         borderRadius: upadding * 1.5,
-                        backgroundColor: '#346ca5',
+                        backgroundColor: AppConstant.appColor,
                         justifyContent: 'center',
                         alignItems: 'center'
                     }}
@@ -34,8 +34,8 @@ class Gmail extends Component {
                     style={{
                         height: upadding & 3.5,
                         marginLeft: upadding,
-                        paddingBottom: upadding,
-                        flexDirection: 'column'
+                        flexDirection: 'column',
+                        justifyContent:'center'
                     }}
                 >
                     <Text

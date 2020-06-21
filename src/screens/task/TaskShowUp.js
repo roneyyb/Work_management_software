@@ -529,7 +529,8 @@ const mapStatetoprops = state => {
 		state: state.task.state,
 		selectedwork: state.worklist.state.selectedwork,
 		userid: state.user.user._id,
-		defaultwork: state.user.user.work
+		defaultwork: state.user.user.work,
+		email: state.user.user.email
 	};
 };
 
