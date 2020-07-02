@@ -55,7 +55,7 @@ class SearchTask extends Component {
     }
 
 
-    undoaction = () => {
+    undoAction = () => {
         var arr = this.state.searchresult;
         arr.splice(this.deleteelement.index, 0, this.deleteelement.element);
         this.totaldata.push(this.deleteelement.element);

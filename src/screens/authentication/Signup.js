@@ -9,7 +9,7 @@ import BasicInfo from './BasicInfo';
 import uuidv1 from 'uuid/v1';
 import AppConstant from '../../constants/AppConstant';
 import { connect } from 'react-redux';
-import { setupUserOnStart } from '../../actions/UserActions';
+import { setupUserOnStart } from '../../actions/userActions';
 let deviceWidth = Dimensions.get('window').width;
 
 class Signup extends React.Component {

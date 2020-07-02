@@ -15,7 +15,7 @@ import Server from '../../constants/Server';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import WrappedTextInput from './components/WrappedTextInput';
 import axios from 'axios';
-import { setupUserOnStart } from '../../actions/UserActions';
+import { setupUserOnStart } from '../../actions/userActions';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
@@ -143,6 +143,7 @@ class Login extends Component {
             .then(response => {
                 let responseJson = response.data;
                 this.setState({ isLoading: false });
+                console.log(responseJson);
                 setupUserOnStart(responseJson);
                 navigation.navigate('settingupdatabase',{'signup':false});
             })

@@ -29,7 +29,7 @@ import {
 	Refreshing,
 	updateTaskInRedux,
 } from '../../actions/taskActions';
-import { resetRedux } from '../../actions/UserActions';
+import { resetRedux } from '../../actions/userActions';
 import { updateTaskInDatabase } from '../../database/updateItem';
 import { deleteWorkInDatabase } from '../../database/deleteItem';
 import { updateWorkListAfterCloud, deleteWorkInRedux } from '../../actions/workListActions';
@@ -51,8 +51,6 @@ const monthNames = [
 	'Nov',
 	'Dec',
 ];
-
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
@@ -82,7 +80,7 @@ class Taskshowup extends Component {
 		UpdateCloudData(this.props.userid, this.updatinglocalworklist, this.handleRefresh);
 	}
 
-	loggingout = () => {
+	logginOut = () => {
 		UpdateCloudData(this.props.userid);
 		this.props.resetRedux();
 		setTimeout(() => {
@@ -126,12 +124,12 @@ class Taskshowup extends Component {
 		this.setState({ state: this.state });
 	};
 
-
 	handleViewRef = ref => (this.position = ref);
 
 	onBackdropPress = state => {
 		this.setState({ visibleModal: state });
 	};
+
 	onCancelPressDeleteModal = state => {
 		this.setState({ visibleWorkModal: state });
 	};
@@ -155,7 +153,8 @@ class Taskshowup extends Component {
 			this.resetUndo(deleteids, type, workid);
 		}, 4000);
 	};
-	undoalreadyinuse = async (deleteids, type) => {
+
+	undoAlreadyInUse = async (deleteids, type) => {
 		await clearTimeout(this.a);
 		Animated.timing(this.state.opacity, {
 			toValue: 0,
@@ -187,7 +186,7 @@ class Taskshowup extends Component {
 			this.setState({ deleteids: deleteids });
 			this.undoinuse++;
 		} else {
-			this.undoalreadyinuse(deleteids, type);
+			this.undoAlreadyInUse(deleteids, type);
 			this.undoinuse++;
 		}
 	};
@@ -269,7 +268,7 @@ class Taskshowup extends Component {
 		this.setState({ visibledatetimeModal, selected_task: '' });
 	}
 
-	ondate = value => {
+	onDate = value => {
 		this.setState({ visibledatetimeModal: value });
 	};
 
@@ -277,7 +276,7 @@ class Taskshowup extends Component {
 		this.setState({ task_search_enable: value });
 	};
 
-	undoaction = async () => {
+	undoAction = async () => {
 
 		await clearTimeout(this.a);
 		await Animated.timing(this.state.opacity, {
@@ -290,10 +289,10 @@ class Taskshowup extends Component {
 			this.props.selectedwork.workid
 		);
 		if (this.state.task_search_enable) {
-			this.searchtask.undoaction();
+			this.searchtask.undoAction();
 		}
 	};
-	setfootertouch = value => {
+	setFooterTouch = value => {
 		this.footer.setpointer(value);
 	};
 
@@ -302,9 +301,7 @@ class Taskshowup extends Component {
 	}
 
 	setColordefault = () => {
-		console.log("setColorDefault", this.deleteid);
 		this.deleteid.splice(0, this.deleteid.length);
-		console.log("setColorDefault", this.deleteid);
 		this.setTaskTouch(false);
 	};
 
@@ -343,10 +340,6 @@ class Taskshowup extends Component {
 	render() {
 		const { navigation, data } = this.props;
 		const tasklistlength = data.data.length;
-		const undosize = this.state.opacity.interpolate({
-			inputRange: [0, 1],
-			outputRange: [0, upadding*2],
-		});
 
 		return (
 			<View
@@ -423,7 +416,7 @@ class Taskshowup extends Component {
 					ref={this.headerRef}
 					title={this.props.selectedwork.work_title}
 					headerAction={this.headerAction.bind(this)}
-					setpointer={this.setfootertouch}
+					setpointer={this.setFooterTouch}
 					settaskSearch={this.settaskSearch}
 					navigation={navigation}
 					setColordefault={this.setColordefault}
@@ -463,7 +456,7 @@ class Taskshowup extends Component {
 								}]}
 						underlayColor={'#87cefa33'}
 						onPress={() => {
-							this.undoaction();
+							this.undoAction();
 						}}>
 						<Animated.Text
 							style={{
@@ -485,7 +478,7 @@ class Taskshowup extends Component {
 					<Modal2
 						navigation={this.props.navigation}
 						email={this.props.email}
-						Logout={this.loggingout}
+						Logout={this.logginOut}
 						onBackdropPress={this.onBackdropPress}
 					/>
 				</Modal>
@@ -507,7 +500,7 @@ class Taskshowup extends Component {
 					<Datetimemodal
 						onChangeDeadline={this.onChangeDeadline}
 						setOpacity={this.setOpacity}
-						onDate={this.ondate}
+						onDate={this.onDate}
 						title={this.state.selected_task.task_title}
 						description={this.state.selected_task.task_description}
 					/>

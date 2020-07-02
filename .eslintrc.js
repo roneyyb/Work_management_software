@@ -23,9 +23,9 @@ module.exports = {
     'react',
   ],
   rules: {
-    no-console: 0;
-    no-emprt: 0;
-    no-irregular-whitespace:0;
+    "no-console": 0,
+    "no-emprt": 0,
+    "no-irregular-whitespace": 0
   },
   root: true
 };

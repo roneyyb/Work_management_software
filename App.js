@@ -19,9 +19,9 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {Provider} from 'react-redux';
 import {StatusBar} from 'react-native';
 import Container from './src/container/stackcontainer';
-import LoadScreen from './src/onLoad/loadscreen';
+import LoadScreen from './src/onLoad/LoadScreen';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {store, persistor} from './src/reduxForm/persiststore';
+import {store, persistor} from './src/store/persiststore';
 
 export default class App extends Component {
   render() {

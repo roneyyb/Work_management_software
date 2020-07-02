@@ -21,7 +21,7 @@ import {
 } from '../../database/updateItem';
 
 import { giveAllTask } from '../../database/giveAllItem';
-import { updateDefaultWork } from '../../actions/UserActions';
+import { updateDefaultWork } from '../../actions/userActions';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const upadding = Math.round(SCREEN_WIDTH * 0.03);
 
