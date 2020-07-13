@@ -3,16 +3,16 @@ This is the frontend of the work management software built with react native and
 It has the following functionalities:-
 
 Responsive UI
-Login/Register.
-Cloud synchronization gets your data back from anywhere where ever you log in.
-Create multiple work and multiple tasks into work and add a description to the task.
-Multi Complete/Delete/Incomplete any task.
-Swipe Complete/Incomplete/delete any single task.
-Set the Deadline and get notified.
-Search for any task.
-Undo any deleted, completed, incomplete action.
-Update anything.
-Used React-native, NodeJs, MongoDB, SQLite. Deployed on AWS ec2, Play Store.
+1. Login/Register.
+2. Cloud synchronization gets your data back from anywhere where ever you log in.
+3. Create multiple work and multiple tasks into work and add a description to the task.
+4. Multi Complete/Delete/Incomplete any task.
+5. Swipe Complete/Incomplete/delete any single task.
+6. Set the Deadline and get notified.
+7. Search for any task.
+8. Undo any deleted, completed, incomplete action.
+9. Update anything.
+10.Used React-native, NodeJs, MongoDB, SQLite. Deployed on AWS ec2, Play Store.
 
 How to run the application.
 1. Install nodeJS.
