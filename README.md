@@ -42,20 +42,37 @@ Refer this article https://medium.com/dooboolab/running-react-native-app-in-ubun
 Refer this for expo installation https://itnext.io/set-up-react-native-with-expo-1e63a82d01ac
 
 
-![createTask](https://user-images.githubusercontent.com/47710539/87419936-ff587980-c5f1-11ea-9574-ab74f9b17b25.png)
-
-![login](https://user-images.githubusercontent.com/47710539/87419939-01223d00-c5f2-11ea-98cb-767e27748707.png)
-
-![modal](https://user-images.githubusercontent.com/47710539/87419942-02ec0080-c5f2-11ea-98a3-9773869de369.png)
-
-![modal1](https://user-images.githubusercontent.com/47710539/87419946-03849700-c5f2-11ea-8264-f03f1558a982.jpg)
-
-![searchtask](https://user-images.githubusercontent.com/47710539/87419947-041d2d80-c5f2-11ea-8fb2-b2e3afdeca85.jpg)
 
 ![signup](https://user-images.githubusercontent.com/47710539/87419950-054e5a80-c5f2-11ea-82b7-c8248efadbea.png)
 
+
+
+![login](https://user-images.githubusercontent.com/47710539/87419939-01223d00-c5f2-11ea-98cb-767e27748707.png)
+
+
+
+![createTask](https://user-images.githubusercontent.com/47710539/87419936-ff587980-c5f1-11ea-9574-ab74f9b17b25.png)
+
+
+
+
+![modal](https://user-images.githubusercontent.com/47710539/87419942-02ec0080-c5f2-11ea-98a3-9773869de369.png)
+
+
+
+![modal1](https://user-images.githubusercontent.com/47710539/87419946-03849700-c5f2-11ea-8264-f03f1558a982.jpg)
+
+
+
+![searchtask](https://user-images.githubusercontent.com/47710539/87419947-041d2d80-c5f2-11ea-8fb2-b2e3afdeca85.jpg)
+
+
+
 ![taskSelected](https://user-images.githubusercontent.com/47710539/87419954-07181e00-c5f2-11ea-860a-759692f31fab.jpg)
+
+
 
 ![undo](https://user-images.githubusercontent.com/47710539/87419955-07b0b480-c5f2-11ea-9105-a1eaa07b68e3.png)
 
-![createTask](https://user-images.githubusercontent.com/47710539/87419856-d7691600-c5f1-11ea-8273-353d4e974763.png)
+
+
