@@ -10,6 +10,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@bam.tech/react-native-make": "^3.0.0",
     "@fortawesome/fontawesome-free": "^5.12.1",
     "@react-native-community/async-storage": "^1.7.1",
     "@react-native-community/datetimepicker": "^2.2.1",
@@ -35,6 +36,7 @@
     "react-native-push-notification": "^3.5.2",
     "react-native-safe-area-context": "^0.6.4",
     "react-native-screens": "^2.0.0-alpha.34",
+    "react-native-splash-screen": "^3.2.0",
     "react-native-sqlite-storage": "^4.1.0",
     "react-native-vector-icons": "^6.6.0",
     "react-navigation": "^4.1.0",
